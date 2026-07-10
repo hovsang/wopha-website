@@ -195,7 +195,57 @@
       </div>
     </section>
 
-    <section class="section section--tint" aria-labelledby="faq-heading">
+    <section class="section section--tint" id="arc" aria-labelledby="arc-heading">
+      <div class="container">
+        <span class="eyebrow">Before you build, paint, or fence</span>
+        <h2 id="arc-heading">Exterior change request</h2>
+        <p class="lede">The covenants require board approval before exterior changes — fences, paint colors, roofs, additions, major landscaping. Send your request here and get a written answer before work starts; it protects you at resale.</p>
+        <!-- PLACEHOLDER: Web3Forms access key for the exterior change request form. -->
+        <div class="setup-note">
+          <p>Create a free Web3Forms access key routed to the board's email and replace <code>YOUR_WEB3FORMS_ACCESS_KEY</code> in this form's hidden input.</p>
+        </div>
+        <form class="form-grid" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+          <input type="hidden" name="subject" value="WOPHA exterior change request">
+          <div>
+            <label for="arc-name">Your name</label>
+            <input id="arc-name" name="name" type="text" required autocomplete="name">
+          </div>
+          <div>
+            <label for="arc-address">Property address</label>
+            <input id="arc-address" name="address" type="text" required autocomplete="street-address">
+          </div>
+          <div>
+            <label for="arc-email">Email</label>
+            <input id="arc-email" name="email" type="email" required autocomplete="email">
+          </div>
+          <div>
+            <label for="arc-type">Type of change</label>
+            <select id="arc-type" name="project_type" required>
+              <option value="">Choose one…</option>
+              <option>Fence</option>
+              <option>Exterior paint</option>
+              <option>Roof</option>
+              <option>Addition or structure</option>
+              <option>Major landscaping / tree removal</option>
+              <option>Something else</option>
+            </select>
+          </div>
+          <div>
+            <label for="arc-desc">Describe the project</label>
+            <textarea id="arc-desc" name="message" rows="5" required placeholder="What you're changing, materials and colors, and roughly when work would start"></textarea>
+          </div>
+          <div>
+            <button class="btn btn--primary" type="submit">Submit for board review</button>
+          </div>
+        </form>
+        <div class="notice">
+          <p>Have drawings, paint chips, or photos? After submitting, email them to the board referencing your address. The board reviews requests at its next meeting and replies in writing.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="faq-heading">
       <div class="container">
         <span class="eyebrow">Common questions</span>
         <h2 id="faq-heading">FAQ</h2>
