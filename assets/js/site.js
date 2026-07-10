@@ -1,4 +1,8 @@
-// Woods of Parkview — shared behavior (mobile nav only; everything else is plain HTML)
+// Woods of Parkview — shared behavior (mobile nav + PWA registration)
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+
 (function () {
   var toggle = document.querySelector(".nav-toggle");
   var nav = document.querySelector(".site-nav");
