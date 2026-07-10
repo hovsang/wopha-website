@@ -153,13 +153,26 @@ a:hover { color: var(--poolwater); }
   cursor: pointer;
 }
 
-.site-nav { display: none; }
+/* Mobile: dropdown panel below the bar — the bar itself never grows */
+.site-nav {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--pine);
+  border-top: 1px solid rgba(255, 253, 247, 0.15);
+  box-shadow: 0 14px 24px rgba(22, 45, 32, 0.35);
+}
 .site-nav.open { display: block; }
 
 .site-nav ul {
   list-style: none;
   margin: 0;
-  padding: 0.5rem 0 1rem;
+  padding: 0.75rem 1.25rem 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem 1rem;
 }
 
 .site-nav a {
@@ -182,7 +195,13 @@ a:hover { color: var(--poolwater); }
 
 @media (min-width: 960px) {
   .nav-toggle { display: none; }
-  .site-nav { display: block; }
+  .site-nav {
+    display: block;
+    position: static;
+    background: transparent;
+    border-top: 0;
+    box-shadow: none;
+  }
   .site-nav ul { display: flex; gap: 0.125rem; padding: 0; }
   .site-nav a { padding: 1.05rem 0.7rem; border-radius: 0; white-space: nowrap; }
   .site-nav a[aria-current="page"] {
