@@ -120,7 +120,50 @@
       </div>
     </section>
 
-    <section class="section" id="know" aria-labelledby="know-heading">
+    <section class="section" id="report" aria-labelledby="report-heading">
+      <div class="container">
+        <span class="eyebrow">See something broken?</span>
+        <h2 id="report-heading">Report a neighborhood issue</h2>
+        <p class="lede">Burned-out court light, gate that won't latch, pool problem, playground damage — tell us and the right volunteer gets on it.</p>
+        <!-- PLACEHOLDER: Web3Forms access key for the issue-report form. -->
+        <div class="setup-note">
+          <p>Create a free Web3Forms access key routed to the board's email and replace <code>YOUR_WEB3FORMS_ACCESS_KEY</code> in this form's hidden input.</p>
+        </div>
+        <form class="form-grid" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+          <input type="hidden" name="subject" value="WOPHA issue report">
+          <div>
+            <label for="issue-where">Where is the problem?</label>
+            <select id="issue-where" name="location" required>
+              <option value="">Choose a location…</option>
+              <option>Pool area</option>
+              <option>Tennis / pickleball courts</option>
+              <option>Clubhouse or pavilion</option>
+              <option>Playground</option>
+              <option>Entrance or common grounds</option>
+              <option>Somewhere else</option>
+            </select>
+          </div>
+          <div>
+            <label for="issue-what">What's wrong?</label>
+            <textarea id="issue-what" name="message" rows="4" required placeholder="What you saw, and when"></textarea>
+          </div>
+          <div>
+            <label for="issue-name">Your name (optional)</label>
+            <input id="issue-name" name="name" type="text" autocomplete="name">
+          </div>
+          <div>
+            <label for="issue-email">Email (optional — if you'd like an update)</label>
+            <input id="issue-email" name="email" type="email" autocomplete="email">
+          </div>
+          <div>
+            <button class="btn btn--primary" type="submit">Send report</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section section--tint" id="know" aria-labelledby="know-heading">
       <div class="container">
         <span class="eyebrow">The basics</span>
         <h2 id="know-heading">Good to know</h2>

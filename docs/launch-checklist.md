@@ -28,10 +28,13 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
 
 ## 2. Forms (suggestions.html, contact.html)
 
-- [ ] Create a free **Web3Forms** access key (web3forms.com) routed to
+- [ ] Create free **Web3Forms** access keys (web3forms.com) routed to
       `wophatreasurer@gmail.com` (or a board alias) and replace
-      `YOUR_WEB3FORMS_ACCESS_KEY` in both `contact.html` and `suggestions.html`.
-      Separate keys per form keeps the inboxes distinguishable.
+      `YOUR_WEB3FORMS_ACCESS_KEY` in all four forms: contact-info update
+      (`contact.html#update`), suggestion box (`suggestions.html`), issue
+      report (`contact.html#report`), and exterior change request
+      (`board.html#arc`). Separate keys per form keeps the inboxes
+      distinguishable; each form already sets its own email subject line.
 - [ ] Create the **anonymous suggestion** Google Form (no required identity
       fields) and paste its link into `suggestions.html`.
 
@@ -67,6 +70,12 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
       addresses in open CC.
 - [ ] Consider a Google Group or newsletter service for wophalilburn@gmail.com
       so "join the list" is self-service from the Contact page.
+
+## 4c. Dues transparency (membership.html)
+
+- [ ] Treasurer: replace the placeholder note in `membership.html#budget` with
+      the current year's budget summary table from the annual-meeting
+      presentation.
 
 ## 5. Pool hours (pool.html)
 
