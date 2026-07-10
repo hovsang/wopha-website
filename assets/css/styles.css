@@ -1,0 +1,475 @@
+/* ==========================================================================
+   Woods of Parkview HOA — shared stylesheet
+   Palette:  Pine #1F3D2B · Canopy #2E5940 · Birch #F7F4EA · Poolwater #17727F
+             Clay #B4552D · Ink #26301F
+   Type:     Fraunces (display) · Public Sans (body)
+   Poolwater is reserved for actions (pay, book, reserve). Clay is for small
+   highlights only. Keep it that way.
+   ========================================================================== */
+
+:root {
+  --pine: #1f3d2b;
+  --pine-deep: #162d20;
+  --canopy: #2e5940;
+  --birch: #f7f4ea;
+  --birch-dark: #ede8d8;
+  --poolwater: #17727f;
+  --poolwater-dark: #0f5a65;
+  --clay: #b4552d;
+  --ink: #26301f;
+  --ink-soft: #4a543f;
+  --white: #fffdf7;
+  --display: "Fraunces", Georgia, serif;
+  --body: "Public Sans", -apple-system, "Segoe UI", sans-serif;
+  --radius: 10px;
+  --shadow: 0 2px 10px rgba(31, 61, 43, 0.1);
+  --container: 68rem;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--birch);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---- Typography ------------------------------------------------------- */
+
+h1, h2, h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--pine);
+  margin: 0 0 0.5em;
+}
+
+h1 { font-size: clamp(2rem, 5.5vw, 3.25rem); }
+h2 { font-size: clamp(1.5rem, 3.5vw, 2.125rem); }
+h3 { font-size: 1.25rem; }
+
+p { margin: 0 0 1em; }
+
+a { color: var(--poolwater-dark); }
+a:hover { color: var(--poolwater); }
+
+:focus-visible {
+  outline: 3px solid var(--poolwater);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clay);
+  margin-bottom: 0.5rem;
+}
+
+.lede { font-size: 1.1875rem; color: var(--ink-soft); max-width: 46rem; }
+
+/* ---- Layout ------------------------------------------------------------ */
+
+.container {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+.section { padding-block: 3rem; }
+@media (min-width: 768px) { .section { padding-block: 4.5rem; } }
+
+.section--tint { background: var(--birch-dark); }
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--pine);
+  color: var(--white);
+  padding: 0.75rem 1.25rem;
+  z-index: 100;
+}
+.skip-link:focus { left: 0; }
+
+/* ---- Header / nav ------------------------------------------------------ */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--pine);
+  color: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.75rem;
+}
+
+.brand {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.1875rem;
+  color: var(--white);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-block: 0.5rem;
+}
+.brand:hover { color: var(--white); }
+.brand svg { flex: none; }
+
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 2px solid rgba(255, 253, 247, 0.4);
+  border-radius: var(--radius);
+  color: var(--white);
+  font: 700 0.9375rem var(--body);
+  padding: 0.5rem 0.875rem;
+  cursor: pointer;
+}
+
+.site-nav { display: none; }
+.site-nav.open { display: block; }
+
+.site-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0 1rem;
+}
+
+.site-nav a {
+  display: block;
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.65rem 0.5rem;
+  border-radius: 6px;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible { background: var(--canopy); color: var(--white); }
+
+.site-nav a[aria-current="page"] {
+  background: var(--canopy);
+  box-shadow: inset 3px 0 0 var(--clay);
+}
+
+@media (min-width: 960px) {
+  .nav-toggle { display: none; }
+  .site-nav { display: block; }
+  .site-nav ul { display: flex; gap: 0.125rem; padding: 0; }
+  .site-nav a { padding: 1.05rem 0.7rem; border-radius: 0; white-space: nowrap; }
+  .site-nav a[aria-current="page"] {
+    box-shadow: inset 0 -3px 0 var(--clay);
+    background: transparent;
+  }
+}
+
+/* ---- Hero -------------------------------------------------------------- */
+
+.hero {
+  background: var(--pine);
+  color: var(--white);
+  padding-block: 3.5rem 0;
+  overflow: hidden;
+}
+
+.hero h1 { color: var(--white); }
+.hero .eyebrow { color: #d9a06b; }
+.hero p { color: rgba(255, 253, 247, 0.88); max-width: 40rem; }
+
+.hero--page { padding-block: 2.5rem 0; }
+.hero--page .container { padding-bottom: 2.5rem; }
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* Pine canopy divider — bottom edge of hero sections */
+.canopy {
+  display: block;
+  width: 100%;
+  height: 42px;
+  margin-top: 2.5rem;
+  color: var(--birch);
+}
+.section--tint + * .canopy, .canopy--tint { color: var(--birch-dark); }
+
+/* ---- Buttons ------------------------------------------------------------ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font: 700 1rem var(--body);
+  text-decoration: none;
+  border-radius: var(--radius);
+  padding: 0.8rem 1.4rem;
+  min-height: 44px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn--primary { background: var(--poolwater); color: var(--white); }
+.btn--primary:hover { background: var(--poolwater-dark); color: var(--white); }
+
+.btn--outline { border-color: var(--poolwater); color: var(--poolwater-dark); background: transparent; }
+.btn--outline:hover { background: var(--poolwater); color: var(--white); }
+
+.hero .btn--outline { border-color: rgba(255, 253, 247, 0.7); color: var(--white); }
+.hero .btn--outline:hover { background: var(--white); color: var(--pine); }
+
+/* ---- Cards -------------------------------------------------------------- */
+
+.grid { display: grid; gap: 1.25rem; }
+@media (min-width: 640px) { .grid--2 { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 900px) {
+  .grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .grid--4 { grid-template-columns: repeat(4, 1fr); }
+}
+@media (min-width: 640px) and (max-width: 899px) {
+  .grid--3, .grid--4 { grid-template-columns: 1fr 1fr; }
+}
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+}
+
+.card h3 { margin-top: 0; }
+.card > :last-child { margin-bottom: 0; }
+
+.card--action {
+  display: block;
+  text-decoration: none;
+  color: var(--ink);
+  border-top: 4px solid var(--poolwater);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card--action:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(31, 61, 43, 0.16);
+  color: var(--ink);
+}
+.card--action .card-cta { color: var(--poolwater-dark); font-weight: 700; }
+
+/* Clubhouse board — the season-at-a-glance panel */
+.board-panel {
+  background: var(--canopy);
+  color: var(--white);
+  border-radius: var(--radius);
+  border: 2px solid rgba(255, 253, 247, 0.25);
+  box-shadow: var(--shadow);
+  padding: 1.75rem 1.5rem;
+}
+.board-panel h2, .board-panel h3 { color: var(--white); }
+.board-panel ul { list-style: none; margin: 0; padding: 0; }
+.board-panel li {
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed rgba(255, 253, 247, 0.3);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.board-panel li:last-child { border-bottom: none; }
+.board-panel strong { color: #f0c98f; font-family: var(--display); }
+
+/* ---- Notices ------------------------------------------------------------ */
+
+.notice {
+  background: var(--white);
+  border-left: 5px solid var(--clay);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1rem 1.25rem;
+  margin-block: 1.25rem;
+}
+.notice > :last-child { margin-bottom: 0; }
+
+.setup-note {
+  background: repeating-linear-gradient(-45deg, #fdf6e3, #fdf6e3 12px, #faf0d7 12px, #faf0d7 24px);
+  border: 2px dashed var(--clay);
+  border-radius: var(--radius);
+  padding: 0.875rem 1.125rem;
+  font-size: 0.9375rem;
+  margin-block: 1rem;
+}
+.setup-note::before {
+  content: "Board setup needed";
+  display: block;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--clay);
+  margin-bottom: 0.25rem;
+}
+
+/* ---- Tables -------------------------------------------------------------- */
+
+.table-wrap { overflow-x: auto; margin-block: 1.25rem; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  font-size: 0.9375rem;
+}
+
+th, td { text-align: left; padding: 0.75rem 1rem; }
+thead th { background: var(--pine); color: var(--white); font-weight: 700; }
+tbody tr:nth-child(even) { background: var(--birch); }
+
+/* ---- Accordions (rules) --------------------------------------------------- */
+
+details.rule {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 0.75rem;
+  padding: 0;
+}
+
+details.rule summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-family: var(--display);
+  font-size: 1.0625rem;
+  color: var(--pine);
+  padding: 1rem 1.25rem;
+  list-style-position: outside;
+}
+
+details.rule[open] summary { border-bottom: 1px solid var(--birch-dark); }
+details.rule .rule-body { padding: 1rem 1.25rem; }
+details.rule .rule-body > :last-child { margin-bottom: 0; }
+
+/* ---- People (board roster) ------------------------------------------------ */
+
+.person {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem 1.5rem;
+}
+.person .role {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+.person h3 { margin: 0.25rem 0; }
+.person p { margin: 0; font-size: 0.9375rem; color: var(--ink-soft); }
+
+/* ---- Forms ----------------------------------------------------------------- */
+
+.form-grid { display: grid; gap: 1rem; max-width: 38rem; }
+
+label { font-weight: 600; display: block; margin-bottom: 0.3rem; }
+
+input, textarea, select {
+  width: 100%;
+  font: 400 1rem var(--body);
+  color: var(--ink);
+  background: var(--white);
+  border: 2px solid #cfc9b4;
+  border-radius: var(--radius);
+  padding: 0.7rem 0.9rem;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--poolwater);
+  box-shadow: 0 0 0 3px rgba(23, 114, 127, 0.2);
+}
+
+/* ---- Footer ------------------------------------------------------------------ */
+
+.site-footer {
+  background: var(--pine);
+  color: rgba(255, 253, 247, 0.85);
+  padding-block: 2.5rem 2rem;
+  margin-top: 3rem;
+  font-size: 0.9375rem;
+}
+
+.site-footer .container {
+  display: grid;
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
+  .site-footer .container { grid-template-columns: 2fr 1fr 1fr; }
+}
+
+.site-footer h3 { color: var(--white); font-size: 1.0625rem; }
+.site-footer a { color: #a8d5c2; }
+.site-footer a:hover { color: var(--white); }
+.site-footer ul { list-style: none; margin: 0; padding: 0; }
+.site-footer li { padding-block: 0.2rem; }
+.footer-note {
+  border-top: 1px solid rgba(255, 253, 247, 0.2);
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  font-size: 0.875rem;
+  color: rgba(255, 253, 247, 0.6);
+}
+
+/* ---- Misc ---------------------------------------------------------------------- */
+
+.pill-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.pill-list li {
+  background: var(--white);
+  border: 1.5px solid var(--birch-dark);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.stat-row { display: flex; flex-wrap: wrap; gap: 2rem; margin-block: 1.5rem; }
+.stat-row .stat strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.75rem;
+  color: var(--pine);
+}
+.stat-row .stat span { font-size: 0.875rem; color: var(--ink-soft); }
+
+img { max-width: 100%; height: auto; border-radius: var(--radius); }
+
+.gallery { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
