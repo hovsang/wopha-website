@@ -38,7 +38,12 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
 ## 3. Calendar & community (community.html)
 
 - [ ] Create a shared **WOPHA Google Calendar**; paste its embed iframe into
-      `community.html` (`#events`).
+      `community.html` (`#events`). Seed it with the known annual rhythm from
+      the email archive: annual meeting (late Jan, Lilburn Police HQ), pine
+      straw sale (spring + Dec), graduation-banner deadline (late Mar),
+      clean-up day (May), opening-day ice cream social (mid-May), Summer Fun
+      Series (trivia/karaoke), pool closing (mid-Sep), Harvest for the Hungry
+      (Nov).
 - [ ] Create the **GroupMe** circles (Parents of Littles, Playground Meetups,
       Swim Team Parents) and paste invite links.
 - [ ] Create the **opt-in family directory** Google Form + private Sheet;
@@ -50,8 +55,18 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
 - [x] Covenants and bylaws PDFs migrated (`documents/`).
 - [ ] Collect meeting minutes into `documents/minutes/` as dated PDFs
       (filenames are already referenced in `board.html`). Some minutes exist
-      only as text on the old site's Meeting Minutes page; the 2/22/26 minutes
-      are a PDF inside a blog post.
+      only as text on the old site's Meeting Minutes page. Shortcut: the
+      2026 (2.22.26) and 2025 (2.23.25) annual-meeting minutes PDFs are
+      attached to board emails from wophalilburn@gmail.com (sent Mar 2026 and
+      Mar 2025) — save those attachments straight into `documents/minutes/`.
+
+## 4b. Email hygiene (no site change needed)
+
+- [ ] Send announcement emails with recipients in **BCC** or via a free
+      newsletter tool — the May 2026 wristband email exposed 200+ resident
+      addresses in open CC.
+- [ ] Consider a Google Group or newsletter service for wophalilburn@gmail.com
+      so "join the list" is self-service from the Contact page.
 
 ## 5. Pool hours (pool.html)
 
