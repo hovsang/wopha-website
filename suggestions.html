@@ -56,13 +56,9 @@
         <h2 id="form-heading">Share your suggestion</h2>
         <p class="lede">Name and email are optional — include them only if you'd like a reply.</p>
 
-        <!-- PLACEHOLDER: Web3Forms access key. Create a free access key at https://web3forms.com routed to the board's email address, then replace the value below. -->
-        <div class="setup-note">
-          <p>Create a free Web3Forms access key at web3forms.com, routed to the board's email address, and replace the placeholder value <code>YOUR_WEB3FORMS_ACCESS_KEY</code> in this form's hidden input.</p>
-        </div>
-
-        <form class="form-grid" action="https://api.web3forms.com/submit" method="POST">
-          <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+        <form class="form-grid" action="/api/forms/submit" method="POST">
+          <input type="hidden" name="form_type" value="suggestion">
+          <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
           <div>
             <label for="name">Your name (optional)</label>
             <input type="text" id="name" name="name" autocomplete="name">

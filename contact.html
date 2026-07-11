@@ -55,12 +55,9 @@
         <span class="eyebrow">Stay in the loop</span>
         <h2 id="update-heading">Update your contact information</h2>
         <p class="lede">We use this to send your annual dues invoice and infrequent important announcements — nothing else.</p>
-        <!-- PLACEHOLDER: Board creates a free Web3Forms access key routed to wophatreasurer@gmail.com and replaces the access_key value below. -->
-        <div class="setup-note">
-          <p>Create a free access key at web3forms.com using <strong>wophatreasurer@gmail.com</strong> as the destination email, then replace <code>YOUR_WEB3FORMS_ACCESS_KEY</code> in this form's hidden input with the real key. Submissions will arrive in the treasurer's inbox.</p>
-        </div>
-        <form class="form-grid" action="https://api.web3forms.com/submit" method="POST">
-          <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+        <form class="form-grid" action="/api/forms/submit" method="POST">
+          <input type="hidden" name="form_type" value="contact_update">
+          <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
           <div>
             <label for="address">Home address</label>
             <input type="text" id="address" name="address" required autocomplete="street-address">
@@ -125,13 +122,9 @@
         <span class="eyebrow">See something broken?</span>
         <h2 id="report-heading">Report a neighborhood issue</h2>
         <p class="lede">Burned-out court light, gate that won't latch, pool problem, damaged picnic table — tell us and the right volunteer gets on it.</p>
-        <!-- PLACEHOLDER: Web3Forms access key for the issue-report form. -->
-        <div class="setup-note">
-          <p>Create a free Web3Forms access key routed to the board's email and replace <code>YOUR_WEB3FORMS_ACCESS_KEY</code> in this form's hidden input.</p>
-        </div>
-        <form class="form-grid" action="https://api.web3forms.com/submit" method="POST">
-          <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
-          <input type="hidden" name="subject" value="WOPHA issue report">
+        <form class="form-grid" action="/api/forms/submit" method="POST">
+          <input type="hidden" name="form_type" value="issue_report">
+          <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
           <div>
             <label for="issue-where">Where is the problem?</label>
             <select id="issue-where" name="location" required>
