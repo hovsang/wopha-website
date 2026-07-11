@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Dashboard — WOPHA board portal</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/portal.css">
+</head>
+<body>
+  <main class="section">
+    <div class="container">
+      <span class="eyebrow">WOPHA board portal</span>
+      <h1>Dashboard</h1>
+      <nav class="portal-nav">
+        <a href="index.html">Dashboard</a>
+        <a href="announcements.html">Announcements</a>
+        <a href="inbox.html">Inbox</a>
+        <a href="ledger.html">Ledger</a>
+        <a href="content.html">Site content</a>
+        <a href="../index.html">← Public site</a>
+      </nav>
+      <div id="error" class="portal-error"></div>
+      <div class="stat-row">
+        <div class="stat"><strong id="stat-paid">–</strong> <span id="stat-paid-label">households paid</span></div>
+        <div class="stat"><strong id="stat-new">–</strong> <span>new inbox items</span></div>
+        <div class="stat"><strong id="stat-households">–</strong> <span>households on file</span></div>
+      </div>
+      <h2>Latest announcement</h2>
+      <p id="latest">–</p>
+      <p><a class="btn" href="/api/admin/export">Download full data export (JSON)</a></p>
+    </div>
+  </main>
+  <script src="portal.js"></script>
+  <script>
+    api("/api/admin/summary").then(function (s) {
+      document.getElementById("stat-paid").textContent = s.paid + " / " + s.households;
+      document.getElementById("stat-paid-label").textContent = "households paid for " + s.year;
+      document.getElementById("stat-new").textContent = String(s.newSubmissions);
+      document.getElementById("stat-households").textContent = String(s.households);
+      document.getElementById("latest").textContent = s.latestAnnouncement
+        ? s.latestAnnouncement.title + " (" + s.latestAnnouncement.created_at.slice(0, 10) + ")"
+        : "No announcements yet.";
+    }).catch(showError);
+  </script>
+</body>
+</html>
