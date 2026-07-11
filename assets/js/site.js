@@ -51,3 +51,36 @@ if ("serviceWorker" in navigator) {
     btn.hidden = true;
   });
 })();
+
+// Announcements: fetched from the portal API. If the API is unreachable
+// (offline, or portal not yet deployed) the sections simply stay hidden.
+(function () {
+  var list = document.getElementById("news-list");
+  var archive = document.getElementById("news-archive-list");
+  var target = list || archive;
+  if (!target) return;
+  fetch("/api/announcements").then(function (r) {
+    if (!r.ok) throw new Error("bad status");
+    return r.json();
+  }).then(function (data) {
+    var items = (data && data.announcements) || [];
+    if (list) items = items.slice(0, 3);
+    if (!items.length) return;
+    items.forEach(function (a) {
+      var card = document.createElement("div");
+      card.className = "card";
+      var h = document.createElement("h3");
+      h.textContent = a.title;
+      var p = document.createElement("p");
+      p.textContent = a.body;
+      var d = document.createElement("p");
+      d.textContent = a.created_at.slice(0, 10);
+      card.appendChild(h);
+      card.appendChild(p);
+      card.appendChild(d);
+      target.appendChild(card);
+    });
+    var section = target.closest("section");
+    if (section) section.hidden = false;
+  }).catch(function () { /* leave section hidden */ });
+})();

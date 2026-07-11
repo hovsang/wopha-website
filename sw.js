@@ -1,7 +1,7 @@
 // Woods of Parkview — service worker.
 // Network-first so updates always show when online; cache fallback offline.
 // Bump the cache name when shipping big changes.
-var CACHE = "wopha-v1";
+var CACHE = "wopha-v2";
 
 var CORE = [
   "./",
@@ -38,6 +38,10 @@ self.addEventListener("activate", function (e) {
 
 self.addEventListener("fetch", function (e) {
   if (e.request.method !== "GET") return;
+  // API responses must always be live (or fail cleanly); portal pages are
+  // login-gated and must never land in a shared cache.
+  var path = new URL(e.request.url).pathname;
+  if (path.indexOf("/api/") === 0 || path.indexOf("/portal/") === 0) return;
   e.respondWith(
     fetch(e.request).then(function (r) {
       if (r.ok && e.request.url.indexOf(self.location.origin) === 0) {
