@@ -28,13 +28,11 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
 
 ## 2. Forms (suggestions.html, contact.html)
 
-- [ ] Create free **Web3Forms** access keys (web3forms.com) routed to
-      `wophatreasurer@gmail.com` (or a board alias) and replace
-      `YOUR_WEB3FORMS_ACCESS_KEY` in all four forms: contact-info update
-      (`contact.html#update`), suggestion box (`suggestions.html`), issue
-      report (`contact.html#report`), and exterior change request
-      (`board.html#arc`). Separate keys per form keeps the inboxes
-      distinguishable; each form already sets its own email subject line.
+- [ ] Create ONE free **Web3Forms** access key (web3forms.com) routed to the
+      board's email, and set it as the `WEB3FORMS_KEY` secret on the Pages
+      project (Settings → Environment variables). The four site forms post to
+      the portal API, which stores each submission in the board inbox and
+      forwards a copy by email. No keys live in the HTML.
 - [ ] Create the **anonymous suggestion** Google Form (no required identity
       fields) and paste its link into `suggestions.html`.
 
@@ -79,8 +77,9 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
 
 ## 5. Pool hours (pool.html)
 
-- [ ] Copy the 2026 hours from the board's Google Sheet into the hours table
-      so they live on the page. Update in place when they change mid-season.
+- [ ] Enter the current hours in the board portal (Site content → Pool hours);
+      they appear on pool.html automatically. The rows baked into the HTML are
+      the offline fallback — keep them roughly current once a season.
 
 ## 6. Hosting & domain
 
@@ -97,13 +96,34 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
 - [ ] After launch, cancel the Weebly subscription (export/download anything
       still needed first — old photos, remaining minutes text).
 
-## Later, if dues bookkeeping gets painful
+## 7. Board portal (Cloudflare) — replaces the "PayHOA later" plan
 
-PayHOA (~$99–199/mo at this community size, $2.45 ACH) provides owner ledgers,
-auto-invoicing, and reminders, and coexists with this site — "Pay dues" would
-just link to its portal instead of Stripe.
+The portal (announcements, inbox, dues ledger, content editing) ships with
+the site. Launch-time setup, in order:
+
+- [ ] Create the **Cloudflare Pages** project from the GitHub repo
+      (production branch: `deploy`, no build command, output `/`).
+- [ ] `npx wrangler d1 create wopha` → paste the database id into BOTH
+      `wrangler.toml` and `workers/backup/wrangler.toml`.
+- [ ] Apply the schema remotely:
+      `npx wrangler d1 execute wopha --remote --file=schema.sql`
+- [ ] Bind the database to the Pages project (Settings → Functions →
+      D1 bindings → `DB` → `wopha`) if the toml binding isn't picked up.
+- [ ] **Cloudflare Access (required before any real data):** Zero Trust →
+      Access → Applications → add a self-hosted app covering
+      `wopha.com/portal/*` AND `wopha.com/api/admin/*`, policy = allow the
+      board members' email addresses (one-time PIN is fine). Board turnover
+      later = edit this email list.
+- [ ] Set the `WEB3FORMS_KEY` secret (section 2).
+- [ ] Create the R2 bucket: `npx wrangler r2 bucket create wopha-backups`,
+      then deploy the backup worker: `cd workers/backup && npx wrangler deploy`.
+- [ ] Import the real household list: portal → Ledger → Import (CSV with
+      address, owner_name, email, phone). Until Access is live, demo only
+      with the fake seed data.
+- [ ] Demo to the board on the free `*.pages.dev` URL (seed data) before the
+      wopha.com DNS cutover in section 6.
 
 ## Local preview
 
 Open `index.html` in a browser, or from this folder run:
-`python -m http.server 8080` → http://localhost:8080
+`python -m http.server 8201` → http://localhost:8201

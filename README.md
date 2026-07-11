@@ -13,4 +13,20 @@ Replaces the old Weebly site.
   needed" boxes on the pages.
 - Design decisions: `docs/superpowers/specs/2026-07-09-wopha-website-design.md`.
 
-Preview locally: open `index.html`, or `python -m http.server 8080`.
+Preview locally: open `index.html`, or `python -m http.server 8201`.
+
+## Local development
+
+The public site is plain HTML — open `index.html` or run any static server.
+The board portal (`/portal/`) and API need wrangler:
+
+```
+npm install
+npm run db:schema   # create local D1 tables
+npm run db:seed     # fake demo data (safe — no real residents)
+npm run dev         # http://127.0.0.1:8200
+npm test            # vitest for functions/api/_lib
+```
+
+Portal auth: production is gated by Cloudflare Access; local dev on
+127.0.0.1 is open by design (`functions/api/_lib/auth.js`).
