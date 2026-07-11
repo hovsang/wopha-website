@@ -1,0 +1,33 @@
+import { toCsv } from "../_lib/csv.js";
+
+export async function onRequestGet({ request, env }) {
+  const url = new URL(request.url);
+  const year = Number(url.searchParams.get("year")) || new Date().getFullYear();
+  const onlyUnpaid = url.searchParams.get("only") === "unpaid";
+  const { results } = await env.DB.prepare(
+    `SELECT h.address, h.owner_name, h.email, h.phone,
+            p.amount_cents, p.method, p.paid_on
+     FROM households h
+     LEFT JOIN payments p ON p.household_id = h.id AND p.year = ?
+     ORDER BY h.address`
+  ).bind(year).all();
+  const rows = results
+    .filter((r) => (onlyUnpaid ? r.paid_on == null : true))
+    .map((r) => [
+      r.address, r.owner_name, r.email, r.phone,
+      r.paid_on ? "paid" : "unpaid",
+      r.amount_cents != null ? (r.amount_cents / 100).toFixed(2) : "",
+      r.method || "", r.paid_on || "",
+    ]);
+  const csv = toCsv([
+    ["address", "owner_name", "email", "phone", "status", "amount", "method", "paid_on"],
+    ...rows,
+  ]);
+  const name = "wopha-ledger-" + year + (onlyUnpaid ? "-unpaid" : "") + ".csv";
+  return new Response(csv, {
+    headers: {
+      "Content-Type": "text/csv; charset=utf-8",
+      "Content-Disposition": 'attachment; filename="' + name + '"',
+    },
+  });
+}
