@@ -21,6 +21,7 @@
 - Git: work on `master` (local-only). NEVER push `master`. NEVER let `docs/board-proposal.md` or `docs/superpowers/` reach the `deploy` branch. Do not merge the form-action changes (Task 6) to `deploy` until Cloudflare Pages serves production — GitHub Pages cannot run functions, so repointed forms would 404 there.
 - Commit at the end of every task with the message given in the task.
 - All commands run from the repo root (`wopha-website/`) unless a task says otherwise. Windows: use `npx wrangler ...` (wrangler is a devDependency, not global).
+- This machine reserves TCP ports 8078-8177, 8278-8777, 8779-8978 (Hyper-V excluded ranges) — binding them makes workerd abort with `std::terminate`. Dev servers use the free 8178-8277 window: pages dev on 8200, python checks on 8201, backup-worker test on 8202.
 
 ## File Structure
 
@@ -82,7 +83,7 @@ Modified: `sw.js` (bypass /api/ + /portal/, cache bump), `assets/js/site.js` (an
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler pages dev . --port 8788",
+    "dev": "wrangler pages dev . --port 8200",
     "db:schema": "wrangler d1 execute wopha --local --file=schema.sql",
     "db:seed": "wrangler d1 execute wopha --local --file=seed.sql",
     "test": "vitest run"
@@ -207,7 +208,7 @@ Expected: both commands report executed statements, no errors. (Local D1 state l
 - [ ] **Step 7: Verify the dev server serves the existing site**
 
 Run: `npm run dev` (leave running in a second terminal from here on; restart it whenever a task adds a new function file)
-Then: `curl -s http://127.0.0.1:8788/ | head -5`
+Then: `curl -s http://127.0.0.1:8200/ | head -5`
 Expected: the existing `index.html` doctype/head — the static site works under wrangler.
 
 - [ ] **Step 8: Commit**
@@ -240,8 +241,8 @@ function req(url, headers) {
 
 describe("adminEmailFor", () => {
   it("allows local dev hosts without a header", () => {
-    expect(adminEmailFor(req("http://localhost:8788/api/admin/summary"))).toBe("dev@localhost");
-    expect(adminEmailFor(req("http://127.0.0.1:8788/api/admin/summary"))).toBe("dev@localhost");
+    expect(adminEmailFor(req("http://localhost:8200/api/admin/summary"))).toBe("dev@localhost");
+    expect(adminEmailFor(req("http://127.0.0.1:8200/api/admin/summary"))).toBe("dev@localhost");
   });
 
   it("returns the Access email on production hosts", () => {
@@ -587,19 +588,19 @@ export async function onRequestDelete({ env, params }) {
 
 - [ ] **Step 4: Verify with curl** (restart `npm run dev` first so the new routes load)
 
-Run: `curl -s http://127.0.0.1:8788/api/announcements`
+Run: `curl -s http://127.0.0.1:8200/api/announcements`
 Expected: JSON with the 3 seeded announcements; "Pine straw sale is on" (pinned) first.
 
-Run: `curl -s -X POST http://127.0.0.1:8788/api/admin/announcements -H "Content-Type: application/json" -d "{\"title\":\"Test\",\"body\":\"Body\",\"pinned_until\":null}"`
+Run: `curl -s -X POST http://127.0.0.1:8200/api/admin/announcements -H "Content-Type: application/json" -d "{\"title\":\"Test\",\"body\":\"Body\",\"pinned_until\":null}"`
 Expected: `{"id":4}` with status 201.
 
-Run: `curl -s -X PUT http://127.0.0.1:8788/api/admin/announcements/4 -H "Content-Type: application/json" -d "{\"title\":\"Test 2\",\"body\":\"Body\",\"pinned_until\":null}"`
+Run: `curl -s -X PUT http://127.0.0.1:8200/api/admin/announcements/4 -H "Content-Type: application/json" -d "{\"title\":\"Test 2\",\"body\":\"Body\",\"pinned_until\":null}"`
 Expected: `{"ok":true}`
 
-Run: `curl -s -X DELETE http://127.0.0.1:8788/api/admin/announcements/4`
+Run: `curl -s -X DELETE http://127.0.0.1:8200/api/admin/announcements/4`
 Expected: `{"ok":true}`; a second identical DELETE returns `{"error":"Not found"}`.
 
-Run: `curl -s -X POST http://127.0.0.1:8788/api/admin/announcements -H "Content-Type: application/json" -d "{\"title\":\"\",\"body\":\"x\"}"`
+Run: `curl -s -X POST http://127.0.0.1:8200/api/admin/announcements -H "Content-Type: application/json" -d "{\"title\":\"\",\"body\":\"x\"}"`
 Expected: `{"error":"Title is required (max 200 characters)"}` with status 400.
 
 - [ ] **Step 5: Commit**
@@ -701,9 +702,9 @@ In the `fetch` handler, immediately after `if (e.request.method !== "GET") retur
 
 - [ ] **Step 5: Verify in the browser**
 
-With `npm run dev` running, open `http://127.0.0.1:8788/` — the "Latest from the board" section appears with the 3 seeded announcements, pinned first. Open `http://127.0.0.1:8788/community.html` — archive section appears.
+With `npm run dev` running, open `http://127.0.0.1:8200/` — the "Latest from the board" section appears with the 3 seeded announcements, pinned first. Open `http://127.0.0.1:8200/community.html` — archive section appears.
 
-Degradation check: `python -m http.server 8080` from the repo root (static only, no functions), open `http://localhost:8080/` — the news section stays hidden and the console shows no uncaught errors. Stop the python server.
+Degradation check: `python -m http.server 8201` from the repo root (static only, no functions), open `http://localhost:8201/` — the news section stays hidden and the console shows no uncaught errors. Stop the python server.
 
 - [ ] **Step 6: Commit**
 
@@ -823,7 +824,7 @@ export async function onRequestPost({ request, env }) {
 
 - [ ] **Step 4: Verify end-to-end locally**
 
-With `npm run dev` restarted, open `http://127.0.0.1:8788/contact.html#report`, fill in the issue form, submit.
+With `npm run dev` restarted, open `http://127.0.0.1:8200/contact.html#report`, fill in the issue form, submit.
 Expected: browser lands on `/thanks.html`.
 
 Run: `npx wrangler d1 execute wopha --local --command "SELECT id, form_type, status FROM submissions ORDER BY id DESC LIMIT 1"`
@@ -831,7 +832,7 @@ Expected: the new row, `form_type = issue_report`, `status = new`.
 
 Repeat the submit once for each of the other three forms (contact update, suggestion, ARC) and confirm a row appears for each `form_type`.
 
-Bot check: `curl -s -o /dev/null -w "%{http_code}" -X POST http://127.0.0.1:8788/api/forms/submit -d "form_type=suggestion&message=spam&botcheck=on"`
+Bot check: `curl -s -o /dev/null -w "%{http_code}" -X POST http://127.0.0.1:8200/api/forms/submit -d "form_type=suggestion&message=spam&botcheck=on"`
 Expected: `400`.
 
 - [ ] **Step 5: Commit**
@@ -982,10 +983,10 @@ export async function onRequestGet({ env }) {
 
 - [ ] **Step 5: Verify**
 
-Run: `curl -s http://127.0.0.1:8788/api/admin/summary` (restart dev server first)
+Run: `curl -s http://127.0.0.1:8200/api/admin/summary` (restart dev server first)
 Expected: `{"year":2026,"households":5,"paid":2,"newSubmissions":...}` — newSubmissions ≥ 2 (seeds plus Task 6 test submits).
 
-Open `http://127.0.0.1:8788/portal/` in the browser: dashboard renders with those numbers, no error box.
+Open `http://127.0.0.1:8200/portal/` in the browser: dashboard renders with those numbers, no error box.
 
 - [ ] **Step 6: Commit**
 
@@ -1141,9 +1142,9 @@ git commit -m "Portal shell and dashboard with summary endpoint"
 
 - [ ] **Step 2: Verify in the browser**
 
-Open `http://127.0.0.1:8788/portal/announcements.html`:
+Open `http://127.0.0.1:8200/portal/announcements.html`:
 - Seeded announcements listed, newest first.
-- Publish a new one → appears in the table AND on `http://127.0.0.1:8788/` homepage strip.
+- Publish a new one → appears in the table AND on `http://127.0.0.1:8200/` homepage strip.
 - Edit it (change title) → table and homepage update.
 - Delete it → gone from both.
 - Submit with empty title → red error box shows the validation message, nothing saved.
@@ -1361,13 +1362,13 @@ export async function onRequestPatch({ request, env, params }) {
 
 - [ ] **Step 4: Verify**
 
-Run: `curl -s "http://127.0.0.1:8788/api/admin/submissions?status=new"` (restart dev server first)
+Run: `curl -s "http://127.0.0.1:8200/api/admin/submissions?status=new"` (restart dev server first)
 Expected: JSON including the seeded issue report and suggestion, `fields` as a nested object (not a string).
 
-Run: `curl -s -X PATCH http://127.0.0.1:8788/api/admin/submissions/1 -H "Content-Type: application/json" -d "{\"status\":\"done\",\"notes\":\"Fixed by Joel\"}"`
+Run: `curl -s -X PATCH http://127.0.0.1:8200/api/admin/submissions/1 -H "Content-Type: application/json" -d "{\"status\":\"done\",\"notes\":\"Fixed by Joel\"}"`
 Expected: `{"ok":true}`
 
-In the browser, open `http://127.0.0.1:8788/portal/inbox.html`:
+In the browser, open `http://127.0.0.1:8200/portal/inbox.html`:
 - Default "New" filter hides the item just marked done; "Everything" shows it with a green badge.
 - Changing a status via the dropdown persists (reload the page to confirm).
 - Notes save and survive reload.
@@ -1888,17 +1889,17 @@ export async function onRequestGet({ request, env }) {
 
 Restart the dev server, then:
 
-Run: `curl -s "http://127.0.0.1:8788/api/admin/households?year=2026"`
+Run: `curl -s "http://127.0.0.1:8200/api/admin/households?year=2026"`
 Expected: 5 seeded households sorted by address; summary `paidCount: 2`, `outstandingCents: 160500` (3 × 53500).
 
-In the browser, open `http://127.0.0.1:8788/portal/ledger.html`:
+In the browser, open `http://127.0.0.1:8200/portal/ledger.html`:
 - Summary line reads "2 of 5 households paid for 2026 — $1,035 collected, $1,605 outstanding."
 - "Mark paid" on an unpaid household flips it to a green badge and updates the summary.
 - Marking the same household again is impossible (button now "Undo"); "Undo" flips it back.
 - Import: paste `address,owner_name\n106 Planters Way,New Owner` → "Imported 1 households." and the row appears unpaid.
 - "Export unpaid" downloads a CSV whose rows are exactly the unpaid households.
 
-Run: `curl -s -o /dev/null -w "%{http_code}" -X POST http://127.0.0.1:8788/api/admin/payments -H "Content-Type: application/json" -d "{\"household_id\":1,\"year\":2026,\"amount_cents\":53500,\"method\":\"check\",\"paid_on\":\"2026-07-01\"}"`
+Run: `curl -s -o /dev/null -w "%{http_code}" -X POST http://127.0.0.1:8200/api/admin/payments -H "Content-Type: application/json" -d "{\"household_id\":1,\"year\":2026,\"amount_cents\":53500,\"method\":\"check\",\"paid_on\":\"2026-07-01\"}"`
 Expected: `409` (household 1 is already paid for 2026 from the seed).
 
 - [ ] **Step 7: Commit**
@@ -2101,13 +2102,13 @@ Also delete the `<!-- PLACEHOLDER: Board must copy the 2026 daily hours ... -->`
 
 - [ ] **Step 6: Verify**
 
-Restart the dev server, then open `http://127.0.0.1:8788/portal/content.html`:
+Restart the dev server, then open `http://127.0.0.1:8200/portal/content.html`:
 - Both textareas load the seeded rows as `label | value` lines.
-- Change Friday's pool hours to `Friday | 11 a.m. – 10 p.m.`, save → open `http://127.0.0.1:8788/pool.html` and confirm the table shows the new value.
-- Change a season-glance value, save → confirm on `http://127.0.0.1:8788/`.
+- Change Friday's pool hours to `Friday | 11 a.m. – 10 p.m.`, save → open `http://127.0.0.1:8200/pool.html` and confirm the table shows the new value.
+- Change a season-glance value, save → confirm on `http://127.0.0.1:8200/`.
 - Save an empty textarea → red error box ("Value must be a list of 1–50 rows"), public page unchanged.
 
-Degradation check: `python -m http.server 8080`, open `http://localhost:8080/pool.html` — the baked-in hours rows still show. Stop the server.
+Degradation check: `python -m http.server 8201`, open `http://localhost:8201/pool.html` — the baked-in hours rows still show. Stop the server.
 
 - [ ] **Step 7: Commit**
 
@@ -2197,7 +2198,7 @@ export default {
 
 - [ ] **Step 4: Verify**
 
-Export: with the Pages dev server running, `curl -s http://127.0.0.1:8788/api/admin/export | head -3`
+Export: with the Pages dev server running, `curl -s http://127.0.0.1:8200/api/admin/export | head -3`
 Expected: JSON starting with `{"announcements": [...` — and the dashboard's "Download full data export" link now works in the browser.
 
 Backup worker (its own local sandbox — empty local D1/R2 is fine; we're verifying it runs):
@@ -2205,10 +2206,10 @@ Backup worker (its own local sandbox — empty local D1/R2 is fine; we're verify
 ```bash
 cd workers/backup
 npx wrangler d1 execute wopha --local --file=../../schema.sql
-npx wrangler dev --test-scheduled --port 8789
+npx wrangler dev --test-scheduled --port 8202
 ```
 
-In a second terminal: `curl -s "http://127.0.0.1:8789/__scheduled?cron=0+6+*+*+1"`
+In a second terminal: `curl -s "http://127.0.0.1:8202/__scheduled?cron=0+6+*+*+1"`
 Expected: `Ran scheduled event` and no error in the worker log. Stop the worker, `cd ../..`.
 
 - [ ] **Step 5: Commit**
@@ -2291,7 +2292,7 @@ The board portal (`/portal/`) and API need wrangler:
 npm install
 npm run db:schema   # create local D1 tables
 npm run db:seed     # fake demo data (safe — no real residents)
-npm run dev         # http://127.0.0.1:8788
+npm run dev         # http://127.0.0.1:8200
 npm test            # vitest for functions/api/_lib
 ```
 
