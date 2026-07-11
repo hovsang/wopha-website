@@ -20,6 +20,11 @@ describe("validateSubmission", () => {
     expect(validateSubmission("suggestion", {}, "").ok).toBe(false);
     expect(validateSubmission("suggestion", { message: "a".repeat(4001) }, "").ok).toBe(false);
   });
+  it("rejects oversized field names", () => {
+    const fields = {};
+    fields["k".repeat(101)] = "x";
+    expect(validateSubmission("suggestion", fields, "").ok).toBe(false);
+  });
 });
 
 describe("validateAnnouncement", () => {

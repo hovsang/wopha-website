@@ -8,6 +8,9 @@ async function api(path, options) {
   var res = await fetch(path, opts);
   var data = null;
   try { data = await res.json(); } catch (e) { /* non-JSON (e.g. Access login page) */ }
+  if (res.ok && data === null) {
+    throw new Error("Your sign-in session expired — reload the page and sign in again.");
+  }
   if (!res.ok) {
     throw new Error((data && data.error) || "Request failed (" + res.status + "). Are you signed in?");
   }

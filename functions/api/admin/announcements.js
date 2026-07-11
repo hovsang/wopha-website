@@ -4,7 +4,7 @@ import { validateAnnouncement } from "../_lib/validate.js";
 export async function onRequestGet({ env }) {
   const { results } = await env.DB.prepare(
     `SELECT id, title, body, pinned_until, created_at, updated_at
-     FROM announcements WHERE deleted = 0 ORDER BY created_at DESC`
+     FROM announcements WHERE deleted = 0 ORDER BY created_at DESC, id DESC`
   ).all();
   return json({ announcements: results });
 }

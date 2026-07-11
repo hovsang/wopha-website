@@ -120,6 +120,10 @@ the site. Launch-time setup, in order:
 - [ ] Import the real household list: portal → Ledger → Import (CSV with
       address, owner_name, email, phone). Until Access is live, demo only
       with the fake seed data.
+- [ ] Enable the Access policy on the project's `*.pages.dev` hostname too
+      (Zero Trust → Access → Applications → add the pages.dev domain to the
+      same app / same board-email policy) — without this, portal pages and
+      admin APIs 401 on pages.dev and the demo cannot work.
 - [ ] Demo to the board on the free `*.pages.dev` URL (seed data) before the
       wopha.com DNS cutover in section 6.
 

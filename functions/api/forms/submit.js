@@ -15,7 +15,7 @@ export async function onRequestPost({ request, env }) {
   const botcheck = String(form.get("botcheck") || "");
   const fields = {};
   for (const [key, value] of form.entries()) {
-    if (key === "form_type" || key === "botcheck") continue;
+    if (key === "form_type" || key === "botcheck" || key === "access_key" || key === "subject") continue;
     if (typeof value !== "string" || value === "") continue; // skip files and empty optionals
     fields[key] = value;
   }

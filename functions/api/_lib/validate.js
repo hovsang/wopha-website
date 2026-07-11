@@ -15,6 +15,7 @@ export function validateSubmission(formType, fields, botcheck) {
   if (keys.length === 0) return { ok: false, error: "Empty submission" };
   if (keys.length > MAX_FIELDS) return { ok: false, error: "Too many fields" };
   for (const k of keys) {
+    if (k.length > 100) return { ok: false, error: "Field name too long" };
     if (typeof fields[k] !== "string" || fields[k].length > MAX_FIELD_LENGTH) {
       return { ok: false, error: "Field too long: " + k };
     }
