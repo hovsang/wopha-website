@@ -84,3 +84,43 @@ if ("serviceWorker" in navigator) {
     if (section) section.hidden = false;
   }).catch(function () { /* leave section hidden */ });
 })();
+
+// Live site content: board-edited values (pool hours, season glance) fetched
+// from the portal API. Baked-in HTML is the fallback — offline or API-down
+// leaves the page exactly as authored.
+(function () {
+  var glance = document.getElementById("season-glance");
+  var hours = document.getElementById("pool-hours-body");
+  if (!glance && !hours) return;
+  fetch("/api/content").then(function (r) {
+    if (!r.ok) throw new Error("bad status");
+    return r.json();
+  }).then(function (content) {
+    function fill(el, rows, makeRow) {
+      if (!el || !Array.isArray(rows) || !rows.length) return;
+      el.textContent = "";
+      rows.forEach(function (row) { el.appendChild(makeRow(row[0], row[1])); });
+    }
+    fill(glance, content.season_glance, function (label, value) {
+      var li = document.createElement("li");
+      var s = document.createElement("span");
+      s.textContent = label;
+      var st = document.createElement("strong");
+      st.textContent = value;
+      li.appendChild(s);
+      li.appendChild(document.createTextNode(" "));
+      li.appendChild(st);
+      return li;
+    });
+    fill(hours, content.pool_hours, function (label, value) {
+      var tr = document.createElement("tr");
+      var td1 = document.createElement("td");
+      td1.textContent = label;
+      var td2 = document.createElement("td");
+      td2.textContent = value;
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      return tr;
+    });
+  }).catch(function () { /* keep baked-in content */ });
+})();
