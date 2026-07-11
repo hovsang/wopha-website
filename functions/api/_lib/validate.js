@@ -8,6 +8,7 @@ const MAX_FIELDS = 20;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 export function validateSubmission(formType, fields, botcheck) {
+  if (!fields || typeof fields !== "object" || Array.isArray(fields)) return { ok: false, error: "Bad submission" };
   if (botcheck) return { ok: false, error: "Rejected" };
   if (!FORM_TYPES.includes(formType)) return { ok: false, error: "Unknown form type" };
   const keys = Object.keys(fields);
@@ -22,6 +23,7 @@ export function validateSubmission(formType, fields, botcheck) {
 }
 
 export function validateAnnouncement(input) {
+  if (!input || typeof input !== "object") return { ok: false, error: "Bad input" };
   const title = String(input.title || "").trim();
   const body = String(input.body || "").trim();
   const pinnedUntil = input.pinned_until || null;
@@ -34,6 +36,7 @@ export function validateAnnouncement(input) {
 }
 
 export function validatePayment(input) {
+  if (!input || typeof input !== "object") return { ok: false, error: "Bad input" };
   const householdId = Number(input.household_id);
   const year = Number(input.year);
   const amountCents = Number(input.amount_cents);

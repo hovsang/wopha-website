@@ -68,3 +68,17 @@ describe("validateContent", () => {
     expect(validateContent("pool_hours", [[1, 2]]).ok).toBe(false);
   });
 });
+
+describe("malformed top-level input", () => {
+  it("rejects null/undefined/array fields in validateSubmission", () => {
+    expect(validateSubmission("suggestion", null, "").ok).toBe(false);
+    expect(validateSubmission("suggestion", undefined, "").ok).toBe(false);
+    expect(validateSubmission("suggestion", ["x"], "").ok).toBe(false);
+  });
+  it("rejects null input in validateAnnouncement and validatePayment", () => {
+    expect(validateAnnouncement(null).ok).toBe(false);
+    expect(validatePayment(null).ok).toBe(false);
+    expect(validateAnnouncement(undefined).ok).toBe(false);
+    expect(validatePayment(undefined).ok).toBe(false);
+  });
+});
