@@ -1,0 +1,17 @@
+name = "wopha-backup"
+main = "index.js"
+compatibility_date = "2026-07-01"
+
+# Mondays 06:00 UTC (≈ 1–2 a.m. Eastern)
+[triggers]
+crons = ["0 6 * * 1"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "wopha"
+# PLACEHOLDER: same id as the root wrangler.toml, set at launch (Task 14)
+database_id = "00000000-0000-0000-0000-000000000000"
+
+[[r2_buckets]]
+binding = "BACKUPS"
+bucket_name = "wopha-backups"
