@@ -6,9 +6,11 @@
     "dev": "wrangler pages dev . --port 8200",
     "db:schema": "wrangler d1 execute wopha --local --file=schema.sql",
     "db:seed": "wrangler d1 execute wopha --local --file=seed.sql",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint": "eslint ."
   },
   "devDependencies": {
+    "eslint": "^9.39.5",
     "vitest": "^3.2.0",
     "wrangler": "^4.24.0"
   }
