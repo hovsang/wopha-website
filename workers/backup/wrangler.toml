@@ -9,8 +9,7 @@ crons = ["0 6 * * 1"]
 [[d1_databases]]
 binding = "DB"
 database_name = "wopha"
-# PLACEHOLDER: same id as the root wrangler.toml, set at launch (Task 14)
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "0856504b-dae6-4887-98ac-01d46bfce135"
 
 [[r2_buckets]]
 binding = "BACKUPS"

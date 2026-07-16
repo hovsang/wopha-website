@@ -21,4 +21,11 @@ describe("adminEmailFor", () => {
   it("returns null on production hosts without the Access header", () => {
     expect(adminEmailFor(req("https://wopha.com/api/admin/summary"))).toBe(null);
   });
+
+  it("opens admin to everyone only when DEMO_OPEN_ADMIN is exactly '1'", () => {
+    const r = req("https://wopha-website.pages.dev/api/admin/summary");
+    expect(adminEmailFor(r, { DEMO_OPEN_ADMIN: "1" })).toBe("demo@wopha.com");
+    expect(adminEmailFor(r, { DEMO_OPEN_ADMIN: "true" })).toBe(null);
+    expect(adminEmailFor(r, {})).toBe(null);
+  });
 });

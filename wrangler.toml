@@ -5,6 +5,4 @@ pages_build_output_dir = "."
 [[d1_databases]]
 binding = "DB"
 database_name = "wopha"
-# PLACEHOLDER: replace with the real id after `npx wrangler d1 create wopha`
-# at launch (Task 14). Local dev ignores this value.
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "0856504b-dae6-4887-98ac-01d46bfce135"
