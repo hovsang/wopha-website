@@ -13,7 +13,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@11ty/eleventy": "^3.1.0",
+    "@11ty/eleventy": "^3.1.6",
     "eslint": "^9.39.5",
     "vitest": "^3.2.0",
     "wrangler": "^4.24.0"
