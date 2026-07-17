@@ -23,6 +23,7 @@ describe("GET /api/admin/settings", () => {
       booking_window_hours: "48",
       booking_daily_limit: "1",
       booking_weekly_limit: "3",
+      plan: "",
     });
   });
   it("overlays stored rows and drops keys that are no longer allowlisted", async () => {
@@ -39,6 +40,7 @@ describe("GET /api/admin/settings", () => {
       booking_window_hours: "48",
       booking_daily_limit: "1",
       booking_weekly_limit: "3",
+      plan: "",
     });
   });
 });

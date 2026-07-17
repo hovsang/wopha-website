@@ -13,6 +13,7 @@ export const DEFAULTS = {
   booking_window_hours: String(RULE_DEFAULTS.booking_window_hours),
   booking_daily_limit: String(RULE_DEFAULTS.booking_daily_limit),
   booking_weekly_limit: String(RULE_DEFAULTS.booking_weekly_limit),
+  plan: "",
 };
 
 export async function onRequestGet({ env }) {

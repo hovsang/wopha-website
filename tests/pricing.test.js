@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import pricing from "../src/_data/pricing.json";
+import { PLAN_KEYS } from "../functions/api/_lib/validate.js";
 
 // Mirrors the portal's dollars() formatting (portal-shell.js) and the Eleventy
 // dollars filter: whole dollars stay whole, cents show when present, negatives
@@ -81,5 +82,11 @@ describe("pricing.json shape", () => {
     // loosened non-empty-string check: malformed tags still fail.
     expect(pricing.payhoa_anchor_source).toMatch(/^[FVMT]\d$/);
     expect(pricing.sponsor_target_source).toMatch(/^[FVMT]\d$/);
+  });
+});
+
+describe("plan settings key stays in lockstep with the tier data", () => {
+  it("PLAN_KEYS equals the pricing.json tier ids", () => {
+    expect(PLAN_KEYS).toEqual(pricing.tiers.map((t) => t.id));
   });
 });

@@ -92,7 +92,9 @@ export function validateContent(key, value) {
 export const SETTING_KEYS = [
   "dues_cents", "dues_due_date", "quickbooks_url",
   "booking_window_hours", "booking_daily_limit", "booking_weekly_limit",
+  "plan",
 ];
+export const PLAN_KEYS = ["essentials", "amenities", "complete"];
 
 export function validateSetting(key, value) {
   if (!SETTING_KEYS.includes(key)) return { ok: false, error: "Unknown setting key" };
@@ -116,6 +118,13 @@ export function validateSetting(key, value) {
       return { ok: false, error: key + " must be a whole number from 1 to " + max };
     }
     return { ok: true, value: String(n) };
+  }
+  if (key === "plan") {
+    if (s === "") return { ok: true, value: "" };
+    if (!PLAN_KEYS.includes(s)) {
+      return { ok: false, error: "plan must be one of: " + PLAN_KEYS.join(", ") + " (or empty to clear)" };
+    }
+    return { ok: true, value: s };
   }
   // quickbooks_url
   if (s === "") return { ok: true, value: "" };

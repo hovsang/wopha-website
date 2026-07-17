@@ -6,6 +6,7 @@ import {
   validateContent,
   validateSetting,
   validateHouseholdUpdate,
+  PLAN_KEYS,
 } from "../functions/api/_lib/validate.js";
 
 describe("validateSubmission", () => {
@@ -160,6 +161,21 @@ describe("validateSetting", () => {
     expect(validateSetting("booking_daily_limit", "2")).toEqual({ ok: true, value: "2" });
     expect(validateSetting("booking_weekly_limit", "51").ok).toBe(false);
     expect(validateSetting("booking_daily_limit", "1.5").ok).toBe(false);
+  });
+  it("accepts plan ids from the allowlist and empty to clear", () => {
+    expect(validateSetting("plan", "essentials")).toEqual({ ok: true, value: "essentials" });
+    expect(validateSetting("plan", "amenities")).toEqual({ ok: true, value: "amenities" });
+    expect(validateSetting("plan", "complete")).toEqual({ ok: true, value: "complete" });
+    expect(validateSetting("plan", "")).toEqual({ ok: true, value: "" });
+    expect(validateSetting("plan", "  complete  ")).toEqual({ ok: true, value: "complete" });
+  });
+  it("rejects plan values outside the allowlist", () => {
+    expect(validateSetting("plan", "gold").ok).toBe(false);
+    expect(validateSetting("plan", "Essentials").ok).toBe(false);
+    expect(validateSetting("plan", "essentials,complete").ok).toBe(false);
+  });
+  it("exports the PLAN_KEYS allowlist", () => {
+    expect(PLAN_KEYS).toEqual(["essentials", "amenities", "complete"]);
   });
 });
 
