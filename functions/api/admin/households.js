@@ -1,9 +1,10 @@
 import { json } from "../_lib/respond.js";
-import { parseHouseholdsCsv, ledgerSummary, DUES_CENTS } from "../_lib/ledger.js";
+import { parseHouseholdsCsv, ledgerSummary, duesCentsFor } from "../_lib/ledger.js";
 
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
   const year = Number(url.searchParams.get("year")) || new Date().getFullYear();
+  const duesCents = await duesCentsFor(env);
   const { results } = await env.DB.prepare(
     `SELECT h.id, h.address, h.owner_name, h.email, h.phone,
             p.id AS payment_id, p.amount_cents, p.method, p.paid_on
@@ -13,9 +14,9 @@ export async function onRequestGet({ request, env }) {
   ).bind(year).all();
   const summary = ledgerSummary(
     results.map((r) => ({ paid: r.payment_id != null, amount_cents: r.amount_cents || 0 })),
-    DUES_CENTS
+    duesCents
   );
-  return json({ year, dues_cents: DUES_CENTS, summary, households: results });
+  return json({ year, dues_cents: duesCents, summary, households: results });
 }
 
 export async function onRequestPost({ request, env }) {

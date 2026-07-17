@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { parseHouseholdsCsv, ledgerSummary, DUES_CENTS } from "../functions/api/_lib/ledger.js";
+import { parseHouseholdsCsv, ledgerSummary, DUES_CENTS, settingValue, duesCentsFor } from "../functions/api/_lib/ledger.js";
+import { fakeDb } from "./helpers/fake-db.js";
 
 describe("parseHouseholdsCsv", () => {
   it("maps rows using the header, tolerating column order and case", () => {
@@ -40,5 +41,26 @@ describe("ledgerSummary", () => {
     expect(ledgerSummary([], DUES_CENTS)).toEqual({
       total: 0, paidCount: 0, unpaidCount: 0, collectedCents: 0, outstandingCents: 0,
     });
+  });
+});
+
+describe("settingValue", () => {
+  it("returns the stored value as a string", async () => {
+    const db = fakeDb([{ match: "FROM settings", first: { value: "60000" } }]);
+    expect(await settingValue({ DB: db }, "dues_cents")).toBe("60000");
+    expect(db.calls[0].args).toEqual(["dues_cents"]);
+  });
+  it("returns '' when the key is missing or the table does not exist yet", async () => {
+    expect(await settingValue({ DB: fakeDb([{ match: "FROM settings", first: null }]) }, "dues_cents")).toBe("");
+    expect(await settingValue({ DB: fakeDb([{ match: "FROM settings", error: "no such table: settings" }]) }, "dues_cents")).toBe("");
+  });
+});
+
+describe("duesCentsFor", () => {
+  it("prefers the settings value and falls back to DUES_CENTS on missing or bad data", async () => {
+    expect(await duesCentsFor({ DB: fakeDb([{ match: "FROM settings", first: { value: "60000" } }]) })).toBe(60000);
+    expect(await duesCentsFor({ DB: fakeDb([{ match: "FROM settings", first: null }]) })).toBe(DUES_CENTS);
+    expect(await duesCentsFor({ DB: fakeDb([{ match: "FROM settings", first: { value: "garbage" } }]) })).toBe(DUES_CENTS);
+    expect(await duesCentsFor({ DB: fakeDb([{ match: "FROM settings", error: "no such table: settings" }]) })).toBe(DUES_CENTS);
   });
 });

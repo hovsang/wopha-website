@@ -41,3 +41,23 @@ export function ledgerSummary(rows, duesCents) {
     outstandingCents: (rows.length - paid.length) * duesCents,
   };
 }
+
+// Read one operator setting (see admin/settings.js) as a string. Returns ""
+// when the key is unset — or when the settings table has not been deployed
+// yet, so deploy order can never break the ledger.
+export async function settingValue(env, key) {
+  try {
+    const row = await env.DB.prepare("SELECT value FROM settings WHERE key = ?").bind(key).first();
+    return row ? String(row.value) : "";
+  } catch (_) {
+    return "";
+  }
+}
+
+// Settings-driven dues figure with the code constant as the safety net.
+export async function duesCentsFor(env) {
+  const raw = await settingValue(env, "dues_cents");
+  const n = Number(raw);
+  if (/^\d+$/.test(raw) && n > 0 && n <= 1000000) return n;
+  return DUES_CENTS;
+}
