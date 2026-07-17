@@ -61,4 +61,22 @@ describe("pricing.json shape", () => {
       }
     }
   });
+  it("enforces the $0-floor: only F-tagged (verified) items may sit in verified_cancellations", () => {
+    // The plan's honesty rule: V-tagged (unverified) items like RMC [V1], SwimTopia
+    // [V2], and Weebly [V3] belong only in pending_cancellations. This makes the
+    // tripwire real, not true-only-by-construction: it fails the moment a V-tagged
+    // item lands in the verified array, not just when the literal word "swimtopia"
+    // appears there.
+    for (const t of pricing.tiers) {
+      for (const c of t.verified_cancellations) {
+        expect(c.source, `${t.id}: "${c.label}" is in verified_cancellations`).toMatch(/^F\d$/);
+      }
+    }
+  });
+  it("carries a source tag on both top-level figures (payhoa anchor, sponsor target)", () => {
+    // Global Constraints: "each figure carries its [F#]/[V#] source tag." These two
+    // top-level figures aren't tier line items, so they need their own tag fields.
+    expect(pricing.payhoa_anchor_source).toMatch(/^[FV]\d$/);
+    expect(pricing.sponsor_target_source).toMatch(/^[FV]\d$/);
+  });
 });

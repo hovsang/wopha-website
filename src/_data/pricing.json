@@ -2,8 +2,11 @@
   "draft": true,
   "note": "DRAFT prices; the user finalizes gross_monthly_cents here before the proposal is presented. Single source for docs/board-proposal-addendum-2.md, docs/pricing-artifact.html, and src/portal/billing.html. tests/pricing.test.js enforces consistency; edit here first, then let failing tests point at stale consumers. stripe_link per tier is the webmaster's OWN business Stripe recurring Payment Link (monthly), entirely separate from the HOA dues Stripe; empty until the user supplies real links.",
   "payhoa_anchor_monthly_cents": 19900,
+  "payhoa_anchor_source": "F7",
+  "payhoa_anchor_note": "F7: PayHOA-class portals publicly price around $199/mo at WOPHA's community size, already cited as the market anchor in the existing board proposal (docs/board-proposal.md) and spec section 3. This is an external market citation, not one of the F1-F6 facts extracted from the annual-meeting minutes in spec section 2, so it carries its own tag rather than borrowing an unrelated one.",
   "sponsor_target_monthly_cents": 8333,
-  "sponsor_target_note": "4 sponsors x $250/yr = $1,000/yr, about $83/mo. A target, never counted as verified.",
+  "sponsor_target_source": "F8",
+  "sponsor_target_note": "F8: 4 sponsors x $250/yr = $1,000/yr, about $83/mo, per spec section 6.2. A target the spec author set, not one of the F1-F6 minutes-extracted facts and not counted as verified income; it stands apart from the F2 outside-member $250 initiation fee it happens to echo in amount.",
   "tiers": [
     {
       "id": "essentials",
