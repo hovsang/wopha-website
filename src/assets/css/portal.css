@@ -615,13 +615,3 @@ a.kpi:hover { border-color: var(--fern); }
   white-space: nowrap;
   border: 0;
 }
-
-/* ==========================================================================
-   LEGACY (pre-redesign page bodies) — DELETE THIS WHOLE BLOCK IN TASK 8.
-   Keeps not-yet-rewritten pages usable while the shell ships first.
-   ========================================================================== */
-.portal-nav { display: flex; gap: 1rem 1.5rem; flex-wrap: wrap; margin: 1rem 0 2rem; }
-.portal-nav a { font-weight: 600; }
-.portal-error:empty { display: none; }
-.portal-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: end; margin: 1rem 0; }
-.portal-actions > div { display: flex; flex-direction: column; gap: 0.25rem; }

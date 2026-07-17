@@ -3,7 +3,7 @@ layout: portal-base.njk
 title: "Dues & households"
 pageKey: ledger
 ---
-  <main class="section">
+  <main class="section" id="portal-main" tabindex="-1">
     <div class="container">
       <div class="portal-page-head">
         <h1>Dues &amp; households</h1>
@@ -273,7 +273,11 @@ pageKey: ledger
           renderLedger();
           renderRoster();
           updateImportPreview();
-        }).catch(showError);
+        }).catch(function (err) {
+          rowsEl.textContent = ""; // don't strand the loading skeleton behind the error banner
+          rosterEl.textContent = "";
+          showError(err);
+        });
       }
 
       function renderSummary() {
@@ -651,9 +655,17 @@ pageKey: ledger
             h.owner_name = owner.value.trim();
             h.email = email.value.trim();
             h.phone = phone.value.trim();
-            var fresh = buildRosterRow(h);
-            tr.replaceWith(fresh);
-            fresh.querySelector("button").focus();
+            // `tr` may be stale if some other render (an import, a year change) already
+            // replaced it in the DOM. Same guard class as the ledger tab's mark-paid/undo
+            // handlers above: only splice in place when the row is still connected,
+            // otherwise a full renderRoster() picks up the already-mutated `h`.
+            if (tr.isConnected) {
+              var fresh = buildRosterRow(h);
+              tr.replaceWith(fresh);
+              fresh.querySelector("button").focus();
+            } else {
+              renderRoster();
+            }
             renderLedger(); // address/owner also show on the Ledger tab
             toast("Household saved.");
           }).catch(function (e2) {

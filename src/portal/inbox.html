@@ -3,7 +3,7 @@ layout: portal-base.njk
 title: "Inbox"
 pageKey: inbox
 ---
-  <main class="section">
+  <main class="section" id="portal-main" tabindex="-1">
     <div class="container">
       <div class="portal-page-head">
         <h1>Inbox</h1>
@@ -299,6 +299,9 @@ pageKey: inbox
         loaded = true;
         updateCounts();
         renderQueue();
-      }).catch(showError);
+      }).catch(function (err) {
+        queue.textContent = ""; // don't strand the loading skeleton behind the error banner
+        showError(err);
+      });
     })();
   </script>
