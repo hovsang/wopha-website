@@ -1,153 +1,764 @@
 ---
 layout: portal-base.njk
-title: "Ledger"
+title: "Dues & households"
 pageKey: ledger
 ---
   <main class="section">
     <div class="container">
-      <h1>Dues ledger</h1>
-      <div class="portal-actions">
-        <div>
-          <label for="year">Year</label>
-          <input type="number" id="year" min="2020" max="2100" style="width:6rem">
-        </div>
-        <div>
-          <label for="pay-method">Method</label>
-          <select id="pay-method">
-            <option value="check">Check</option>
-            <option value="zelle">Zelle</option>
-            <option value="stripe">Stripe</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-        <div>
-          <label for="pay-date">Paid on</label>
-          <input type="date" id="pay-date">
-        </div>
-        <div>
-          <label for="pay-amount">Amount ($)</label>
-          <input type="number" id="pay-amount" step="0.01" min="0" value="535.00" style="width:7rem">
-        </div>
-        <div>
-          <a class="btn" id="export-all" href="#">Export CSV</a>
-        </div>
-        <div>
-          <a class="btn" id="export-unpaid" href="#">Export unpaid</a>
-        </div>
+      <div class="portal-page-head">
+        <h1>Dues &amp; households</h1>
       </div>
-      <p id="summary" class="lede">–</p>
 
-      <table class="portal-table">
-        <thead><tr><th>Address</th><th>Owner</th><th>Email</th><th>Status</th><th>Method</th><th>Date</th><th></th></tr></thead>
-        <tbody id="ledger-rows"></tbody>
-      </table>
+      <div class="portal-tabs" role="tablist" aria-label="Dues and households sections" id="ledger-tabs">
+        <button type="button" role="tab" id="tab-ledger" data-hash="ledger" aria-controls="panel-ledger" aria-selected="true">Ledger</button>
+        <button type="button" role="tab" id="tab-households" data-hash="households" aria-controls="panel-households" aria-selected="false" tabindex="-1">Households</button>
+        <button type="button" role="tab" id="tab-exports" data-hash="exports" aria-controls="panel-exports" aria-selected="false" tabindex="-1">Exports</button>
+      </div>
 
-      <h2>Import households</h2>
-      <p>Paste a CSV export from the treasurer's spreadsheet. Required column: <code>address</code>; optional: <code>owner_name</code>, <code>email</code>, <code>phone</code>. Existing addresses are updated, new ones added; nothing is deleted.</p>
-      <form class="form-grid" id="import-form">
-        <div>
-          <textarea id="import-csv" rows="6" placeholder="address,owner_name,email,phone&#10;101 Planters Way,Alex Morgan,alex@example.com,"></textarea>
+      <section id="panel-ledger" role="tabpanel" aria-labelledby="tab-ledger">
+        <div class="portal-page-head">
+          <div class="stepper" role="group" aria-label="Ledger year">
+            <button type="button" id="year-prev" aria-label="Previous year">&#9664;</button>
+            <output id="year-out">–</output>
+            <button type="button" id="year-next" aria-label="Next year">&#9654;</button>
+          </div>
+          <a class="btn btn--outline" id="qb-link" href="#" target="_blank" rel="noopener" hidden>Open QuickBooks &#8599;</a>
         </div>
-        <div>
-          <button class="btn btn--primary" type="submit">Import</button>
-          <span id="import-result"></span>
+
+        <div class="summary-strip">
+          <div class="sum-item">
+            <strong id="sum-paid">–</strong>
+            <span>households paid</span>
+            <span class="progress" aria-hidden="true"><span id="sum-bar" style="width:0%"></span></span>
+          </div>
+          <div class="sum-item"><strong id="sum-collected">–</strong> <span>collected</span></div>
+          <div class="sum-item"><strong id="sum-outstanding">–</strong> <span>outstanding</span></div>
         </div>
-      </form>
+
+        <div class="portal-toolbar">
+          <label class="visually-hidden" for="search">Search by address or owner</label>
+          <input type="search" id="search" placeholder="Search address or owner…" autocomplete="off">
+          <fieldset class="segmented">
+            <legend>Filter by payment status</legend>
+            <label><input type="radio" name="paidfilter" value="paid"><span>Paid</span></label>
+            <label><input type="radio" name="paidfilter" value="unpaid"><span>Unpaid</span></label>
+            <label><input type="radio" name="paidfilter" value="" checked><span>All</span></label>
+          </fieldset>
+        </div>
+
+        <div class="table-card">
+          <table class="portal-table">
+            <caption class="visually-hidden" id="ledger-caption">Dues ledger</caption>
+            <thead>
+              <tr>
+                <th scope="col">Address</th>
+                <th scope="col">Owner</th>
+                <th scope="col">Status</th>
+                <th scope="col">Method</th>
+                <th scope="col">Date</th>
+                <th scope="col"><span class="visually-hidden">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="ledger-rows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="panel-households" role="tabpanel" aria-labelledby="tab-households" hidden>
+        <section class="portal-card portal-section" aria-labelledby="import-heading">
+          <h2 id="import-heading">Import households</h2>
+          <p>Pick the treasurer's CSV export (or paste it below). Required column: <code>address</code>; optional: <code>owner_name</code>, <code>email</code>, <code>phone</code>. <strong>Existing addresses are updated, new ones added. Nothing is ever deleted.</strong></p>
+          <form id="import-form">
+            <p>
+              <label for="import-file">CSV file</label><br>
+              <input type="file" id="import-file" accept=".csv,text/csv">
+            </p>
+            <p>
+              <label for="import-csv">Or paste CSV</label><br>
+              <textarea id="import-csv" rows="6" style="width:100%" placeholder="address,owner_name,email,phone&#10;101 Planters Way,Alex Morgan,alex@example.com,"></textarea>
+            </p>
+            <p class="field-help" id="import-preview" role="status"></p>
+            <p><button class="btn btn--primary" type="submit" id="import-btn">Import</button></p>
+            <div class="result-banner" id="import-result" role="status"></div>
+          </form>
+        </section>
+
+        <section class="portal-card portal-section" aria-labelledby="add-heading">
+          <h2 id="add-heading">+ Add household</h2>
+          <form id="add-form">
+            <div class="portal-grid portal-grid--2">
+              <p><label for="add-address">Address (required)</label><br><input type="text" id="add-address" required style="width:100%"></p>
+              <p><label for="add-owner">Owner name</label><br><input type="text" id="add-owner" style="width:100%"></p>
+              <p><label for="add-email">Email</label><br><input type="email" id="add-email" style="width:100%"></p>
+              <p><label for="add-phone">Phone</label><br><input type="text" id="add-phone" style="width:100%"></p>
+            </div>
+            <p><button class="btn btn--primary" type="submit" id="add-btn">Add household</button></p>
+          </form>
+        </section>
+
+        <div class="table-card">
+          <table class="portal-table">
+            <caption class="visually-hidden">Household roster</caption>
+            <thead>
+              <tr>
+                <th scope="col">Address</th>
+                <th scope="col">Owner</th>
+                <th scope="col">Email</th>
+                <th scope="col">Phone</th>
+                <th scope="col"><span class="visually-hidden">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="roster-rows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="panel-exports" role="tabpanel" aria-labelledby="tab-exports" hidden>
+        <div class="portal-grid portal-grid--3">
+          <section class="portal-card export-card" aria-labelledby="exp-board-h">
+            <h3 id="exp-board-h">Ledger CSV</h3>
+            <p class="field-help">Every household with paid/unpaid status for the year, for the board spreadsheet.</p>
+            <a class="btn btn--outline" id="exp-board" href="/api/admin/ledger-export">Download ledger CSV</a>
+          </section>
+          <section class="portal-card export-card" aria-labelledby="exp-unpaid-h">
+            <h3 id="exp-unpaid-h">Unpaid households CSV</h3>
+            <p class="field-help">Only households that have not paid, for reminder letters.</p>
+            <a class="btn btn--outline" id="exp-unpaid" href="/api/admin/ledger-export?only=unpaid">Download unpaid CSV</a>
+          </section>
+          <section class="portal-card export-card" aria-labelledby="exp-qbo-h">
+            <h3 id="exp-qbo-h">QuickBooks</h3>
+            <p class="field-help">One-way exports for QuickBooks Online. The portal stays the ledger of record.</p>
+            <ul class="quick-actions">
+              <li><a id="exp-qbo-customers" href="/api/admin/ledger-export?format=qbo-customers">Customers CSV (one-time seed)</a></li>
+              <li><a id="exp-qbo-invoices" href="/api/admin/ledger-export?format=qbo-invoices">Invoices CSV (once per year)</a></li>
+              <li><a id="exp-qbo-payments" href="/api/admin/ledger-export?format=qbo-payments">Payments reference CSV</a></li>
+            </ul>
+            <p><label><input type="checkbox" id="qbo-unpaid-only"> Invoices: unpaid households only</label></p>
+            <div class="popover-host">
+              <button type="button" class="btn btn--sm" id="qbo-help" aria-expanded="false" aria-controls="qbo-runbook">How to import into QuickBooks</button>
+              <div class="portal-popover" id="qbo-runbook" role="dialog" aria-label="QuickBooks import steps" hidden>
+                <ol style="margin:0 0 0.75rem; padding-left:1.25rem">
+                  <li>One time: in QuickBooks go to Settings (gear) &#8594; Import data &#8594; Customers and upload <code>wopha-qbo-customers.csv</code>. Addresses become the customer names.</li>
+                  <li>Optional, once per year: Settings (gear) &#8594; Import data &#8594; Invoices and upload <code>wopha-qbo-invoices-&lt;year&gt;.csv</code>. Invoice numbers look like <code>WOPHA-2026-17</code>, so importing the same year twice shows up as duplicates you can skip.</li>
+                  <li>Recommended (cash basis): do not import payments at all. The QuickBooks bank feed already brings in Stripe, Zelle, and check deposits as income.</li>
+                  <li>Use <code>wopha-qbo-payments-&lt;year&gt;.csv</code> as a reference to categorize and memo those bank-feed deposits (who paid, which household, what year).</li>
+                  <li>If you imported invoices, match bank-feed deposits to them as payments received. Verify invoice import is available on the association's QuickBooks plan first.</li>
+                </ol>
+                <p class="row-error" style="margin:0 0 0.75rem">If your bank feed already brings in dues deposits, use the Payments file as a reference. Don't import it as transactions.</p>
+                <button type="button" class="btn btn--sm" id="qbo-help-close">Close</button>
+              </div>
+            </div>
+          </section>
+        </div>
+        <p class="field-help" id="exports-year-note"></p>
+      </section>
     </div>
   </main>
   <script>
-    var yearEl = document.getElementById("year");
-    var methodEl = document.getElementById("pay-method");
-    var dateEl = document.getElementById("pay-date");
-    var amountEl = document.getElementById("pay-amount");
-    var rowsEl = document.getElementById("ledger-rows");
-    var summaryEl = document.getElementById("summary");
-
-    var today = new Date();
-    yearEl.value = String(today.getFullYear());
-    dateEl.value = today.toISOString().slice(0, 10);
-
-    function dollars(cents) {
-      return "$" + (cents / 100).toLocaleString("en-US", { minimumFractionDigits: 0 });
-    }
-
-    function load() {
-      clearError();
-      var year = yearEl.value;
-      document.getElementById("export-all").href = "/api/admin/ledger-export?year=" + year;
-      document.getElementById("export-unpaid").href = "/api/admin/ledger-export?year=" + year + "&only=unpaid";
-      api("/api/admin/households?year=" + year).then(function (data) {
-        var s = data.summary;
-        summaryEl.textContent = s.paidCount + " of " + s.total + " households paid for " + data.year +
-          ": " + dollars(s.collectedCents) + " collected, " + dollars(s.outstandingCents) + " outstanding.";
-        rowsEl.textContent = "";
-        data.households.forEach(function (h) {
-          var tr = document.createElement("tr");
-          [h.address, h.owner_name, h.email].forEach(function (text) {
-            var td = document.createElement("td");
-            td.textContent = text || "";
-            tr.appendChild(td);
-          });
-
-          var statusTd = document.createElement("td");
-          var badge = document.createElement("span");
-          var paid = h.payment_id != null;
-          badge.className = "badge " + (paid ? "badge--paid" : "badge--unpaid");
-          badge.textContent = paid ? "paid" : "unpaid";
-          statusTd.appendChild(badge);
-          tr.appendChild(statusTd);
-
-          var methodTd = document.createElement("td");
-          methodTd.textContent = h.method || "";
-          tr.appendChild(methodTd);
-          var dateTd = document.createElement("td");
-          dateTd.textContent = h.paid_on || "";
-          tr.appendChild(dateTd);
-
-          var actionTd = document.createElement("td");
-          var btn = document.createElement("button");
-          btn.className = "btn";
-          btn.type = "button";
-          if (paid) {
-            btn.textContent = "Undo";
-            btn.addEventListener("click", function () {
-              if (!confirm("Remove the " + yearEl.value + " payment for " + h.address + "?")) return;
-              api("/api/admin/payments/" + h.payment_id, { method: "DELETE" }).then(load).catch(showError);
-            });
+    (function () {
+      /* ================= CSV mirrors =================
+         MIRROR of parseCsv in functions/api/_lib/csv.js. Keep in sync. */
+      function parseCsvLocal(text) {
+        var rows = [];
+        var row = [];
+        var cell = "";
+        var inQuotes = false;
+        for (var i = 0; i < text.length; i++) {
+          var ch = text[i];
+          if (inQuotes) {
+            if (ch === '"') {
+              if (text[i + 1] === '"') { cell += '"'; i++; }
+              else inQuotes = false;
+            } else {
+              cell += ch;
+            }
+          } else if (ch === '"') {
+            inQuotes = true;
+          } else if (ch === ",") {
+            row.push(cell); cell = "";
+          } else if (ch === "\n" || ch === "\r") {
+            if (ch === "\r" && text[i + 1] === "\n") i++;
+            row.push(cell); cell = "";
+            rows.push(row); row = [];
           } else {
-            btn.textContent = "Mark paid";
-            btn.addEventListener("click", function () {
-              api("/api/admin/payments", {
-                method: "POST",
-                body: {
-                  household_id: h.id,
-                  year: Number(yearEl.value),
-                  amount_cents: Math.round(parseFloat(amountEl.value) * 100),
-                  method: methodEl.value,
-                  paid_on: dateEl.value,
-                },
-              }).then(load).catch(showError);
-            });
+            cell += ch;
           }
-          actionTd.appendChild(btn);
-          tr.appendChild(actionTd);
-          rowsEl.appendChild(tr);
+        }
+        if (cell !== "" || row.length) { row.push(cell); rows.push(row); }
+        while (rows.length > 0 && rows[rows.length - 1].length === 1 && rows[rows.length - 1][0] === "") {
+          rows.pop();
+        }
+        return rows;
+      }
+
+      /* MIRROR of parseHouseholdsCsv in functions/api/_lib/ledger.js. Keep in sync. */
+      function parseHouseholdsCsvLocal(text) {
+        var rows = parseCsvLocal(String(text || "").trim());
+        if (rows.length < 2) return { ok: false, error: "Need a header row plus at least one household" };
+        var header = rows[0].map(function (h) { return h.trim().toLowerCase(); });
+        var col = {
+          address: header.indexOf("address"),
+          owner_name: header.indexOf("owner_name"),
+          email: header.indexOf("email"),
+          phone: header.indexOf("phone"),
+        };
+        if (col.address === -1) return { ok: false, error: "Missing required 'address' column" };
+        var households = [];
+        var errors = [];
+        rows.slice(1).forEach(function (r, i) {
+          var get = function (idx) { return idx === -1 ? "" : String(r[idx] || "").trim(); };
+          var address = get(col.address);
+          if (!address) { errors.push("Row " + (i + 2) + ": empty address — skipped"); return; }
+          households.push({
+            address: address,
+            owner_name: get(col.owner_name),
+            email: get(col.email),
+            phone: get(col.phone),
+          });
         });
-      }).catch(showError);
-    }
+        return { ok: true, households: households, errors: errors };
+      }
 
-    document.getElementById("import-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-      clearError();
-      api("/api/admin/households", { method: "POST", body: { csv: document.getElementById("import-csv").value } })
-        .then(function (r) {
-          var msg = "Imported " + r.imported + " households.";
-          if (r.errors.length) msg += " Skipped: " + r.errors.join("; ");
-          document.getElementById("import-result").textContent = msg;
-          load();
+      /* MIRROR of toCsv in functions/api/_lib/csv.js. Keep in sync. */
+      function toCsvLocal(rows) {
+        return rows.map(function (row) {
+          return row.map(function (cell) {
+            var s = String(cell);
+            return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+          }).join(",");
+        }).join("\n");
+      }
+
+      /* ================= state ================= */
+      var year = new Date().getFullYear();
+      var duesCents = 53500; // replaced by the API value on first load
+      var data = null;       // last GET /api/admin/households?year= payload
+      var currentPopover = null;
+
+      var yearOut = document.getElementById("year-out");
+      var searchEl = document.getElementById("search");
+      var rowsEl = document.getElementById("ledger-rows");
+      var rosterEl = document.getElementById("roster-rows");
+      var importCsv = document.getElementById("import-csv");
+
+      initTabs(document.getElementById("ledger-tabs"));
+
+      /* ================= load & render ================= */
+      function skeletonRow(tbody, cols) {
+        tbody.textContent = "";
+        for (var i = 0; i < 4; i++) {
+          var tr = el("tr");
+          var td = el("td");
+          td.colSpan = cols;
+          td.appendChild(skeleton(1));
+          tr.appendChild(td);
+          tbody.appendChild(tr);
+        }
+      }
+
+      function load() {
+        clearError();
+        closePopover(false);
+        yearOut.textContent = String(year);
+        document.getElementById("ledger-caption").textContent = "Dues ledger for " + year;
+        updateExportLinks();
+        skeletonRow(rowsEl, 6);
+        skeletonRow(rosterEl, 5);
+        api("/api/admin/households?year=" + year).then(function (d) {
+          data = d;
+          duesCents = d.dues_cents;
+          renderSummary();
+          renderLedger();
+          renderRoster();
+          updateImportPreview();
         }).catch(showError);
-    });
+      }
 
-    yearEl.addEventListener("change", load);
-    load();
+      function renderSummary() {
+        var s = data.summary;
+        document.getElementById("sum-paid").textContent = s.paidCount + " of " + s.total;
+        var pct = s.total ? Math.round((s.paidCount / s.total) * 100) : 0;
+        document.getElementById("sum-bar").style.width = pct + "%";
+        document.getElementById("sum-collected").textContent = dollars(s.collectedCents);
+        document.getElementById("sum-outstanding").textContent = dollars(s.outstandingCents);
+      }
+
+      function ledgerFilterPass(h) {
+        var q = searchEl.value.trim().toLowerCase();
+        if (q && (h.address + " " + (h.owner_name || "")).toLowerCase().indexOf(q) === -1) return false;
+        var f = document.querySelector('input[name="paidfilter"]:checked').value;
+        if (f === "paid" && h.payment_id == null) return false;
+        if (f === "unpaid" && h.payment_id != null) return false;
+        return true;
+      }
+
+      function renderLedger() {
+        rowsEl.textContent = "";
+        var shown = data.households.filter(ledgerFilterPass);
+        if (!shown.length) {
+          var tr = el("tr");
+          var td = el("td", "empty-state", data.households.length
+            ? "No households match the current search or filter."
+            : "No households yet. Import a CSV on the Households tab.");
+          td.colSpan = 6;
+          tr.appendChild(td);
+          rowsEl.appendChild(tr);
+          return;
+        }
+        shown.forEach(function (h) { rowsEl.appendChild(buildLedgerRow(h)); });
+      }
+
+      function cellFor(label, text) {
+        var td = el("td", null, text);
+        td.setAttribute("data-label", label);
+        return td;
+      }
+
+      function buildLedgerRow(h) {
+        var tr = el("tr");
+        tr.appendChild(cellFor("Address", h.address));
+        tr.appendChild(cellFor("Owner", h.owner_name || ""));
+
+        var paid = h.payment_id != null;
+        var statusTd = el("td");
+        statusTd.setAttribute("data-label", "Status");
+        statusTd.appendChild(el("span", "badge " + (paid ? "badge--paid" : "badge--unpaid"), paid ? "paid" : "unpaid"));
+        tr.appendChild(statusTd);
+
+        tr.appendChild(cellFor("Method", paid ? (h.method || "") : "–"));
+        tr.appendChild(cellFor("Date", paid ? (h.paid_on || "") : "–"));
+
+        var actionTd = el("td", "popover-host");
+        var btn;
+        if (paid) {
+          btn = el("button", "btn btn--sm", "Undo");
+          btn.type = "button";
+          btn.addEventListener("click", function () {
+            confirmDialog("Remove the " + year + " payment for " + h.address + "?").then(function (yes) {
+              if (yes) undoPayment(h, tr);
+            });
+          });
+        } else {
+          btn = el("button", "btn btn--sm btn--primary", "Mark paid");
+          btn.type = "button";
+          btn.addEventListener("click", function () { openMarkPaid(h, actionTd, btn, tr); });
+        }
+        actionTd.appendChild(btn);
+        var rowErr = el("div", "row-error");
+        rowErr.hidden = true;
+        rowErr.tabIndex = -1;
+        actionTd.appendChild(rowErr);
+        tr.appendChild(actionTd);
+        return tr;
+      }
+
+      function refreshRow(h, oldTr, focusButton) {
+        var newTr = buildLedgerRow(h);
+        if (ledgerFilterPass(h)) {
+          oldTr.replaceWith(newTr);
+          if (focusButton) {
+            var b = newTr.querySelector("button");
+            if (b) b.focus();
+          }
+        } else {
+          // Row no longer matches the active filter. Per spec it still updates
+          // in place (visible until the next filter change), so keep it but let
+          // the next renderLedger() drop it.
+          oldTr.replaceWith(newTr);
+        }
+      }
+
+      function rowError(tr, message, withReload) {
+        var box = tr.querySelector(".row-error");
+        box.textContent = message + " ";
+        if (withReload) {
+          var re = el("button", "btn btn--sm", "Reload list");
+          re.type = "button";
+          re.addEventListener("click", load);
+          box.appendChild(re);
+        }
+        box.hidden = false;
+        box.focus();
+      }
+
+      /* ================= mark paid popover ================= */
+      function closePopover(focusTrigger) {
+        if (!currentPopover) return;
+        var pop = currentPopover;
+        currentPopover = null;
+        document.removeEventListener("mousedown", pop.outsideHandler);
+        pop.node.remove();
+        if (focusTrigger && pop.trigger) pop.trigger.focus();
+      }
+
+      function openMarkPaid(h, hostTd, trigger, tr) {
+        closePopover(false);
+        var pop = el("div", "portal-popover");
+        pop.setAttribute("role", "dialog");
+        pop.setAttribute("aria-label", "Record payment for " + h.address);
+
+        function fieldRow(labelText, input) {
+          var wrap = el("div", "form-row");
+          var label = el("label", null, labelText);
+          var fid = "pp-" + labelText.toLowerCase().replace(/[^a-z]+/g, "-") + "-" + h.id;
+          label.htmlFor = fid;
+          input.id = fid;
+          wrap.appendChild(label);
+          wrap.appendChild(input);
+          return wrap;
+        }
+
+        var amount = el("input");
+        amount.type = "number";
+        amount.step = "0.01";
+        amount.min = "0.01";
+        amount.value = (duesCents / 100).toFixed(2);
+        pop.appendChild(fieldRow("Amount ($)", amount));
+
+        var method = el("select");
+        ["check", "zelle", "stripe", "other"].forEach(function (m) {
+          var o = el("option", null, m.charAt(0).toUpperCase() + m.slice(1));
+          o.value = m;
+          method.appendChild(o);
+        });
+        pop.appendChild(fieldRow("Method", method));
+
+        var date = el("input");
+        date.type = "date";
+        date.value = new Date().toISOString().slice(0, 10);
+        pop.appendChild(fieldRow("Paid on", date));
+
+        var note = el("input");
+        note.type = "text";
+        note.maxLength = 500;
+        note.placeholder = "Optional note";
+        pop.appendChild(fieldRow("Note", note));
+
+        var errEl = el("p", "field-error", "");
+        errEl.hidden = true;
+        pop.appendChild(errEl);
+
+        var actions = el("div", "popover-actions");
+        var confirmBtn = el("button", "btn btn--sm btn--primary", "Confirm");
+        confirmBtn.type = "button";
+        var cancelBtn = el("button", "btn btn--sm", "Cancel");
+        cancelBtn.type = "button";
+        actions.appendChild(confirmBtn);
+        actions.appendChild(cancelBtn);
+        pop.appendChild(actions);
+
+        cancelBtn.addEventListener("click", function () { closePopover(true); });
+        pop.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") { e.stopPropagation(); closePopover(true); }
+        });
+
+        confirmBtn.addEventListener("click", function () {
+          var cents = Math.round(parseFloat(amount.value) * 100);
+          if (!isFinite(cents) || cents <= 0) {
+            errEl.textContent = "Enter an amount in dollars.";
+            errEl.hidden = false;
+            amount.focus();
+            return;
+          }
+          confirmBtn.disabled = true;
+          cancelBtn.disabled = true;
+          api("/api/admin/payments", {
+            method: "POST",
+            body: {
+              household_id: h.id,
+              year: year,
+              amount_cents: cents,
+              method: method.value,
+              paid_on: date.value,
+              note: note.value,
+            },
+          }).then(function (res) {
+            h.payment_id = res.id;
+            h.amount_cents = cents;
+            h.method = method.value;
+            h.paid_on = date.value;
+            data.summary.paidCount += 1;
+            data.summary.unpaidCount -= 1;
+            data.summary.collectedCents += cents;
+            data.summary.outstandingCents = data.summary.unpaidCount * duesCents;
+            renderSummary();
+            closePopover(false);
+            refreshRow(h, tr, true);
+            toast("Marked " + h.address + " paid.", {
+              actionLabel: "Undo",
+              onAction: function () { undoPayment(h, null); },
+            });
+          }).catch(function (err) {
+            closePopover(false);
+            if (err.status === 409) {
+              rowError(tr, "Already marked paid for " + year + ".", true);
+            } else {
+              showError(err);
+            }
+          });
+        });
+
+        hostTd.appendChild(pop);
+        currentPopover = {
+          node: pop,
+          trigger: trigger,
+          outsideHandler: function (e) {
+            if (!pop.contains(e.target) && e.target !== trigger) closePopover(false);
+          },
+        };
+        document.addEventListener("mousedown", currentPopover.outsideHandler);
+        amount.focus();
+      }
+
+      function undoPayment(h, tr) {
+        var refundCents = h.amount_cents || duesCents;
+        api("/api/admin/payments/" + h.payment_id, { method: "DELETE" }).then(function () {
+          h.payment_id = null;
+          h.amount_cents = null;
+          h.method = null;
+          h.paid_on = null;
+          data.summary.paidCount -= 1;
+          data.summary.unpaidCount += 1;
+          data.summary.collectedCents -= refundCents;
+          data.summary.outstandingCents = data.summary.unpaidCount * duesCents;
+          renderSummary();
+          if (tr && tr.isConnected) refreshRow(h, tr, true);
+          else renderLedger();
+          toast("Payment removed.");
+        }).catch(function (err) {
+          if (err.status === 404) { load(); return; } // already gone; resync the list
+          showError(err);
+        });
+      }
+
+      /* ================= roster (Households tab) ================= */
+      function renderRoster() {
+        rosterEl.textContent = "";
+        if (!data.households.length) {
+          var tr = el("tr");
+          var td = el("td", "empty-state", "No households yet. Import a CSV above.");
+          td.colSpan = 5;
+          tr.appendChild(td);
+          rosterEl.appendChild(tr);
+          return;
+        }
+        data.households.forEach(function (h) { rosterEl.appendChild(buildRosterRow(h)); });
+      }
+
+      function buildRosterRow(h) {
+        var tr = el("tr");
+        tr.appendChild(cellFor("Address", h.address));
+        tr.appendChild(cellFor("Owner", h.owner_name || ""));
+        tr.appendChild(cellFor("Email", h.email || ""));
+        tr.appendChild(cellFor("Phone", h.phone || ""));
+        var actionTd = el("td");
+        var edit = el("button", "btn btn--sm", "Edit");
+        edit.type = "button";
+        edit.addEventListener("click", function () { editRosterRow(h, tr); });
+        actionTd.appendChild(edit);
+        tr.appendChild(actionTd);
+        return tr;
+      }
+
+      function editRosterRow(h, tr) {
+        tr.textContent = "";
+        function inputCell(label, value) {
+          var td = el("td");
+          td.setAttribute("data-label", label);
+          var input = el("input");
+          input.type = label === "Email" ? "email" : "text";
+          input.value = value || "";
+          input.setAttribute("aria-label", label + " for " + h.address);
+          input.style.width = "100%";
+          input.style.minHeight = "44px";
+          td.appendChild(input);
+          tr.appendChild(td);
+          return input;
+        }
+        var address = inputCell("Address", h.address);
+        var owner = inputCell("Owner", h.owner_name);
+        var email = inputCell("Email", h.email);
+        var phone = inputCell("Phone", h.phone);
+
+        var actionTd = el("td");
+        var save = el("button", "btn btn--sm btn--primary", "Save");
+        save.type = "button";
+        var cancel = el("button", "btn btn--sm", "Cancel");
+        cancel.type = "button";
+        var err = el("div", "row-error");
+        err.hidden = true;
+        err.tabIndex = -1;
+        actionTd.appendChild(save);
+        actionTd.appendChild(document.createTextNode(" "));
+        actionTd.appendChild(cancel);
+        actionTd.appendChild(err);
+        tr.appendChild(actionTd);
+        address.focus();
+
+        cancel.addEventListener("click", function () {
+          var fresh = buildRosterRow(h);
+          tr.replaceWith(fresh);
+          fresh.querySelector("button").focus();
+        });
+
+        save.addEventListener("click", function () {
+          if (!address.value.trim()) {
+            err.textContent = "Address is required.";
+            err.hidden = false;
+            err.focus();
+            return;
+          }
+          save.disabled = true;
+          cancel.disabled = true;
+          api("/api/admin/households/" + h.id, {
+            method: "PUT",
+            body: {
+              address: address.value.trim(),
+              owner_name: owner.value.trim(),
+              email: email.value.trim(),
+              phone: phone.value.trim(),
+            },
+          }).then(function () {
+            h.address = address.value.trim();
+            h.owner_name = owner.value.trim();
+            h.email = email.value.trim();
+            h.phone = phone.value.trim();
+            var fresh = buildRosterRow(h);
+            tr.replaceWith(fresh);
+            fresh.querySelector("button").focus();
+            renderLedger(); // address/owner also show on the Ledger tab
+            toast("Household saved.");
+          }).catch(function (e2) {
+            save.disabled = false;
+            cancel.disabled = false;
+            err.textContent = e2.message;
+            err.hidden = false;
+            err.focus();
+          });
+        });
+      }
+
+      /* ================= import (Households tab) ================= */
+      function updateImportPreview() {
+        var p = document.getElementById("import-preview");
+        var text = importCsv.value.trim();
+        if (!text) { p.textContent = ""; return; }
+        var parsed = parseHouseholdsCsvLocal(text);
+        if (!parsed.ok) { p.textContent = parsed.error + "."; return; }
+        var existing = {};
+        (data ? data.households : []).forEach(function (h) { existing[h.address] = true; });
+        var seen = {};
+        var adds = 0;
+        var updates = 0;
+        parsed.households.forEach(function (r) {
+          if (existing[r.address] || seen[r.address]) updates++;
+          else adds++;
+          seen[r.address] = true;
+        });
+        p.textContent = "Will add " + adds + " new household" + (adds === 1 ? "" : "s") +
+          ", update " + updates + " existing." +
+          (parsed.errors.length
+            ? " " + parsed.errors.length + " row" + (parsed.errors.length === 1 ? "" : "s") + " skipped (empty address)."
+            : "");
+      }
+
+      document.getElementById("import-file").addEventListener("change", function (e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function () {
+          importCsv.value = String(reader.result);
+          updateImportPreview();
+        };
+        reader.readAsText(file);
+      });
+
+      importCsv.addEventListener("input", updateImportPreview);
+
+      document.getElementById("import-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        clearError();
+        var btn = document.getElementById("import-btn");
+        btn.disabled = true;
+        api("/api/admin/households", { method: "POST", body: { csv: importCsv.value } })
+          .then(function (r) {
+            var msg = "Imported " + r.imported + " households.";
+            if (r.errors.length) msg += " Skipped: " + r.errors.join("; ");
+            document.getElementById("import-result").textContent = msg;
+            load();
+          })
+          .catch(showError)
+          .finally(function () { btn.disabled = false; });
+      });
+
+      document.getElementById("add-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        clearError();
+        var btn = document.getElementById("add-btn");
+        btn.disabled = true;
+        var csv = toCsvLocal([
+          ["address", "owner_name", "email", "phone"],
+          [
+            document.getElementById("add-address").value.trim(),
+            document.getElementById("add-owner").value.trim(),
+            document.getElementById("add-email").value.trim(),
+            document.getElementById("add-phone").value.trim(),
+          ],
+        ]);
+        api("/api/admin/households", { method: "POST", body: { csv: csv } })
+          .then(function () {
+            document.getElementById("add-form").reset();
+            toast("Household added.");
+            load();
+          })
+          .catch(showError)
+          .finally(function () { btn.disabled = false; });
+      });
+
+      /* ================= exports ================= */
+      function updateExportLinks() {
+        var invoicesUnpaid = document.getElementById("qbo-unpaid-only").checked;
+        document.getElementById("exp-board").href = "/api/admin/ledger-export?year=" + year;
+        document.getElementById("exp-unpaid").href = "/api/admin/ledger-export?year=" + year + "&only=unpaid";
+        document.getElementById("exp-qbo-customers").href = "/api/admin/ledger-export?format=qbo-customers";
+        document.getElementById("exp-qbo-invoices").href =
+          "/api/admin/ledger-export?year=" + year + "&format=qbo-invoices" + (invoicesUnpaid ? "&only=unpaid" : "");
+        document.getElementById("exp-qbo-payments").href = "/api/admin/ledger-export?year=" + year + "&format=qbo-payments";
+        document.getElementById("exports-year-note").textContent =
+          "Year-based exports follow the Ledger tab's year: " + year + ".";
+      }
+      document.getElementById("qbo-unpaid-only").addEventListener("change", updateExportLinks);
+
+      var qboHelp = document.getElementById("qbo-help");
+      var qboRunbook = document.getElementById("qbo-runbook");
+      function setRunbook(open) {
+        qboRunbook.hidden = !open;
+        qboHelp.setAttribute("aria-expanded", open ? "true" : "false");
+        if (open) document.getElementById("qbo-help-close").focus();
+        else qboHelp.focus();
+      }
+      qboHelp.addEventListener("click", function () { setRunbook(qboRunbook.hidden); });
+      document.getElementById("qbo-help-close").addEventListener("click", function () { setRunbook(false); });
+      qboRunbook.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") { e.stopPropagation(); setRunbook(false); }
+      });
+
+      /* ================= wiring ================= */
+      document.getElementById("year-prev").addEventListener("click", function () { year -= 1; load(); });
+      document.getElementById("year-next").addEventListener("click", function () { year += 1; load(); });
+      searchEl.addEventListener("input", function () { if (data) renderLedger(); });
+      document.querySelectorAll('input[name="paidfilter"]').forEach(function (r) {
+        r.addEventListener("change", function () { if (data) renderLedger(); });
+      });
+
+      api("/api/admin/settings").then(function (s) {
+        if (s.quickbooks_url) {
+          var qb = document.getElementById("qb-link");
+          qb.href = s.quickbooks_url;
+          qb.hidden = false;
+        }
+      }).catch(showError);
+
+      load();
+    })();
   </script>
