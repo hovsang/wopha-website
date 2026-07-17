@@ -135,6 +135,22 @@ the site. Launch-time setup, in order:
 - [ ] Confirm `DEMO_OPEN_ADMIN` is NOT set on the production Pages project
       before importing real resident data (if it was set for a seed-data
       demo, unset it first, it bypasses admin auth entirely).
+- [ ] **While any demo deploy runs with `DEMO_OPEN_ADMIN` set (no Cloudflare
+      Access):** delete `portal/billing.html` from the staging copy's
+      `public/` directory before `wrangler pages deploy`. Demo portal pages
+      are public static files; shipping the billing page there would publish
+      the service pricing. The sidebar's "Plan & billing" link falls back to
+      the index page on demos; that is expected until Access is live. Verify
+      the exclusion by fetching `/portal/billing.html` on the deployed demo
+      and checking the BODY is not the billing page (unknown paths serve
+      index content with status 200, so check the body, not the status).
+- [ ] **After Access is live on wopha.com and the pages.dev hostnames:**
+      include `portal/billing.html` in deploys again, paste the webmaster's
+      Stripe recurring Payment Links into `src/_data/pricing.json`
+      (`stripe_link` per tier), rebuild, and set the current plan in
+      Portal → Plan & billing once the board subscribes. Run
+      `node tools/check-pricing-privacy.mjs` against every build before
+      deploying it.
 - [ ] Set the `WEB3FORMS_KEY` secret (section 2).
 - [ ] Create the R2 bucket: `npx wrangler r2 bucket create wopha-backups`,
       then deploy the backup worker: `cd workers/backup && npx wrangler deploy`.
