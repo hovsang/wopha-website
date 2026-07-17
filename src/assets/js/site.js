@@ -166,13 +166,14 @@ if ("serviceWorker" in navigator) {
   }).catch(function () { /* leave section hidden */ });
 })();
 
-// Live site content: board-edited values (pool hours, season glance) fetched
-// from the portal API. Baked-in HTML is the fallback: offline or API-down
-// leaves the page exactly as authored.
+// Live site content: board-edited values (pool hours, season glance, sponsors)
+// fetched from the portal API. Baked-in HTML is the fallback: offline or
+// API-down leaves the page exactly as authored.
 (function () {
   var glance = document.getElementById("season-glance");
   var hours = document.getElementById("pool-hours-body");
-  if (!glance && !hours) return;
+  var sponsorsGrid = document.getElementById("sponsors-grid");
+  if (!glance && !hours && !sponsorsGrid) return;
   fetch("/api/content").then(function (r) {
     if (!r.ok) throw new Error("bad status");
     return r.json();
@@ -180,28 +181,77 @@ if ("serviceWorker" in navigator) {
     function fill(el, rows, makeRow) {
       if (!el || !Array.isArray(rows) || !rows.length) return;
       el.textContent = "";
-      rows.forEach(function (row) { el.appendChild(makeRow(row[0], row[1])); });
+      rows.forEach(function (row) { el.appendChild(makeRow(row)); });
     }
-    fill(glance, content.season_glance, function (label, value) {
+    fill(glance, content.season_glance, function (row) {
       var li = document.createElement("li");
       var s = document.createElement("span");
-      s.textContent = label;
+      s.textContent = row[0];
       var st = document.createElement("strong");
-      st.textContent = value;
+      st.textContent = row[1];
       li.appendChild(s);
       li.appendChild(document.createTextNode(" "));
       li.appendChild(st);
       return li;
     });
-    fill(hours, content.pool_hours, function (label, value) {
+    fill(hours, content.pool_hours, function (row) {
       var tr = document.createElement("tr");
       var td1 = document.createElement("td");
-      td1.textContent = label;
+      td1.textContent = row[0];
       var td2 = document.createElement("td");
-      td2.textContent = value;
+      td2.textContent = row[1];
       tr.appendChild(td1);
       tr.appendChild(td2);
       return tr;
     });
+    fill(sponsorsGrid, content.sponsors, function (row) {
+      var name = row[0] || "";
+      var url = row[1] || "";
+      var blurb = row[2] || "";
+      var card = document.createElement("div");
+      card.className = "card sponsor-card";
+      var mark = document.createElement("span");
+      mark.className = "sponsor-mark";
+      mark.setAttribute("aria-hidden", "true");
+      mark.textContent = name.charAt(0).toUpperCase();
+      // Optional committed logo: /assets/img/sponsors/<slug>.png replaces the
+      // lettermark only after it actually loads (no broken-image icon, no
+      // layout jump; the mark box keeps its size either way).
+      var slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      if (slug) {
+        var img = document.createElement("img");
+        img.alt = "";
+        img.addEventListener("load", function () {
+          if (!mark.isConnected) return; // page content replaced while loading
+          mark.textContent = "";
+          mark.appendChild(img);
+        });
+        img.src = "/assets/img/sponsors/" + slug + ".png";
+      }
+      card.appendChild(mark);
+      var h = document.createElement("h3");
+      if (/^https:\/\//.test(url)) {
+        var a = document.createElement("a");
+        a.textContent = name;
+        a.href = url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        h.appendChild(a);
+      } else {
+        h.textContent = name;
+      }
+      card.appendChild(h);
+      if (blurb) {
+        var p = document.createElement("p");
+        p.textContent = blurb;
+        card.appendChild(p);
+      }
+      return card;
+    });
+    if (sponsorsGrid && Array.isArray(content.sponsors) && content.sponsors.length) {
+      var empty = document.getElementById("sponsors-empty");
+      if (empty) empty.hidden = true;
+      sponsorsGrid.hidden = false;
+    }
   }).catch(function () { /* keep baked-in content */ });
 })();
