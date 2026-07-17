@@ -68,7 +68,7 @@ pageKey: content
 
       <section class="portal-card portal-section" aria-labelledby="settings-heading">
         <h2 id="settings-heading">Portal settings</h2>
-        <p class="field-help">Used by the portal itself. The dues amount drives the ledger's outstanding math and the mark-paid prefill. The QuickBooks link shows the Open QuickBooks button on the Dues &amp; households page when set.</p>
+        <p class="field-help">Used by the portal itself. The dues amount drives the ledger's outstanding math and the mark-paid prefill. The QuickBooks link shows the Open QuickBooks button on the Dues &amp; households page when set. The booking rules control the public court and pavilion calendar.</p>
         <div class="portal-grid portal-grid--3">
           <p>
             <label for="set-dues">Annual dues ($)</label><br>
@@ -82,6 +82,21 @@ pageKey: content
           <p>
             <label for="set-qb">QuickBooks URL (optional)</label><br>
             <input type="url" id="set-qb" placeholder="https://" style="width:100%">
+          </p>
+          <p>
+            <label for="set-window">Booking window (hours)</label><br>
+            <input type="number" id="set-window" min="1" max="336" step="1" style="width:100%" aria-describedby="set-window-hint">
+            <span class="field-help" id="set-window-hint">How far ahead residents can book a court or the pavilion.</span>
+          </p>
+          <p>
+            <label for="set-daily">Court bookings per day</label><br>
+            <input type="number" id="set-daily" min="1" max="50" step="1" style="width:100%" aria-describedby="set-daily-hint">
+            <span class="field-help" id="set-daily-hint">Per household.</span>
+          </p>
+          <p>
+            <label for="set-weekly">Court bookings per week</label><br>
+            <input type="number" id="set-weekly" min="1" max="50" step="1" style="width:100%" aria-describedby="set-weekly-hint">
+            <span class="field-help" id="set-weekly-hint">Per household, Monday to Sunday.</span>
           </p>
         </div>
         <p>
@@ -350,6 +365,9 @@ pageKey: content
       var duesHintEl = document.getElementById("set-dues-hint");
       var dueDateEl = document.getElementById("set-due-date");
       var qbEl = document.getElementById("set-qb");
+      var windowEl = document.getElementById("set-window");
+      var dailyEl = document.getElementById("set-daily");
+      var weeklyEl = document.getElementById("set-weekly");
       var settingsError = document.getElementById("settings-error");
 
       function updateDuesHint() {
@@ -364,6 +382,9 @@ pageKey: content
         duesEl.value = s.dues_cents ? (Number(s.dues_cents) / 100).toFixed(2) : "";
         dueDateEl.value = s.dues_due_date || "";
         qbEl.value = s.quickbooks_url || "";
+        windowEl.value = s.booking_window_hours || "";
+        dailyEl.value = s.booking_daily_limit || "";
+        weeklyEl.value = s.booking_weekly_limit || "";
         updateDuesHint();
       }).catch(showError);
 
@@ -394,6 +415,21 @@ pageKey: content
         if (String(cents) !== original.dues_cents) updates.push({ key: "dues_cents", value: String(cents) });
         if (dueDateEl.value !== (original.dues_due_date || "")) updates.push({ key: "dues_due_date", value: dueDateEl.value });
         if (qb !== (original.quickbooks_url || "")) updates.push({ key: "quickbooks_url", value: qb });
+        var ruleFields = [
+          { el: windowEl, key: "booking_window_hours", label: "booking window" },
+          { el: dailyEl, key: "booking_daily_limit", label: "daily court limit" },
+          { el: weeklyEl, key: "booking_weekly_limit", label: "weekly court limit" },
+        ];
+        for (var r = 0; r < ruleFields.length; r++) {
+          var rv = ruleFields[r].el.value.trim();
+          if (!/^\d+$/.test(rv) || Number(rv) < 1) {
+            settingsError.textContent = "Enter a whole number of at least 1 for the " + ruleFields[r].label + ".";
+            settingsError.hidden = false;
+            settingsError.focus();
+            return;
+          }
+          if (rv !== original[ruleFields[r].key]) updates.push({ key: ruleFields[r].key, value: rv });
+        }
         if (!updates.length) {
           toast("No changes to save.");
           return;
