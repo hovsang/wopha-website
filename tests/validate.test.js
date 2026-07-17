@@ -4,6 +4,7 @@ import {
   validateAnnouncement,
   validatePayment,
   validateContent,
+  validateSetting,
 } from "../functions/api/_lib/validate.js";
 
 describe("validateSubmission", () => {
@@ -85,5 +86,36 @@ describe("malformed top-level input", () => {
     expect(validatePayment(null).ok).toBe(false);
     expect(validateAnnouncement(undefined).ok).toBe(false);
     expect(validatePayment(undefined).ok).toBe(false);
+  });
+});
+
+describe("validateSetting", () => {
+  it("accepts allowlisted keys with valid values", () => {
+    expect(validateSetting("dues_cents", "53500")).toEqual({ ok: true, value: "53500" });
+    expect(validateSetting("dues_due_date", "2026-04-30")).toEqual({ ok: true, value: "2026-04-30" });
+    expect(validateSetting("quickbooks_url", "https://app.qbo.intuit.com/app/customers"))
+      .toEqual({ ok: true, value: "https://app.qbo.intuit.com/app/customers" });
+  });
+  it("rejects unknown keys", () => {
+    expect(validateSetting("theme", "dark").ok).toBe(false);
+    expect(validateSetting("", "x").ok).toBe(false);
+  });
+  it("range-checks dues_cents as a positive integer number of cents", () => {
+    expect(validateSetting("dues_cents", "0").ok).toBe(false);
+    expect(validateSetting("dues_cents", "-100").ok).toBe(false);
+    expect(validateSetting("dues_cents", "535.5").ok).toBe(false);
+    expect(validateSetting("dues_cents", "1000001").ok).toBe(false);
+    expect(validateSetting("dues_cents", "").ok).toBe(false);
+  });
+  it("requires YYYY-MM-DD for dues_due_date but allows empty to clear it", () => {
+    expect(validateSetting("dues_due_date", "Apr 30").ok).toBe(false);
+    expect(validateSetting("dues_due_date", "2026-4-30").ok).toBe(false);
+    expect(validateSetting("dues_due_date", "")).toEqual({ ok: true, value: "" });
+  });
+  it("requires an https URL for quickbooks_url but allows empty to clear it", () => {
+    expect(validateSetting("quickbooks_url", "http://app.qbo.intuit.com").ok).toBe(false);
+    expect(validateSetting("quickbooks_url", "not a url").ok).toBe(false);
+    expect(validateSetting("quickbooks_url", "https://" + "a".repeat(500)).ok).toBe(false);
+    expect(validateSetting("quickbooks_url", "")).toEqual({ ok: true, value: "" });
   });
 });

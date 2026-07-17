@@ -79,3 +79,32 @@ export function validateContent(key, value) {
   }
   return { ok: true, value };
 }
+
+// Operator-editable settings (admin/settings.js). Stored as strings in the
+// settings table; each key has its own validator. Empty string clears the
+// optional keys; dues_cents must always be a valid amount.
+export const SETTING_KEYS = ["dues_cents", "dues_due_date", "quickbooks_url"];
+
+export function validateSetting(key, value) {
+  if (!SETTING_KEYS.includes(key)) return { ok: false, error: "Unknown setting key" };
+  const s = String(value === undefined || value === null ? "" : value).trim();
+  if (key === "dues_cents") {
+    const n = Number(s);
+    if (!/^\d+$/.test(s) || n <= 0 || n > 1000000) {
+      return { ok: false, error: "dues_cents must be a positive integer number of cents (max $10,000)" };
+    }
+    return { ok: true, value: String(n) };
+  }
+  if (key === "dues_due_date") {
+    if (s === "") return { ok: true, value: "" };
+    if (!DATE_RE.test(s)) return { ok: false, error: "dues_due_date must be YYYY-MM-DD" };
+    return { ok: true, value: s };
+  }
+  // quickbooks_url
+  if (s === "") return { ok: true, value: "" };
+  if (s.length > 500) return { ok: false, error: "quickbooks_url too long (max 500 characters)" };
+  let u;
+  try { u = new URL(s); } catch (_) { return { ok: false, error: "quickbooks_url must be a valid https URL" }; }
+  if (u.protocol !== "https:") return { ok: false, error: "quickbooks_url must be a valid https URL" };
+  return { ok: true, value: s };
+}
