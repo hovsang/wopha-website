@@ -1,7 +1,7 @@
 import { parseCsv } from "./csv.js";
 
 // 2026 annual dues. Update when dues change (drives the "outstanding" figure).
-export const DUES_CENTS = 53500;
+export const DUES_CENTS = 69300;
 
 // Expected header: address[,owner_name][,email][,phone] — any order, any case.
 export function parseHouseholdsCsv(text) {

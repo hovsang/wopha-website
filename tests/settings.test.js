@@ -17,7 +17,7 @@ describe("GET /api/admin/settings", () => {
     const res = await onRequestGet({ env: { DB: db } });
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({
-      dues_cents: "53500",
+      dues_cents: "69300",
       dues_due_date: "",
       quickbooks_url: "",
     });

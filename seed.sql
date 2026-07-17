@@ -11,8 +11,8 @@ INSERT INTO households (address, owner_name, email, phone) VALUES
   ('105 Planters Way', 'Casey Diaz', 'casey@example.com', '');
 
 INSERT INTO payments (household_id, year, amount_cents, method, paid_on) VALUES
-  (1, 2026, 53500, 'stripe', '2026-03-01'),
-  (2, 2026, 53500, 'check', '2026-03-15');
+  (1, 2026, 69300, 'stripe', '2026-03-01'),
+  (2, 2026, 69300, 'check', '2026-03-15');
 
 INSERT INTO submissions (form_type, fields) VALUES
   ('issue_report', '{"location":"Pool area","message":"Gate latch sticks when it is hot out"}'),
@@ -23,4 +23,4 @@ INSERT INTO site_content (key, value) VALUES
   ('pool_hours', '[["Monday","11 a.m. – 8 p.m."],["Tuesday","11 a.m. – 8 p.m."],["Wednesday","11 a.m. – 8 p.m."],["Thursday","11 a.m. – 8 p.m."],["Friday","11 a.m. – 9 p.m."],["Saturday","10 a.m. – 9 p.m."],["Sunday","12 p.m. – 8 p.m."]]');
 
 INSERT INTO settings (key, value) VALUES
-  ('dues_cents', '53500');
+  ('dues_cents', '69300');

@@ -34,7 +34,7 @@ describe("ledgerSummary", () => {
       paidCount: 2,
       unpaidCount: 1,
       collectedCents: 103500,
-      outstandingCents: 53500,
+      outstandingCents: 69300,
     });
   });
   it("handles an empty ledger", () => {

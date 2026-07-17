@@ -82,7 +82,7 @@ describe("GET /api/admin/ledger-export?format=qbo-*", () => {
     const res = await onRequestGet({ request: req("?year=2026&format=qbo-invoices&only=unpaid"), env: { DB: db } });
     const lines = (await res.text()).split("\n");
     expect(lines.length).toBe(2);
-    expect(lines[1]).toBe("WOPHA-2026-2,102 Planters Way,2026-01-01,2026-01-01,HOA Annual Dues 2026,Annual dues 2026: 102 Planters Way,535.00");
+    expect(lines[1]).toBe("WOPHA-2026-2,102 Planters Way,2026-01-01,2026-01-01,HOA Annual Dues 2026,Annual dues 2026: 102 Planters Way,693.00");
   });
 
   it("qbo-payments: reference rows for the year's paid households", async () => {
