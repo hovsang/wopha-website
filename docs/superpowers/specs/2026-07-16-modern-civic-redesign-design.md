@@ -53,6 +53,13 @@ Portal-only semantic status tokens (all fg/bg pairs must clear WCAG AA 4.5:1):
 `--ok #2e7d4f/#e3f2e8` (paid/done) · `--warn #8a5a00/#fdf0d3` (new/pending) ·
 `--info #17567f/#e2eef5` (in progress) · `--danger #a13324/#fbe7e2` (unpaid/errors).
 
+### Copy rule (user-directed, 2026-07-16)
+
+No em dashes (—) anywhere in user-visible text: page copy, UI strings, exported CSV text,
+board/treasurer-facing docs. Reword with commas, periods, colons, or parentheses instead.
+En dashes in numeric/date ranges (May 17 – Sep 20) are allowed. This overrides any literal
+copy blocks in the implementation plans; implementers reword during transcription.
+
 ### Layout, components, motion
 - Container 68rem → **75rem**; `--container-narrow: 48rem` for prose pages. Systematic **4/8px
   spacing scale** as custom properties (`--space-1`…`--space-12`).
