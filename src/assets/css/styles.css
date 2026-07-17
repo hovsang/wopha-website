@@ -585,6 +585,18 @@ details.rule .rule-body > :last-child { margin-bottom: 0; }
 }
 .sponsor-mark img { width: 100%; height: 100%; object-fit: contain; }
 
+/* ---- Report list (annual safety summary on /about/) ---------------------- */
+
+.report-list { margin-block: var(--space-6); max-width: 52rem; }
+.report-list > div { padding-block: var(--space-3); border-bottom: 1px solid var(--line); }
+.report-list > div:last-child { border-bottom: none; }
+.report-list dt { font-weight: 700; }
+.report-list dd { margin: var(--space-1) 0 0; color: var(--ink-soft); }
+@media (min-width: 700px) {
+  .report-list > div { display: grid; grid-template-columns: 18rem 1fr; gap: var(--space-4); }
+  .report-list dd { margin-top: 0; }
+}
+
 /* ---- Forms, one shared system: .form-card container, labels above ------- */
 
 .form-card {

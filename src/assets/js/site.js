@@ -166,14 +166,15 @@ if ("serviceWorker" in navigator) {
   }).catch(function () { /* leave section hidden */ });
 })();
 
-// Live site content: board-edited values (pool hours, season glance, sponsors)
+// Live site content: board-edited values (pool hours, season glance, sponsors, safety summary)
 // fetched from the portal API. Baked-in HTML is the fallback: offline or
 // API-down leaves the page exactly as authored.
 (function () {
   var glance = document.getElementById("season-glance");
   var hours = document.getElementById("pool-hours-body");
   var sponsorsGrid = document.getElementById("sponsors-grid");
-  if (!glance && !hours && !sponsorsGrid) return;
+  var safety = document.getElementById("safety-report");
+  if (!glance && !hours && !sponsorsGrid && !safety) return;
   fetch("/api/content").then(function (r) {
     if (!r.ok) throw new Error("bad status");
     return r.json();
@@ -247,6 +248,16 @@ if ("serviceWorker" in navigator) {
         card.appendChild(p);
       }
       return card;
+    });
+    fill(safety, content.safety_report, function (row) {
+      var div = document.createElement("div");
+      var dt = document.createElement("dt");
+      dt.textContent = row[0];
+      var dd = document.createElement("dd");
+      dd.textContent = row[1];
+      div.appendChild(dt);
+      div.appendChild(dd);
+      return div;
     });
     if (sponsorsGrid && Array.isArray(content.sponsors) && content.sponsors.length) {
       var empty = document.getElementById("sponsors-empty");
