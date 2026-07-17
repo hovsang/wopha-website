@@ -8,6 +8,9 @@ Replaces the old Weebly site.
 - Payments, bookings, and forms are handled by linked free services (Stripe
   Payment Links, ReserveMyCourt, SwimTopia, Google Forms/Calendar, Web3Forms) —
   the site never needs a backend.
+- QuickBooks: the board portal exports QBO-ready CSVs (one-way; D1 stays the
+  ledger of record) — rationale and treasurer runbook in
+  `docs/quickbooks-export.md`.
 - **To launch:** work through `docs/launch-checklist.md`. Placeholder spots are
   marked with `PLACEHOLDER:` comments in the HTML and visible "Board setup
   needed" boxes on the pages.
