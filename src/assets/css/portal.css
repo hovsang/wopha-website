@@ -123,6 +123,9 @@ body { background: var(--paper); }
   }
   .portal-topbar-brand { font-family: var(--display); font-weight: 600; }
   .portal-topbar-brand span { font-family: var(--body); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.75); margin-left: 0.4rem; }
+  /* The fixed topbar already shows the brand on small screens; hide the
+     drawer's copy so the name doesn't appear twice with the menu open. */
+  .portal-brand { display: none; }
   .portal-sidebar {
     top: var(--portal-topbar-h);
     width: min(320px, 85vw);
