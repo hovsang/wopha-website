@@ -1,158 +1,144 @@
 ---
 layout: base.njk
-title: "Woods of Parkview HOA — Lilburn, Georgia"
-description: "Woods of Parkview is a 170-home swim and tennis neighborhood in Lilburn, Georgia. Pay dues, book the pool, reserve tennis courts, and see what's happening."
+title: Woods of Parkview HOA — Lilburn, Georgia
+description: Woods of Parkview is a 170-home swim and tennis neighborhood in Lilburn, Georgia. Pay dues, book the pool, reserve tennis courts, and see what's happening.
 pageKey: home
+permalink: /index.html
 ---
-    <section class="hero">
-      <div class="container">
-        <span class="eyebrow">Lilburn, Georgia · Est. mid-1980s</span>
-        <h1>A swim &amp; tennis neighborhood under the pines</h1>
-        <p class="lede">Woods of Parkview is 170 homes on half-acre wooded lots in the Parkview school cluster — with a six-lane pool, two lighted tennis courts, picnic areas, and neighbors who run all of it as volunteers.</p>
-        <div class="hero-actions">
-          <a class="btn btn--primary" id="hero-cta" href="membership.html#pay">Pay your dues</a>
-          <a class="btn btn--outline" href="community.html">See what's happening</a>
-        </div>
-      </div>
-    </section>
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow">Lilburn, Georgia · Est. mid-1980s</span>
+    <h1>A swim &amp; tennis neighborhood under the pines</h1>
+    <p class="lede">Woods of Parkview is 170 homes on half-acre wooded lots in the Parkview school cluster — with a six-lane pool, two lighted tennis courts, picnic areas, and neighbors who run all of it as volunteers.</p>
+    <div class="hero-actions">
+      <a class="btn btn--primary" id="hero-cta" href="/membership/#pay">Pay your dues</a>
+      <a class="btn btn--outline" href="/community/">See what's happening</a>
+    </div>
+    <!-- PHOTO (board supplies): optional duotone pool photo. When available, add after .hero-actions:
+         <figure class="photo-duotone" style="max-width:28rem;margin-top:2rem">
+           <img src="/assets/img/pool-hero.jpg" alt="Swimmers in the six-lane pool on a summer afternoon">
+         </figure> -->
+  </div>
+</section>
+<div class="pine-ridge-strip" aria-hidden="true">{% include "pine-ridge.njk" %}</div>
 
-    <section class="section" aria-labelledby="season-heading">
-      <div class="container">
-        <div class="grid grid--2">
-          <div class="board-panel">
-            <h2 id="season-heading">This season at a glance</h2>
-            <ul id="season-glance">
-              <li><span>2026 annual dues</span> <strong>$535</strong></li>
-              <li><span>Membership year</span> <strong>May 1, 2026 – Apr 30, 2027</strong></li>
-              <li><span>Pool open</span> <strong>May 17 – Sep 20</strong></li>
-              <li><span>Tennis courts</span> <strong>7 a.m. – 11 p.m. daily</strong></li>
-              <li><span>Trash &amp; recycling</span> <strong>Thursday mornings</strong></li>
-              <li><span>Refer a new member</span> <strong>Earn $50</strong></li>
-            </ul>
-          </div>
-          <div>
-            <span class="eyebrow">Quick actions</span>
-            <h2>What do you need to do?</h2>
-            <div class="grid grid--2">
-              <a class="card card--action" href="membership.html#pay">
-                <h3>Pay dues</h3>
-                <p>Online, by bank transfer, or by check.</p>
-                <span class="card-cta">Membership &amp; dues →</span>
-              </a>
-              <a class="card card--action" href="pool.html#party">
-                <h3>Book a pool party</h3>
-                <p>Reserve the pavilion and a lifeguard.</p>
-                <span class="card-cta">Pool parties →</span>
-              </a>
-              <a class="card card--action" href="tennis.html#reserve">
-                <h3>Reserve a court</h3>
-                <p>Book up to 48 hours ahead on ReserveMyCourt.</p>
-                <span class="card-cta">Tennis →</span>
-              </a>
-              <a class="card card--action" href="suggestions.html">
-                <h3>Make a suggestion</h3>
-                <p>Tell the board what would make WOP better.</p>
-                <span class="card-cta">Suggestion box →</span>
-              </a>
-              <a class="card card--action" href="contact.html#report">
-                <h3>Report an issue</h3>
-                <p>Broken gate, burned-out court light, pool problem.</p>
-                <span class="card-cta">Report it →</span>
-              </a>
-              <a class="card card--action" href="board.html#arc">
-                <h3>Exterior change?</h3>
-                <p>Fence, paint, addition — request board approval.</p>
-                <span class="card-cta">Change request →</span>
-              </a>
-            </div>
-          </div>
+<section class="section" aria-labelledby="actions-heading">
+  <div class="container">
+    <div class="grid grid--2">
+      <div>
+        <span class="eyebrow">Quick actions</span>
+        <h2 id="actions-heading">What do you need to do?</h2>
+        <div class="grid">
+          <a class="card card--action" href="/membership/#pay">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5c-.5-.9-1.4-1.4-2.5-1.4-1.5 0-2.5.8-2.5 1.9s1 1.5 2.5 1.9 2.5.8 2.5 1.9-1 1.9-2.5 1.9c-1.1 0-2-.5-2.5-1.4"/></svg>
+            <h3>Pay dues</h3>
+            <p>Online, by bank transfer, or by check.</p>
+            <span class="card-cta">Membership &amp; dues →</span>
+          </a>
+          <a class="card card--action" href="/amenities/tennis/#reserve">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.5 6c3.5 2.5 3.5 9.5 0 12M18.5 6c-3.5 2.5-3.5 9.5 0 12"/></svg>
+            <h3>Reserve a court</h3>
+            <p>Book up to 48 hours ahead on ReserveMyCourt.</p>
+            <span class="card-cta">Tennis &amp; pickleball →</span>
+          </a>
+          <a class="card card--action" href="/amenities/pool/#party">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c5 0 9 3.2 9 7H3c0-3.8 4-7 9-7ZM12 10v7a2.5 2.5 0 0 0 5 0"/></svg>
+            <h3>Book a pool party</h3>
+            <p>Reserve the pavilion and a lifeguard.</p>
+            <span class="card-cta">Pool parties →</span>
+          </a>
         </div>
-      </div>
-    </section>
-
-    <section class="section" id="news" hidden aria-labelledby="news-heading">
-      <div class="container">
-        <span class="eyebrow">Latest from the board</span>
-        <h2 id="news-heading">Announcements</h2>
-        <div class="grid grid--3" id="news-list"></div>
-        <p><a href="community.html#news-archive">All announcements →</a></p>
-      </div>
-    </section>
-
-    <section class="section section--tint" aria-labelledby="about-heading">
-      <div class="container">
-        <span class="eyebrow">The neighborhood</span>
-        <h2 id="about-heading">Settled streets, tall trees, and a pool at the center</h2>
-        <p class="lede">Built from the mid-1980s to the early 1990s, Woods of Parkview sits in Gwinnett County just outside downtown Lilburn. Ninety-five percent of homeowners are permanent members — people move here and stay.</p>
-        <div class="stat-row">
-          <div class="stat"><strong>170</strong> <span>homes</span></div>
-          <div class="stat"><strong>½ acre</strong> <span>average lot</span></div>
-          <div class="stat"><strong>6 lanes</strong> <span>pool + diving well + baby pool</span></div>
-          <div class="stat"><strong>2</strong> <span>LED-lighted tennis courts</span></div>
-        </div>
-        <div class="grid grid--3">
-          <div class="card">
-            <h3>Parkview schools</h3>
-            <p>Arcado Elementary, Trickum Middle, and Parkview High — one of Gwinnett County's most sought-after clusters.</p>
-          </div>
-          <div class="card">
-            <h3>Amenities for every age</h3>
-            <p>Pool with diving well and baby pool, clubhouse and pavilion, picnic tables, and lighted tennis until 11 p.m.</p>
-          </div>
-          <div class="card">
-            <h3>Security minded</h3>
-            <p>A camera system records every license plate entering the neighborhood, 24/7.</p>
-          </div>
-        </div>
-        <p style="margin-top:1.5rem">Our streets: </p>
-        <ul class="pill-list">
-          <li>Bowers Brook Drive &amp; Court</li>
-          <li>Planters Drive &amp; Court</li>
-          <li>Amsterdam Drive &amp; Court</li>
-          <li>Huntshire Lane</li>
+        <ul class="action-links">
+          <li><a href="/about/contact/#report">Report an issue</a></li>
+          <li><a href="/about/documents/#arc">Exterior change request</a></li>
+          <li><a href="/about/contact/#suggestions">Make a suggestion</a></li>
         </ul>
       </div>
-    </section>
-
-    <section class="section" id="app" aria-labelledby="app-heading">
-      <div class="container">
-        <span class="eyebrow">Take it with you</span>
-        <h2 id="app-heading">Put WOPHA on your home screen</h2>
-        <p class="lede">This site installs like an app — no app store needed. Pool hours, court booking, and the party form, one tap from your pool chair. It even works with bad signal.</p>
-        <div class="grid grid--2">
-          <div class="card">
-            <h3>iPhone &amp; iPad</h3>
-            <p>Open this site in Safari, tap the <strong>Share</strong> button, then <strong>Add to Home Screen</strong>.</p>
-          </div>
-          <div class="card">
-            <h3>Android</h3>
-            <p>Tap install below, or open Chrome's menu (⋮) and choose <strong>Add to Home screen</strong>.</p>
-            <p><button class="btn btn--primary" id="install-app" hidden>Install the WOPHA app</button></p>
-          </div>
-        </div>
+      <div class="board-panel">
+        <h2 id="season-heading">This season at a glance</h2>
+        <ul id="season-glance">
+          <li><span>2026 annual dues</span> <strong>$535</strong></li>
+          <li><span>Membership year</span> <strong>May 1, 2026 – Apr 30, 2027</strong></li>
+          <li><span>Pool open</span> <strong>May 17 – Sep 20</strong></li>
+          <li><span>Tennis courts</span> <strong>7 a.m. – 11 p.m. daily</strong></li>
+          <li><span>Trash &amp; recycling</span> <strong>Thursday mornings</strong></li>
+          <li><span>Refer a new member</span> <strong>Earn $50</strong></li>
+        </ul>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="section section--tint" aria-labelledby="social-heading">
-      <div class="container">
-        <span class="eyebrow">Get connected</span>
-        <h2 id="social-heading">Meet your neighbors</h2>
-        <div class="grid grid--3">
-          <div class="card">
-            <h3>Parents &amp; kids</h3>
-            <p>Picnic-table meetups, parent group chats, and the Parkview Poolcats swim team — the easiest ways for families to plug in.</p>
-            <p><a href="community.html#parents">Find your group →</a></p>
-          </div>
-          <div class="card">
-            <h3>Events &amp; traditions</h3>
-            <p>Block parties, Yard of the Month, holiday lights, and the annual meeting every January.</p>
-            <p><a href="community.html#events">See the calendar →</a></p>
-          </div>
-          <div class="card">
-            <h3>Volunteer-run, always</h3>
-            <p>No management company — neighbors keep WOP running. There's a job the size of whatever time you have.</p>
-            <p><a href="board.html">Meet the board →</a></p>
-          </div>
-        </div>
+<section class="section" id="news" hidden aria-labelledby="news-heading">
+  <div class="container">
+    <span class="eyebrow">Latest from the board</span>
+    <h2 id="news-heading">Announcements</h2>
+    <div class="grid grid--3" id="news-list"></div>
+    <p><a href="/community/#news-archive">All announcements →</a></p>
+  </div>
+</section>
+
+<section class="section section--tint" aria-labelledby="about-heading">
+  <div class="container">
+    <span class="eyebrow">The neighborhood</span>
+    <h2 id="about-heading">Settled streets, tall trees, and a pool at the center</h2>
+    <p class="lede">Built from the mid-1980s to the early 1990s, Woods of Parkview sits in Gwinnett County just outside downtown Lilburn. Ninety-five percent of homeowners are permanent members — people move here and stay.</p>
+    <div class="stat-row">
+      <div class="stat"><strong>170</strong> <span>homes</span></div>
+      <div class="stat"><strong>½ acre</strong> <span>average lot</span></div>
+      <div class="stat"><strong>6 lanes</strong> <span>pool + diving well + baby pool</span></div>
+      <div class="stat"><strong>2</strong> <span>LED-lighted tennis courts</span></div>
+    </div>
+    <div class="grid grid--3">
+      <div class="card">
+        <h3>Parkview schools</h3>
+        <p>Arcado Elementary, Trickum Middle, and Parkview High — one of Gwinnett County's most sought-after clusters.</p>
       </div>
-    </section>
+      <div class="card">
+        <h3>Amenities for every age</h3>
+        <p>Pool with diving well and baby pool, clubhouse and pavilion, picnic tables, and lighted tennis until 11 p.m.</p>
+      </div>
+      <div class="card">
+        <h3>Security minded</h3>
+        <p>A camera system records every license plate entering the neighborhood, 24/7.</p>
+      </div>
+    </div>
+    <p style="margin-top:1.5rem"><a href="/about/">More about the neighborhood →</a></p>
+  </div>
+</section>
+
+<section class="section" id="app" aria-labelledby="app-heading">
+  <div class="container">
+    <div class="card install-banner">
+      <div>
+        <h2 id="app-heading">Install WOPHA on your home screen</h2>
+        <p>Pool hours, court booking, and the party form — one tap from your pool chair. iPhone: open in Safari, tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>.</p>
+      </div>
+      <button class="btn btn--primary" id="install-app" hidden>Install the app</button>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tint" aria-labelledby="social-heading">
+  <div class="container">
+    <span class="eyebrow">Get connected</span>
+    <h2 id="social-heading">Meet your neighbors</h2>
+    <div class="grid grid--3">
+      <div class="card">
+        <h3>Parents &amp; kids</h3>
+        <p>Picnic-table meetups, parent group chats, and the Parkview Poolcats swim team — the easiest ways for families to plug in.</p>
+        <p><a href="/community/#connect">Find your group →</a></p>
+      </div>
+      <div class="card">
+        <h3>Events &amp; traditions</h3>
+        <p>Block parties, Yard of the Month, holiday lights, and the annual meeting every January.</p>
+        <p><a href="/community/#events">See the calendar →</a></p>
+      </div>
+      <div class="card">
+        <h3>Volunteer-run, always</h3>
+        <p>No management company — neighbors keep WOP running. There's a job the size of whatever time you have.</p>
+        <p><a href="/about/board/">Meet the board →</a></p>
+      </div>
+    </div>
+  </div>
+</section>
