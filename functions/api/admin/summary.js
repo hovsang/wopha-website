@@ -9,7 +9,7 @@ export async function onRequestGet({ env, data }) {
   ).bind(year).first();
   const newSubs = await env.DB.prepare("SELECT COUNT(*) AS n FROM submissions WHERE status = 'new'").first();
   const latest = await env.DB.prepare(
-    "SELECT title, created_at FROM announcements WHERE deleted = 0 ORDER BY created_at DESC LIMIT 1"
+    "SELECT title, created_at FROM announcements WHERE deleted = 0 ORDER BY created_at DESC, id DESC LIMIT 1"
   ).first();
   return json({
     year,

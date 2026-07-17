@@ -208,7 +208,7 @@ pageKey: ledger
         rows.slice(1).forEach(function (r, i) {
           var get = function (idx) { return idx === -1 ? "" : String(r[idx] || "").trim(); };
           var address = get(col.address);
-          if (!address) { errors.push("Row " + (i + 2) + ": empty address — skipped"); return; }
+          if (!address) { errors.push("Row " + (i + 2) + ": empty address: skipped"); return; }
           households.push({
             address: address,
             owner_name: get(col.owner_name),

@@ -115,6 +115,9 @@ the site. Launch-time setup, in order:
       `wopha.com/portal/*` AND `wopha.com/api/admin/*`, policy = allow the
       board members' email addresses (one-time PIN is fine). Board turnover
       later = edit this email list.
+- [ ] Confirm `DEMO_OPEN_ADMIN` is NOT set on the production Pages project
+      before importing real resident data (if it was set for a seed-data
+      demo, unset it first, it bypasses admin auth entirely).
 - [ ] Set the `WEB3FORMS_KEY` secret (section 2).
 - [ ] Create the R2 bucket: `npx wrangler r2 bucket create wopha-backups`,
       then deploy the backup worker: `cd workers/backup && npx wrangler deploy`.

@@ -1,6 +1,8 @@
 // Static link checker for the built site: every internal href/src must
 // resolve to a file in _site (directory URLs resolve via index.html).
-// Skips external/mailto/tel and the runtime-only /api/ + /portal/ paths.
+// Skips external/mailto/tel and the runtime-only /api/ + /portal/ paths,
+// plus /cdn-cgi/ (Cloudflare's own runtime routes, e.g. Access sign-out —
+// never present in the static _site output).
 // /documents/ misses are warnings, not failures — gathering the minutes
 // PDFs is a board content task (see the setup-note on /about/documents/).
 import { readdirSync, statSync, readFileSync, existsSync } from "node:fs";
@@ -18,12 +20,14 @@ const htmlFiles = [];
 
 let bad = 0;
 let warn = 0;
+let runtime = 0;
 const attr = /(?:href|src)="([^"#]+)(?:#[^"]*)?"/g;
 for (const file of htmlFiles) {
   const html = readFileSync(file, "utf8");
   for (const [, url] of html.matchAll(attr)) {
     if (/^(https?:|mailto:|tel:|data:)/.test(url)) continue;
     if (/^\/(api|portal)\//.test(url)) continue;
+    if (/^\/cdn-cgi\//.test(url)) { runtime++; continue; }
     const target = url.startsWith("/") ? join(ROOT, url) : join(dirname(file), url);
     const ok = [target, join(target, "index.html")].some((c) => existsSync(c));
     if (!ok) {
@@ -38,5 +42,5 @@ for (const file of htmlFiles) {
     }
   }
 }
-console.log(`\n${htmlFiles.length} pages scanned; ${bad} broken, ${warn} pending-content warnings.`);
+console.log(`\n${htmlFiles.length} pages scanned; ${bad} broken, ${warn} pending-content warnings, ${runtime} runtime routes skipped.`);
 process.exit(bad ? 1 : 0);

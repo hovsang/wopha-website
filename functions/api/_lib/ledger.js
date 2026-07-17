@@ -20,7 +20,7 @@ export function parseHouseholdsCsv(text) {
   rows.slice(1).forEach((r, i) => {
     const get = (idx) => (idx === -1 ? "" : String(r[idx] || "").trim());
     const address = get(col.address);
-    if (!address) { errors.push("Row " + (i + 2) + ": empty address — skipped"); return; }
+    if (!address) { errors.push("Row " + (i + 2) + ": empty address: skipped"); return; }
     households.push({
       address,
       owner_name: get(col.owner_name),
