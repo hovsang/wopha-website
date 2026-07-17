@@ -62,7 +62,7 @@ $69,078.16; 2023: $85,351.83).
 | Camera - Entrance (the Flock unit) | $1,750 | $2,000 | The replaceable subscription; ~$146-167/mo |
 | QuickBooks Payments fees | $700 | $503.66 | Payment processing (bank debit), not the QBO sub |
 | Telephone | $820 | $746.33 | Clubhouse line; possible future VoIP saving, out of scope |
-| ReserveMyCourt | not a line item | not a line item | UNVERIFIED [V1]: could hide inside Admin Misc or Professional Fees; RMC org plans run roughly $180-300/yr if paid |
+| ReserveMyCourt | not a line item | not a line item | [V1] partially verified 2026-07-17: RMC has NO free tier (rmc2020.reservemycourt.com/pricing: per-amenity pricing capped at $360/yr Standard, $450/yr Pro, plus Stripe transaction fees). WOPHA almost certainly pays ~$200-360/yr, plausibly inside Admin Misc; confirm the exact plan/amount and who pays (HOA vs tennis coordinator) |
 | SwimTopia | not a line item | not a line item | UNVERIFIED [V2]: not visible in the HOA budget; commonly team-paid from swim-team fees, but confirm before excluding from tier math |
 | Weebly/website hosting | not broken out | not broken out | UNVERIFIED [V3]: likely inside Admin Misc ($1,000/$907.23); estimate <=$300/yr |
 
@@ -117,9 +117,9 @@ Cloudflare hosting, weekly backups + monthly retention, QuickBooks CSV exports, 
 | Sponsorship program management (§6.2) | | | ✔ |
 | Self-hosted LPR camera, maintained (§6.4; replaces Flock) | | | ✔ |
 | **Gross monthly (DRAFT, user finalizes in proposal)** | $99 | $149 | $199 |
-| **Minus cancelled subscriptions** | Weebly ~$17-25/mo (est) | + RMC $0 (free tier, §2 F4) | + camera line $146-167/mo (F4) |
+| **Minus cancelled subscriptions** | Weebly ~$17-25/mo (est, V3) | + RMC ~$30/mo (est: $360/yr Standard cap, pending V1 confirm) | + camera line $146-167/mo (F4) |
 | **Minus sponsorship revenue (target)** | | | ~$83/mo (4 sponsors x $250/yr, §6.2) |
-| **Net monthly cost to WOPHA (draft)** | ~$78 | ~$128 | **~$43, potentially net-negative with sponsors** |
+| **Net monthly cost to WOPHA (draft)** | ~$78 | ~$99 | **~$13-30, potentially net-negative with sponsors** |
 
 Draft-pricing notes (grounded in §2):
 - The camera line is the only large hard saving ($1,750-2,000/yr). Tier 3's headline: for
