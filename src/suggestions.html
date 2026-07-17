@@ -1,46 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Suggestion Box — Woods of Parkview HOA</title>
-  <meta name="description" content="Tell the Woods of Parkview board what would make the neighborhood better. Every suggestion is read, and you can send yours anonymously if you prefer.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <link rel="manifest" href="site.webmanifest">
-  <meta name="theme-color" content="#1f3d2b">
-  <link rel="icon" href="assets/img/icon-192.png" type="image/png">
-  <link rel="apple-touch-icon" href="assets/img/icon-180.png">
-</head>
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <header class="site-header">
-    <div class="container">
-      <a class="brand" href="index.html">
-        <svg width="22" height="26" viewBox="0 0 22 26" aria-hidden="true"><path fill="#a8d5c2" d="M11 0 3 10h4L1 19h8v7h4v-7h8l-6-9h4L11 0z"/></svg>
-        Woods of Parkview
-      </a>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
-      <nav class="site-nav" id="site-nav" aria-label="Main">
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="membership.html">Membership</a></li>
-          <li><a href="pool.html">Pool</a></li>
-          <li><a href="tennis.html">Tennis</a></li>
-          <li><a href="swim-team.html">Swim Team</a></li>
-          <li><a href="community.html">Community</a></li>
-          <li><a href="board.html">Board &amp; Docs</a></li>
-          <li><a href="suggestions.html" aria-current="page">Suggestions</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main id="main">
+---
+layout: base.njk
+title: "Suggestion Box — Woods of Parkview HOA"
+description: "Tell the Woods of Parkview board what would make the neighborhood better. Every suggestion is read, and you can send yours anonymously if you prefer."
+pageKey: suggestions
+---
     <section class="hero hero--page">
       <div class="container">
         <span class="eyebrow">Your neighborhood, your ideas</span>
@@ -125,38 +88,3 @@
         </div>
       </div>
     </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <div>
-        <h3>Woods of Parkview HOA</h3>
-        <p>1 Planters Way<br>Lilburn, GA 30047</p>
-        <p><a href="https://www.facebook.com/Woods-of-Parkview-Homeowners-Association-269242857122/" target="_blank" rel="noopener">Facebook page</a></p>
-      </div>
-      <div>
-        <h3>Do it online</h3>
-        <ul>
-          <li><a href="membership.html#pay">Pay dues</a></li>
-          <li><a href="tennis.html#reserve">Reserve a court</a></li>
-          <li><a href="pool.html#party">Book a pool party</a></li>
-          <li><a href="suggestions.html">Suggestion box</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Documents</h3>
-        <ul>
-          <li><a href="board.html#documents">Covenants &amp; bylaws</a></li>
-          <li><a href="board.html#minutes">Meeting minutes</a></li>
-          <li><a href="contact.html">Update your info</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="container footer-note">
-      <p>© 2026 Woods of Parkview Homeowners Association · Lilburn, Georgia</p>
-    </div>
-  </footer>
-
-  <script src="assets/js/site.js"></script>
-</body>
-</html>
