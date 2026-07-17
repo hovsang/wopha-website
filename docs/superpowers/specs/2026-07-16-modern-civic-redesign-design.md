@@ -50,7 +50,7 @@ Both sites share one token set; the portal extends, never forks, the public toke
 | Clay | `#B4552D` | demoted: eyebrow accent + one highlight per page max |
 
 Portal-only semantic status tokens (all fg/bg pairs must clear WCAG AA 4.5:1):
-`--ok #2e7d4f/#e3f2e8` (paid/done) · `--warn #8a5a00/#fdf0d3` (new/pending) ·
+`--ok #2d794d/#e3f2e8` (paid/done; darkened from #2e7d4f in execution — the original pair computed 4.36:1, below this spec's own AA bar; #2d794d clears at 4.59:1) · `--warn #8a5a00/#fdf0d3` (new/pending) ·
 `--info #17567f/#e2eef5` (in progress) · `--danger #a13324/#fbe7e2` (unpaid/errors).
 
 ### Copy rule (user-directed, 2026-07-16)
