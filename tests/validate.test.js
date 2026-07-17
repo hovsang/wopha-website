@@ -153,6 +153,14 @@ describe("validateSetting", () => {
     expect(validateSetting("quickbooks_url", "https://" + "a".repeat(500)).ok).toBe(false);
     expect(validateSetting("quickbooks_url", "")).toEqual({ ok: true, value: "" });
   });
+  it("range-checks the booking rule keys as positive whole numbers", () => {
+    expect(validateSetting("booking_window_hours", "48")).toEqual({ ok: true, value: "48" });
+    expect(validateSetting("booking_window_hours", "0").ok).toBe(false);
+    expect(validateSetting("booking_window_hours", "337").ok).toBe(false);
+    expect(validateSetting("booking_daily_limit", "2")).toEqual({ ok: true, value: "2" });
+    expect(validateSetting("booking_weekly_limit", "51").ok).toBe(false);
+    expect(validateSetting("booking_daily_limit", "1.5").ok).toBe(false);
+  });
 });
 
 describe("validateHouseholdUpdate", () => {

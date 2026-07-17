@@ -1,7 +1,9 @@
 import { describe, it, expect } from "vitest";
 import {
   FACILITY_IDS, facilityById, slotsFor, overlaps, etParts, dateRange, availability,
+  weekBounds, windowError, limitError, validateBookingRequest, validateBlockout, bookingRules,
 } from "../functions/api/_lib/bookings.js";
+import { fakeDb } from "./helpers/fake-db.js";
 
 describe("FACILITIES", () => {
   it("defines the five bookable facilities with unique ids", () => {
@@ -76,5 +78,112 @@ describe("availability", () => {
     expect(lastDay.find((s) => s.start === "10:00").bookable).toBe(true);  // before the 11:00 cutoff
     expect(lastDay.find((s) => s.start === "11:30").bookable).toBe(false); // beyond the 48-hour window
     expect(Object.keys(today[0]).sort()).toEqual(["bookable", "busy", "end", "start"]);
+  });
+});
+
+describe("weekBounds", () => {
+  it("returns the Monday-to-Sunday week containing the date", () => {
+    expect(weekBounds("2026-07-17")).toEqual({ start: "2026-07-13", end: "2026-07-19" }); // a Friday
+    expect(weekBounds("2026-07-13")).toEqual({ start: "2026-07-13", end: "2026-07-19" }); // a Monday
+    expect(weekBounds("2026-07-19")).toEqual({ start: "2026-07-13", end: "2026-07-19" }); // a Sunday
+  });
+});
+
+describe("windowError", () => {
+  const NOW = Date.UTC(2026, 6, 17, 15, 0); // Fri 2026-07-17 11:00 ET
+  it("rejects past slots and slots beyond the window, allows the rest", () => {
+    expect(windowError("2026-07-17", "08:30", NOW, 48)).toMatch(/already passed/);
+    expect(windowError("2026-07-19", "14:30", NOW, 48)).toMatch(/not open yet/);
+    expect(windowError("2026-07-18", "08:30", NOW, 48)).toBe(null);
+    expect(windowError("2026-07-19", "10:00", NOW, 48)).toBe(null);
+  });
+});
+
+describe("validateBookingRequest", () => {
+  const good = {
+    facility: "court-1", date: "2026-07-18", start: "08:30",
+    name: "Alex Morgan", email: " Alex@Example.com ", address: "101 Planters Way",
+  };
+  it("accepts a grid slot and normalizes: derives end, lowercases and trims email", () => {
+    expect(validateBookingRequest(good)).toEqual({ ok: true, value: {
+      facility: "court-1", date: "2026-07-18", start: "08:30", end: "10:00",
+      name: "Alex Morgan", email: "alex@example.com", address: "101 Planters Way",
+    } });
+  });
+  it("rejects unknown facilities, off-grid times, and bad dates", () => {
+    expect(validateBookingRequest({ ...good, facility: "court-9" }).ok).toBe(false);
+    expect(validateBookingRequest({ ...good, start: "08:00" }).ok).toBe(false); // not on the court grid
+    expect(validateBookingRequest({ ...good, start: "8:30" }).ok).toBe(false);
+    expect(validateBookingRequest({ ...good, date: "07/18/2026" }).ok).toBe(false);
+    expect(validateBookingRequest(null).ok).toBe(false);
+  });
+  it("requires name, a plausible email, and address", () => {
+    expect(validateBookingRequest({ ...good, name: " " }).ok).toBe(false);
+    expect(validateBookingRequest({ ...good, email: "not-an-email" }).ok).toBe(false);
+    expect(validateBookingRequest({ ...good, address: "" }).ok).toBe(false);
+    expect(validateBookingRequest({ ...good, name: "x".repeat(201) }).ok).toBe(false);
+  });
+});
+
+describe("validateBlockout", () => {
+  const good = { facility: "pavilion", date: "2026-07-20", start: "08:00", end: "13:45", reason: "Swim meet" };
+  it("accepts one facility or expands all, with any HH:MM range", () => {
+    expect(validateBlockout(good)).toEqual({ ok: true, value: {
+      facilities: ["pavilion"], date: "2026-07-20", start: "08:00", end: "13:45", reason: "Swim meet",
+    } });
+    expect(validateBlockout({ ...good, facility: "all" }).value.facilities).toEqual(FACILITY_IDS);
+  });
+  it("rejects bad ranges, unknown facilities, and missing reasons", () => {
+    expect(validateBlockout({ ...good, start: "14:00" }).ok).toBe(false); // start >= end
+    expect(validateBlockout({ ...good, facility: "gym" }).ok).toBe(false);
+    expect(validateBlockout({ ...good, reason: "" }).ok).toBe(false);
+    expect(validateBlockout({ ...good, end: "24:00" }).ok).toBe(false);
+  });
+});
+
+describe("limitError", () => {
+  const RULES = { booking_window_hours: 48, booking_daily_limit: 1, booking_weekly_limit: 3 };
+  const court1 = facilityById("court-1");
+  const pavilion = facilityById("pavilion");
+  it("caps court bookings per day per household", () => {
+    expect(limitError(court1, "2026-07-18", "2026-07-17", [{ facility: "court-2", date: "2026-07-18" }], RULES))
+      .toMatch(/1 per day/);
+    expect(limitError(court1, "2026-07-18", "2026-07-17", [{ facility: "court-2", date: "2026-07-17" }], RULES))
+      .toBe(null);
+  });
+  it("caps court bookings per Monday-to-Sunday week", () => {
+    const rows = [
+      { facility: "court-1", date: "2026-07-13" },
+      { facility: "court-2", date: "2026-07-15" },
+      { facility: "pickleball-2a", date: "2026-07-16" },
+    ];
+    expect(limitError(court1, "2026-07-18", "2026-07-17", rows, RULES)).toMatch(/3 per week/);
+    expect(limitError(court1, "2026-07-20", "2026-07-17", rows, RULES)).toBe(null); // next week
+  });
+  it("ignores pavilion rows for court limits and allows one upcoming pavilion booking", () => {
+    expect(limitError(court1, "2026-07-18", "2026-07-17", [{ facility: "pavilion", date: "2026-07-18" }], RULES))
+      .toBe(null);
+    expect(limitError(pavilion, "2026-07-18", "2026-07-17", [{ facility: "pavilion", date: "2026-07-18" }], RULES))
+      .toMatch(/pavilion/);
+    expect(limitError(pavilion, "2026-07-18", "2026-07-17", [{ facility: "pavilion", date: "2026-07-16" }], RULES))
+      .toBe(null); // a pavilion booking already in the past does not count
+  });
+});
+
+describe("bookingRules", () => {
+  it("prefers valid settings rows and falls back to defaults otherwise", async () => {
+    const db = fakeDb([{ match: "FROM settings", results: [
+      { key: "booking_window_hours", value: "72" },
+      { key: "booking_daily_limit", value: "garbage" },
+    ] }]);
+    expect(await bookingRules({ DB: db })).toEqual({
+      booking_window_hours: 72, booking_daily_limit: 1, booking_weekly_limit: 3,
+    });
+  });
+  it("survives a missing settings table", async () => {
+    const db = fakeDb([{ match: "FROM settings", error: "no such table: settings" }]);
+    expect(await bookingRules({ DB: db })).toEqual({
+      booking_window_hours: 48, booking_daily_limit: 1, booking_weekly_limit: 3,
+    });
   });
 });

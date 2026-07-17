@@ -89,7 +89,10 @@ export function validateContent(key, value) {
 // Operator-editable settings (admin/settings.js). Stored as strings in the
 // settings table; each key has its own validator. Empty string clears the
 // optional keys; dues_cents must always be a valid amount.
-export const SETTING_KEYS = ["dues_cents", "dues_due_date", "quickbooks_url"];
+export const SETTING_KEYS = [
+  "dues_cents", "dues_due_date", "quickbooks_url",
+  "booking_window_hours", "booking_daily_limit", "booking_weekly_limit",
+];
 
 export function validateSetting(key, value) {
   if (!SETTING_KEYS.includes(key)) return { ok: false, error: "Unknown setting key" };
@@ -105,6 +108,14 @@ export function validateSetting(key, value) {
     if (s === "") return { ok: true, value: "" };
     if (!DATE_RE.test(s)) return { ok: false, error: "dues_due_date must be YYYY-MM-DD" };
     return { ok: true, value: s };
+  }
+  if (key === "booking_window_hours" || key === "booking_daily_limit" || key === "booking_weekly_limit") {
+    const max = key === "booking_window_hours" ? 336 : 50;
+    const n = Number(s);
+    if (!/^\d+$/.test(s) || n < 1 || n > max) {
+      return { ok: false, error: key + " must be a whole number from 1 to " + max };
+    }
+    return { ok: true, value: String(n) };
   }
   // quickbooks_url
   if (s === "") return { ok: true, value: "" };

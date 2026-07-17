@@ -1,6 +1,7 @@
 import { json } from "../_lib/respond.js";
 import { validateSetting, SETTING_KEYS } from "../_lib/validate.js";
 import { DUES_CENTS } from "../_lib/ledger.js";
+import { RULE_DEFAULTS } from "../_lib/bookings.js";
 
 // Operator-editable configuration (dues amount, dues due date, QuickBooks
 // link). GET always returns every allowlisted key so the portal can render a
@@ -9,6 +10,9 @@ export const DEFAULTS = {
   dues_cents: String(DUES_CENTS),
   dues_due_date: "",
   quickbooks_url: "",
+  booking_window_hours: String(RULE_DEFAULTS.booking_window_hours),
+  booking_daily_limit: String(RULE_DEFAULTS.booking_daily_limit),
+  booking_weekly_limit: String(RULE_DEFAULTS.booking_weekly_limit),
 };
 
 export async function onRequestGet({ env }) {

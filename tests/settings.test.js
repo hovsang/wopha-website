@@ -20,6 +20,9 @@ describe("GET /api/admin/settings", () => {
       dues_cents: "69300",
       dues_due_date: "",
       quickbooks_url: "",
+      booking_window_hours: "48",
+      booking_daily_limit: "1",
+      booking_weekly_limit: "3",
     });
   });
   it("overlays stored rows and drops keys that are no longer allowlisted", async () => {
@@ -33,6 +36,9 @@ describe("GET /api/admin/settings", () => {
       dues_cents: "60000",
       dues_due_date: "",
       quickbooks_url: "https://app.qbo.intuit.com/app/customers",
+      booking_window_hours: "48",
+      booking_daily_limit: "1",
+      booking_weekly_limit: "3",
     });
   });
 });
