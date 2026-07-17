@@ -1,0 +1,115 @@
+{
+  "draft": true,
+  "note": "DRAFT prices; the user finalizes gross_monthly_cents here before the proposal is presented. Single source for docs/board-proposal-addendum-2.md, docs/pricing-artifact.html, and src/portal/billing.html. tests/pricing.test.js enforces consistency; edit here first, then let failing tests point at stale consumers. stripe_link per tier is the webmaster's OWN business Stripe recurring Payment Link (monthly), entirely separate from the HOA dues Stripe; empty until the user supplies real links.",
+  "payhoa_anchor_monthly_cents": 19900,
+  "sponsor_target_monthly_cents": 8333,
+  "sponsor_target_note": "4 sponsors x $250/yr = $1,000/yr, about $83/mo. A target, never counted as verified.",
+  "tiers": [
+    {
+      "id": "essentials",
+      "name": "Essentials",
+      "gross_monthly_cents": 9900,
+      "stripe_link": "",
+      "includes": [
+        "Redesigned public site and board portal",
+        "Cloudflare hosting, weekly backups with monthly retention",
+        "Dues ledger and QuickBooks CSV exports",
+        "Content edits and updates, basic turnaround",
+        "Weebly hosting retired after the wopha.com cutover"
+      ],
+      "verified_cancellations": [],
+      "verified_monthly_cents": 0,
+      "pending_cancellations": [
+        {
+          "label": "Weebly hosting",
+          "low_monthly_cents": 1700,
+          "high_monthly_cents": 2500,
+          "source": "V3",
+          "note": "Estimated at most $300/yr; exact amount unverified, likely inside Admin Misc"
+        }
+      ],
+      "pending_low_monthly_cents": 1700,
+      "pending_high_monthly_cents": 2500,
+      "net_verified_monthly_cents": 9900,
+      "net_confirmed_low_monthly_cents": 7400,
+      "net_confirmed_high_monthly_cents": 8200
+    },
+    {
+      "id": "amenities",
+      "name": "Amenities",
+      "gross_monthly_cents": 14900,
+      "stripe_link": "",
+      "includes": [
+        "Everything in Essentials, standard turnaround",
+        "Court booking built in, replaces ReserveMyCourt",
+        "Pavilion and pool party booking calendar",
+        "Swim team pages (optional)"
+      ],
+      "verified_cancellations": [],
+      "verified_monthly_cents": 0,
+      "pending_cancellations": [
+        {
+          "label": "Weebly hosting",
+          "low_monthly_cents": 1700,
+          "high_monthly_cents": 2500,
+          "source": "V3",
+          "note": "Estimated at most $300/yr; exact amount unverified, likely inside Admin Misc"
+        },
+        {
+          "label": "ReserveMyCourt",
+          "low_monthly_cents": 1700,
+          "high_monthly_cents": 3000,
+          "source": "V1",
+          "note": "No free tier exists; $200-360/yr likely. Exact plan and who pays it (HOA or tennis coordinator) unconfirmed"
+        }
+      ],
+      "pending_low_monthly_cents": 3400,
+      "pending_high_monthly_cents": 5500,
+      "net_verified_monthly_cents": 14900,
+      "net_confirmed_low_monthly_cents": 9400,
+      "net_confirmed_high_monthly_cents": 11500
+    },
+    {
+      "id": "complete",
+      "name": "Complete",
+      "gross_monthly_cents": 19900,
+      "stripe_link": "",
+      "includes": [
+        "Everything in Amenities, priority turnaround",
+        "Sponsorship program management",
+        "Self-hosted entrance camera (license plate recognition), maintained; replaces the Flock subscription",
+        "Swim team pages included"
+      ],
+      "verified_cancellations": [
+        {
+          "label": "Camera - Entrance (Flock)",
+          "monthly_cents": 14583,
+          "source": "F4",
+          "note": "$1,750 in the approved 2026 budget; 2025 actual $2,000 ($167/mo)"
+        }
+      ],
+      "verified_monthly_cents": 14583,
+      "pending_cancellations": [
+        {
+          "label": "Weebly hosting",
+          "low_monthly_cents": 1700,
+          "high_monthly_cents": 2500,
+          "source": "V3",
+          "note": "Estimated at most $300/yr; exact amount unverified, likely inside Admin Misc"
+        },
+        {
+          "label": "ReserveMyCourt",
+          "low_monthly_cents": 1700,
+          "high_monthly_cents": 3000,
+          "source": "V1",
+          "note": "No free tier exists; $200-360/yr likely. Exact plan and who pays it unconfirmed"
+        }
+      ],
+      "pending_low_monthly_cents": 3400,
+      "pending_high_monthly_cents": 5500,
+      "net_verified_monthly_cents": 5317,
+      "net_confirmed_low_monthly_cents": -183,
+      "net_confirmed_high_monthly_cents": 1917
+    }
+  ]
+}
