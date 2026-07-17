@@ -27,7 +27,7 @@ const patterns = [
   { label: "net monthly", re: /net monthly/i },
   { label: "per-month price marker (/mo)", re: /\/mo\b/ },
   { label: "Subscribe monthly", re: /subscribe monthly/i },
-  { label: "tier-named plan", re: /\b(Essentials|Amenities|Complete) (tier|plan)\b/ },
+  { label: "tier-named plan", re: /\b(Essentials|Amenities|Complete) (tier|plan)\b/i },
   { label: "PayHOA", re: /payhoa/i },
 ];
 
