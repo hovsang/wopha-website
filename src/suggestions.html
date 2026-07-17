@@ -1,6 +1,6 @@
 ---
 layout: base.njk
-title: "Suggestion Box — Woods of Parkview HOA"
+title: "Suggestion Box | Woods of Parkview HOA"
 description: "Tell the Woods of Parkview board what would make the neighborhood better. Every suggestion is read, and you can send yours anonymously if you prefer."
 pageKey: suggestions
 ---
@@ -16,7 +16,7 @@ pageKey: suggestions
       <div class="container">
         <span class="eyebrow">Send it in</span>
         <h2 id="form-heading">Share your suggestion</h2>
-        <p class="lede">Name and email are optional — include them only if you'd like a reply.</p>
+        <p class="lede">Name and email are optional: include them only if you'd like a reply.</p>
 
         <form class="form-grid" action="/api/forms/submit" method="POST">
           <input type="hidden" name="form_type" value="suggestion">
@@ -26,7 +26,7 @@ pageKey: suggestions
             <input type="text" id="name" name="name" autocomplete="name">
           </div>
           <div>
-            <label for="email">Email (optional — only if you'd like a reply)</label>
+            <label for="email">Email (optional, only if you'd like a reply)</label>
             <input type="email" id="email" name="email" autocomplete="email">
           </div>
           <div>
@@ -57,7 +57,7 @@ pageKey: suggestions
       <div class="container">
         <div class="card">
           <h3 id="anon-heading">Prefer to stay anonymous?</h3>
-          <p>Use our anonymous Google Form instead. It asks for nothing but your suggestion — no name, no email, no address.</p>
+          <p>Use our anonymous Google Form instead. It asks for nothing but your suggestion: no name, no email, no address.</p>
           <!-- PLACEHOLDER: Anonymous Google Form. Create a Google Form with a single suggestion field and no required identity fields, then paste its link below. -->
           <div class="setup-note">
             <p>Create a Google Form with no required identity fields (just a suggestion box) and paste its share link into the button below, replacing the <code>#</code> placeholder.</p>

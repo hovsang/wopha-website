@@ -1,4 +1,4 @@
-// Woods of Parkview — service worker.
+// Woods of Parkview service worker.
 // Network-first so updates always show when online; cache fallback offline.
 // Bump the cache name when shipping big changes.
 var CACHE = "wopha-v2";

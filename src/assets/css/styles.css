@@ -1,8 +1,8 @@
 /* ==========================================================================
-   Woods of Parkview HOA — shared stylesheet ("Modern Civic" system)
+   Woods of Parkview HOA: shared stylesheet ("Modern Civic" system)
    Palette:  Pine #1F3D2B · Canopy #2E5940 · Fern #4C7A5B · Poolwater #0E6E7A
              Sand #EDE7D6 · Paper #FBFAF6 · Card #FFFFFF · Clay #B4552D
-   Type:     Fraunces (display — h1/h2 ONLY) · Public Sans (body & everything else)
+   Type:     Fraunces (display, h1/h2 ONLY) · Public Sans (body & everything else)
    Poolwater is reserved for actions (pay, book, reserve). Clay is decorative;
    text accents use --clay-deep (Clay itself fails AA on Sand). Keep it that way.
    Contrast receipts: docs/superpowers/plans/2026-07-16-public-site-redesign.md
@@ -46,7 +46,7 @@
   src: url("../fonts/public-sans-latin-700-normal.woff2") format("woff2");
 }
 
-/* ---- Tokens (shared contract with the portal plan — never rename) ------- */
+/* ---- Tokens (shared contract with the portal plan, never rename) ------- */
 
 :root {
   /* Color */
@@ -74,7 +74,7 @@
   /* Layout */
   --container: 75rem;
   --container-narrow: 48rem;
-  /* Spacing — 4/8px scale */
+  /* Spacing: 4/8px scale */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -181,7 +181,7 @@ a:hover { color: var(--poolwater); }
 }
 .skip-link:focus { left: 0; }
 
-/* ---- Header / nav — 5 groups + persistent Pay dues ----------------------- */
+/* ---- Header / nav: 5 groups + persistent Pay dues ----------------------- */
 
 .site-header {
   position: sticky;
@@ -299,7 +299,7 @@ a:hover { color: var(--poolwater); }
 
 .nav-link[aria-current="page"], .nav-menu a[aria-current="page"] {
   background: var(--canopy);
-  box-shadow: inset 3px 0 0 #a8d5c2; /* mint 7.36:1 on pine; poolwater is 2.0:1 — do not swap */
+  box-shadow: inset 3px 0 0 #a8d5c2; /* mint 7.36:1 on pine; poolwater is 2.0:1. Do not swap */
 }
 
 @media (min-width: 960px) {
@@ -347,7 +347,7 @@ a:hover { color: var(--poolwater); }
   }
 }
 
-/* ---- Hero — flat pine block, no divider ---------------------------------- */
+/* ---- Hero: flat pine block, no divider ---------------------------------- */
 
 .hero {
   background: var(--pine);
@@ -368,7 +368,7 @@ a:hover { color: var(--poolwater); }
   margin-top: var(--space-6);
 }
 
-/* ---- Buttons — radius 8, darken on hover, no lift, 44px targets ---------- */
+/* ---- Buttons: radius 8, darken on hover, no lift, 44px targets ---------- */
 
 .btn {
   display: inline-flex;
@@ -394,7 +394,7 @@ a:hover { color: var(--poolwater); }
 .hero .btn--outline { border-color: rgba(255, 255, 255, 0.7); color: #fff; }
 .hero .btn--outline:hover { background: #fff; color: var(--pine); border-color: #fff; }
 
-/* ---- Cards — hairline border, soft shadow, line icon; no colored top bar -- */
+/* ---- Cards: hairline border, soft shadow, line icon; no colored top bar -- */
 
 .grid { display: grid; gap: var(--space-6); }
 @media (min-width: 640px) { .grid--2 { grid-template-columns: 1fr 1fr; } }
@@ -443,7 +443,7 @@ a:hover { color: var(--poolwater); }
   margin-bottom: var(--space-2);
 }
 
-/* ---- Clubhouse board — season-at-a-glance panel (Fern/Canopy, clean rules) */
+/* ---- Clubhouse board: season-at-a-glance panel (Fern/Canopy, clean rules) */
 
 .board-panel {
   background: var(--canopy);
@@ -477,7 +477,7 @@ a:hover { color: var(--poolwater); }
 .notice {
   background: var(--card);
   border: 1px solid var(--line);
-  border-left: 4px solid var(--clay); /* decorative — text inside is Ink */
+  border-left: 4px solid var(--clay); /* decorative: text inside is Ink */
   border-radius: var(--radius);
   padding: var(--space-4) var(--space-6);
   margin-block: var(--space-6);
@@ -566,7 +566,7 @@ details.rule .rule-body > :last-child { margin-bottom: 0; }
 .person h3 { margin: var(--space-1) 0; }
 .person p { margin: 0; font-size: 0.9375rem; color: var(--ink-soft); }
 
-/* ---- Forms — one shared system: .form-card container, labels above ------- */
+/* ---- Forms, one shared system: .form-card container, labels above ------- */
 
 .form-card {
   background: var(--card);
@@ -586,7 +586,7 @@ input, textarea, select {
   font: 400 1rem var(--body);
   color: var(--ink);
   background: var(--card);
-  border: 1px solid var(--line-strong); /* 5.58:1 on Card — clears 1.4.11 */
+  border: 1px solid var(--line-strong); /* 5.58:1 on Card, clears 1.4.11 */
   border-radius: var(--radius);
   padding: 0.7rem 0.9rem;
   min-height: 44px;
@@ -636,7 +636,7 @@ input:user-invalid:focus, textarea:user-invalid:focus, select:user-invalid:focus
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* ---- Stats — Fraunces number (tabular), Public Sans micro-caps label ----------- */
+/* ---- Stats: Fraunces number (tabular), Public Sans micro-caps label ----------- */
 
 .stat-row { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-block: var(--space-6); }
 .stat-row .stat strong {
@@ -686,7 +686,7 @@ input:user-invalid:focus, textarea:user-invalid:focus, select:user-invalid:focus
 .install-banner h2 { font-family: var(--body); font-weight: 700; font-size: 1.125rem; margin: 0 0 var(--space-1); }
 .install-banner p { margin: 0; color: var(--ink-soft); }
 
-/* ---- Photography — duotone treatment + placeholder (never clip-art) --------------- */
+/* ---- Photography: duotone treatment + placeholder (never clip-art) --------------- */
 /* Real photos (board supplies) go in .photo-duotone; until then, .photo-placeholder
    renders a solid green block. Placeholders are decorative: aria-hidden="true". */
 
@@ -716,10 +716,10 @@ input:user-invalid:focus, textarea:user-invalid:focus, select:user-invalid:focus
 .photo-strip { display: grid; gap: var(--space-3); grid-template-columns: 1fr; }
 @media (min-width: 640px) { .photo-strip { grid-template-columns: repeat(3, 1fr); } }
 
-/* ---- Pine-ridge line — THE signature element (spec §2) -------------------- */
+/* ---- Pine-ridge line: THE signature element (spec §2) -------------------- */
 /* One drafted 1px fern treeline (src/_includes/pine-ridge.njk), used in
    exactly three places: homepage hero baseline, pre-footer divider, footer
-   mark. This is the site's one bold element — do not use it anywhere else.
+   mark. This is the site's one bold element. Do not use it anywhere else.
    Decorative: the svg carries aria-hidden; no contrast requirement. */
 
 .pine-ridge { display: block; width: 100%; height: 40px; }
@@ -728,9 +728,9 @@ input:user-invalid:focus, textarea:user-invalid:focus, select:user-invalid:focus
 .pine-ridge-strip--prefooter { margin-top: var(--space-10); }
 
 /* Footer mark: a 160px-wide slice of the same ridge at its natural 30:1
-   proportions — the wrapper CROPS (overflow hidden) rather than squeezing
+   proportions: the wrapper CROPS (overflow hidden) rather than squeezing
    1200 units into 160px, keeping the drafted line's rhythm. On pine the
-   fern stroke reads as a quiet emboss — intentional. */
+   fern stroke reads as a quiet emboss (intentional). */
 .pine-ridge--footer {
   width: 160px;
   overflow: hidden;

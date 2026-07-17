@@ -50,7 +50,7 @@ heading: "Inbox"
       card.className = "card";
 
       var head = document.createElement("h3");
-      head.textContent = (TYPE_LABELS[s.form_type] || s.form_type) + " — " + s.created_at.slice(0, 10);
+      head.textContent = (TYPE_LABELS[s.form_type] || s.form_type) + " (" + s.created_at.slice(0, 10) + ")";
       card.appendChild(head);
 
       var badge = document.createElement("span");

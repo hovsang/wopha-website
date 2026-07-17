@@ -67,7 +67,7 @@ describe("GET /api/admin/ledger-export?format=qbo-*", () => {
     expect(res.headers.get("Content-Disposition")).toBe('attachment; filename="wopha-qbo-invoices-2026.csv"');
     const lines = (await res.text()).split("\n");
     expect(lines[0]).toBe("InvoiceNo,Customer,InvoiceDate,DueDate,Item(Product/Service),ItemDescription,ItemAmount");
-    expect(lines[1]).toBe("WOPHA-2026-1,101 Planters Way,2026-01-01,2026-04-30,HOA Annual Dues 2026,Annual dues 2026 — 101 Planters Way,600.00");
+    expect(lines[1]).toBe("WOPHA-2026-1,101 Planters Way,2026-01-01,2026-04-30,HOA Annual Dues 2026,Annual dues 2026 – 101 Planters Way,600.00");
     expect(lines.length).toBe(3);
   });
 
@@ -82,7 +82,7 @@ describe("GET /api/admin/ledger-export?format=qbo-*", () => {
     const res = await onRequestGet({ request: req("?year=2026&format=qbo-invoices&only=unpaid"), env: { DB: db } });
     const lines = (await res.text()).split("\n");
     expect(lines.length).toBe(2);
-    expect(lines[1]).toBe("WOPHA-2026-2,102 Planters Way,2026-01-01,2026-01-01,HOA Annual Dues 2026,Annual dues 2026 — 102 Planters Way,535.00");
+    expect(lines[1]).toBe("WOPHA-2026-2,102 Planters Way,2026-01-01,2026-01-01,HOA Annual Dues 2026,Annual dues 2026 – 102 Planters Way,535.00");
   });
 
   it("qbo-payments: reference rows for the year's paid households", async () => {
@@ -96,8 +96,8 @@ describe("GET /api/admin/ledger-export?format=qbo-*", () => {
     expect(res.headers.get("Content-Disposition")).toBe('attachment; filename="wopha-qbo-payments-2026.csv"');
     expect(await res.text()).toBe([
       "Date,Description,Amount",
-      "2026-03-01,Dues 2026 — 101 Planters Way — stripe,535.00",
-      "2026-03-15,Dues 2026 — 102 Planters Way — check — check #204,500.00",
+      "2026-03-01,Dues 2026 – 101 Planters Way – stripe,535.00",
+      "2026-03-15,Dues 2026 – 102 Planters Way – check – check #204,500.00",
     ].join("\n"));
   });
 

@@ -1,4 +1,4 @@
-/* Board portal — small additions on top of the site design system. */
+/* Board portal: small additions on top of the site design system. */
 .portal-nav { display: flex; gap: 1rem 1.5rem; flex-wrap: wrap; margin: 1rem 0 2rem; }
 .portal-nav a { font-weight: 600; }
 .portal-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }

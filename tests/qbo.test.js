@@ -33,7 +33,7 @@ describe("qboInvoiceRows", () => {
     ]);
     expect(rows[1]).toEqual([
       "WOPHA-2026-1", "101 Planters Way", "2026-01-01", "2026-04-30",
-      "HOA Annual Dues 2026", "Annual dues 2026 — 101 Planters Way", "535.00",
+      "HOA Annual Dues 2026", "Annual dues 2026 – 101 Planters Way", "535.00",
     ]);
     expect(rows[2][0]).toBe("WOPHA-2026-2");
     expect(rows[2][1]).toBe("'=102 Planters Way");
@@ -54,8 +54,8 @@ describe("qboPaymentRows", () => {
     ], 2026);
     expect(rows).toEqual([
       ["Date", "Description", "Amount"],
-      ["2026-03-01", "Dues 2026 — 101 Planters Way — stripe", "535.00"],
-      ["2026-03-15", "Dues 2026 — 102 Planters Way — check — check #204", "500.00"],
+      ["2026-03-01", "Dues 2026 – 101 Planters Way – stripe", "535.00"],
+      ["2026-03-15", "Dues 2026 – 102 Planters Way – check – check #204", "500.00"],
     ]);
   });
 });

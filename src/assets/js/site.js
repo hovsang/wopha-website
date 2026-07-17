@@ -1,4 +1,4 @@
-// Woods of Parkview — shared behavior (mobile nav + PWA registration)
+// Woods of Parkview shared behavior (mobile nav + PWA registration)
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }
@@ -167,7 +167,7 @@ if ("serviceWorker" in navigator) {
 })();
 
 // Live site content: board-edited values (pool hours, season glance) fetched
-// from the portal API. Baked-in HTML is the fallback — offline or API-down
+// from the portal API. Baked-in HTML is the fallback: offline or API-down
 // leaves the page exactly as authored.
 (function () {
   var glance = document.getElementById("season-glance");

@@ -40,7 +40,7 @@ export function qboInvoiceRows(households, year, duesCents, dueDate) {
       year + "-01-01",
       dueDate,
       item,
-      "Annual dues " + year + " — " + h.address,
+      "Annual dues " + year + " – " + h.address,
       amount,
     ].map(safeCell)),
   ];
@@ -55,7 +55,7 @@ export function qboPaymentRows(paymentRows, year) {
     ["Date", "Description", "Amount"],
     ...paymentRows.map((p) => [
       p.paid_on,
-      "Dues " + year + " — " + p.address + " — " + p.method + (p.note ? " — " + p.note : ""),
+      "Dues " + year + " – " + p.address + " – " + p.method + (p.note ? " – " + p.note : ""),
       (p.amount_cents / 100).toFixed(2),
     ].map(safeCell)),
   ];

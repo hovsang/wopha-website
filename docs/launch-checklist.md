@@ -1,10 +1,10 @@
 # WOPHA Website Launch Checklist
 
-The site is a static site built with Eleventy — `npm run build` emits `_site/`. Every item the board must set up
+The site is a static site built with Eleventy: `npm run build` emits `_site/`. Every item the board must set up
 is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
 "Board setup needed" box on the page.
 
-## 0. Urgent — independent of the new site
+## 0. Urgent (independent of the new site)
 
 - [ ] **Take down the public resident directory.** The current site's Directory
       page links to a published Google Sheet with resident names/addresses that
@@ -59,12 +59,12 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
       only as text on the old site's Meeting Minutes page. Shortcut: the
       2026 (2.22.26) and 2025 (2.23.25) annual-meeting minutes PDFs are
       attached to board emails from wophalilburn@gmail.com (sent Mar 2026 and
-      Mar 2025) — save those attachments straight into `documents/minutes/`.
+      Mar 2025). Save those attachments straight into `documents/minutes/`.
 
 ## 4b. Email hygiene (no site change needed)
 
 - [ ] Send announcement emails with recipients in **BCC** or via a free
-      newsletter tool — the May 2026 wristband email exposed 200+ resident
+      newsletter tool: the May 2026 wristband email exposed 200+ resident
       addresses in open CC.
 - [ ] Consider a Google Group or newsletter service for wophalilburn@gmail.com
       so "join the list" is self-service from the Contact page.
@@ -79,7 +79,7 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
 
 - [ ] Enter the current hours in the board portal (Site content → Pool hours);
       they appear on pool.html automatically. The rows baked into the HTML are
-      the offline fallback — keep them roughly current once a season.
+      the offline fallback: keep them roughly current once a season.
 
 ## 6. Hosting & domain
 
@@ -89,14 +89,14 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
 - [ ] Point **wopha.com** nameservers at Cloudflare (free DNS) and attach the
       domain to the Pages project. Weebly keeps serving the old site until DNS
       moves, so there's no downtime window to manage.
-- [ ] Set up **Cloudflare Email Routing** for role addresses —
-      `board@wopha.com`, `treasurer@wopha.com` → volunteers' real inboxes —
+- [ ] Set up **Cloudflare Email Routing** for role addresses
+      (`board@wopha.com`, `treasurer@wopha.com` → volunteers' real inboxes)
       so published contacts survive board turnover. Then update the addresses
       shown on `contact.html`.
 - [ ] After launch, cancel the Weebly subscription (export/download anything
-      still needed first — old photos, remaining minutes text).
+      still needed first: old photos, remaining minutes text).
 
-## 7. Board portal (Cloudflare) — replaces the "PayHOA later" plan
+## 7. Board portal (Cloudflare): replaces the "PayHOA later" plan
 
 The portal (announcements, inbox, dues ledger, content editing) ships with
 the site. Launch-time setup, in order:
@@ -123,7 +123,7 @@ the site. Launch-time setup, in order:
       with the fake seed data.
 - [ ] Enable the Access policy on the project's `*.pages.dev` hostname too
       (Zero Trust → Access → Applications → add the pages.dev domain to the
-      same app / same board-email policy) — without this, portal pages and
+      same app / same board-email policy): without this, portal pages and
       admin APIs 401 on pages.dev and the demo cannot work.
 - [ ] Demo to the board on the free `*.pages.dev` URL (seed data) before the
       wopha.com DNS cutover in section 6.

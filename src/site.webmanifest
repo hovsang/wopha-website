@@ -1,7 +1,7 @@
 {
   "name": "Woods of Parkview HOA",
   "short_name": "WOPHA",
-  "description": "Woods of Parkview HOA, Lilburn GA — dues, pool, tennis and pickleball, events, and neighborhood info.",
+  "description": "Woods of Parkview HOA, Lilburn GA: dues, pool, tennis and pickleball, events, and neighborhood info.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

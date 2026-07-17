@@ -78,7 +78,7 @@ heading: "Dues ledger"
       api("/api/admin/households?year=" + year).then(function (data) {
         var s = data.summary;
         summaryEl.textContent = s.paidCount + " of " + s.total + " households paid for " + data.year +
-          " — " + dollars(s.collectedCents) + " collected, " + dollars(s.outstandingCents) + " outstanding.";
+          ": " + dollars(s.collectedCents) + " collected, " + dollars(s.outstandingCents) + " outstanding.";
         rowsEl.textContent = "";
         data.households.forEach(function (h) {
           var tr = document.createElement("tr");

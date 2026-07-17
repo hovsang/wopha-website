@@ -54,7 +54,7 @@ heading: "Announcements"
         rows.textContent = "";
         data.announcements.forEach(function (a) {
           var tr = document.createElement("tr");
-          [a.created_at.slice(0, 10), a.title, a.pinned_until || "—"].forEach(function (text) {
+          [a.created_at.slice(0, 10), a.title, a.pinned_until || "–"].forEach(function (text) {
             var td = document.createElement("td");
             td.textContent = text;
             tr.appendChild(td);
