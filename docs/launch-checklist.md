@@ -145,6 +145,15 @@ the site. Launch-time setup, in order:
       (Zero Trust → Access → Applications → add the pages.dev domain to the
       same app / same board-email policy): without this, portal pages and
       admin APIs 401 on pages.dev and the demo cannot work.
+- [ ] Booking engine: set the `BOOKING_TOKEN_SECRET` secret on the Pages
+      project (Settings → Environment variables → add as Secret; generate a
+      value with `openssl rand -hex 32`). Cancel links are signed with it;
+      without it the code falls back to a dev-only value that must never
+      serve real bookings.
+- [ ] Booking engine: re-apply the schema remotely so the `bookings` table
+      and its indexes exist:
+      `npx wrangler d1 execute wopha --remote --file=schema.sql`
+      (idempotent: safe to run on the existing database).
 - [ ] Demo to the board on the free `*.pages.dev` URL (seed data) before the
       wopha.com DNS cutover in section 6.
 
