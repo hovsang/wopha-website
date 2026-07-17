@@ -758,10 +758,12 @@ input:user-invalid:focus, textarea:user-invalid:focus, select:user-invalid:focus
 .pine-ridge-strip { line-height: 0; background: var(--paper); }
 .pine-ridge-strip--prefooter { margin-top: var(--space-10); }
 
-/* Hero baseline: the ridge sits on Pine so it reads as the treeline at the
-   foot of the header, not a white band. Light stroke keeps it visible on Pine. */
-.hero + .pine-ridge-strip { background: var(--pine); }
-.hero + .pine-ridge-strip .pine-ridge path { stroke: rgba(255, 255, 255, 0.42); }
+/* Hero baseline: a filled Pine treeline silhouette. The green header comes
+   DOWN in pine-tree shapes into the Paper content, so the ridge IS the edge
+   (not a line floating above a flat cut). Trees hang from the hero. */
+.pine-silhouette-strip { line-height: 0; background: var(--paper); margin-top: -1px; }
+.pine-silhouette { display: block; width: 100%; height: 52px; }
+.pine-silhouette path { fill: var(--pine); }
 
 /* Footer mark: a 160px-wide slice of the same ridge at its natural 30:1
    proportions: the wrapper CROPS (overflow hidden) rather than squeezing
