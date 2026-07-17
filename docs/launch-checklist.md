@@ -75,6 +75,15 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
       the current year's budget summary table from the annual-meeting
       presentation.
 
+## 4d. Sponsors (sponsors page)
+
+- [ ] When a sponsorship is confirmed, add the business in the portal
+      (Site content → Current sponsors: name, https website, one-line blurb).
+      It appears on /sponsors/ immediately; no deploy needed.
+- [ ] Optional logo: send the webmaster a square image. It ships as
+      `src/assets/img/sponsors/<business-name-slug>.png` with the next
+      deploy; until then the site shows a lettermark automatically.
+
 ## 5. Pool hours (pool.html)
 
 - [ ] Enter the current hours in the board portal (Site content → Pool hours);

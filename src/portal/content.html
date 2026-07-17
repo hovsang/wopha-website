@@ -38,6 +38,34 @@ pageKey: content
         <p class="field-help updated-note"></p>
       </section>
 
+      <section class="portal-card portal-section content-card" data-key="sponsors" aria-labelledby="cc-sponsors">
+        <h2 id="cc-sponsors">Current sponsors</h2>
+        <p class="field-help">Shown in the sponsor grid on the public Sponsors page. Each row is one business: name, website (https), one-line blurb. Saving an empty list is fine; the page then shows its reserved-space message. Logos are optional: send the image file to the webmaster and the site shows a lettermark until it ships.</p>
+        <div class="row-editor"></div>
+        <p><button type="button" class="btn btn--sm add-row">+ Add row</button></p>
+        <h3>Preview: how visitors will see it</h3>
+        <div class="content-preview preview-slot"></div>
+        <p>
+          <button type="button" class="btn btn--primary save-btn">Save</button>
+          <span class="field-error save-error" tabindex="-1" hidden></span>
+        </p>
+        <p class="field-help updated-note"></p>
+      </section>
+
+      <section class="portal-card portal-section content-card" data-key="safety_report" aria-labelledby="cc-safety">
+        <h2 id="cc-safety">Safety report</h2>
+        <p class="field-help">Shown in the Safety &amp; security section of the public About page. Update it after each annual meeting with what the police and code enforcement reported; keep it to the facts as presented at the meeting.</p>
+        <div class="row-editor"></div>
+        <p><button type="button" class="btn btn--sm add-row">+ Add row</button></p>
+        <h3>Preview: how residents will see it</h3>
+        <div class="content-preview preview-slot"></div>
+        <p>
+          <button type="button" class="btn btn--primary save-btn">Save</button>
+          <span class="field-error save-error" tabindex="-1" hidden></span>
+        </p>
+        <p class="field-help updated-note"></p>
+      </section>
+
       <section class="portal-card portal-section" aria-labelledby="settings-heading">
         <h2 id="settings-heading">Portal settings</h2>
         <p class="field-help">Used by the portal itself. The dues amount drives the ledger's outstanding math and the mark-paid prefill. The QuickBooks link shows the Open QuickBooks button on the Dues &amp; households page when set.</p>
@@ -114,6 +142,41 @@ pageKey: content
         return wrap;
       }
 
+      /* MIRROR of the public sponsor grid in src/sponsors/index.html
+         (div.grid.grid--3#sponsors-grid) plus site.js fill()'s card shape
+         (div.card.sponsor-card > span.sponsor-mark lettermark, h3 name,
+         p blurb). The preview shows the URL as plain text under the name;
+         the public page links the name only for https URLs and can swap a
+         committed logo image into the mark. Keep the shape in sync. */
+      function renderSponsorsPreview(rows) {
+        var grid = el("div", "grid grid--3");
+        rows.forEach(function (r) {
+          var card = el("div", "card sponsor-card");
+          var mark = el("span", "sponsor-mark", (r[0] || "?").charAt(0).toUpperCase());
+          mark.setAttribute("aria-hidden", "true");
+          card.appendChild(mark);
+          card.appendChild(el("h4", null, r[0]));
+          if (r[1]) card.appendChild(el("p", "field-help", r[1]));
+          if (r[2]) card.appendChild(el("p", null, r[2]));
+          grid.appendChild(card);
+        });
+        return grid;
+      }
+
+      /* MIRROR of the safety list in src/about/index.html
+         (dl.report-list#safety-report) plus site.js fill()'s row shape
+         (div > dt label, dd value). Keep in sync. */
+      function renderSafetyPreview(rows) {
+        var dl = el("dl", "report-list");
+        rows.forEach(function (r) {
+          var div = el("div");
+          div.appendChild(el("dt", null, r[0]));
+          div.appendChild(el("dd", null, r[1]));
+          dl.appendChild(div);
+        });
+        return dl;
+      }
+
       function updatedAtFor(content, key) {
         // Backend-seam contract: content GET gains per-key updated_at as an
         // additive sibling object: { ..., updated_at: { season_glance: "..." } }.
@@ -126,8 +189,10 @@ pageKey: content
       }
 
       var cards = [
-        { key: "season_glance", preview: renderGlancePreview },
-        { key: "pool_hours", preview: renderHoursPreview },
+        { key: "season_glance", fields: ["Label", "Value"], preview: renderGlancePreview },
+        { key: "pool_hours", fields: ["Day", "Hours"], preview: renderHoursPreview },
+        { key: "sponsors", fields: ["Business name", "Website (https)", "One-line blurb"], allowEmpty: true, preview: renderSponsorsPreview },
+        { key: "safety_report", fields: ["Label", "Detail"], preview: renderSafetyPreview },
       ];
 
       cards.forEach(function (card) {
@@ -140,11 +205,11 @@ pageKey: content
 
         card.addBtn.addEventListener("click", function () {
           if (card.rows.length >= MAX_ROWS) return; // button is disabled at the cap; guard anyway
-          card.rows.push(["", ""]);
+          card.rows.push(card.fields.map(function () { return ""; }));
           renderEditor(card);
           renderPreview(card);
           var rowsEls = card.editor.querySelectorAll(".re-row input");
-          if (rowsEls.length) rowsEls[rowsEls.length - 2].focus(); // new row's label input
+          if (rowsEls.length) rowsEls[rowsEls.length - card.fields.length].focus(); // new row's first input
         });
 
         card.root.querySelector(".save-btn").addEventListener("click", function () {
@@ -153,8 +218,10 @@ pageKey: content
           // Capture the serialized rows now, before the request goes out. Nothing
           // below reads card.rows again on success, so further edits the user
           // makes while the PUT is in flight are never clobbered.
-          var value = card.rows.filter(function (r) { return r[0].trim() || r[1].trim(); });
-          if (!value.length) {
+          var value = card.rows.filter(function (r) {
+            return r.some(function (cell) { return cell.trim(); });
+          });
+          if (!value.length && !card.allowEmpty) {
             card.saveError.textContent = "Add at least one row before saving.";
             card.saveError.hidden = false;
             card.saveError.focus();
@@ -187,21 +254,17 @@ pageKey: content
       function renderEditor(card) {
         card.editor.textContent = "";
         card.rows.forEach(function (row, i) {
-          var r = el("div", "re-row");
+          var r = el("div", "re-row" + (card.fields.length === 3 ? " re-row--3" : ""));
 
-          var label = el("input");
-          label.type = "text";
-          label.maxLength = 200;
-          label.value = row[0];
-          label.setAttribute("aria-label", "Row " + (i + 1) + " label");
-          label.addEventListener("input", function () { row[0] = label.value; renderPreview(card); });
-
-          var value = el("input");
-          value.type = "text";
-          value.maxLength = 200;
-          value.value = row[1];
-          value.setAttribute("aria-label", "Row " + (i + 1) + " value");
-          value.addEventListener("input", function () { row[1] = value.value; renderPreview(card); });
+          card.fields.forEach(function (fieldName, c) {
+            var input = el("input");
+            input.type = "text";
+            input.maxLength = 200;
+            input.value = row[c];
+            input.setAttribute("aria-label", "Row " + (i + 1) + " " + fieldName.toLowerCase());
+            input.addEventListener("input", function () { row[c] = input.value; renderPreview(card); });
+            r.appendChild(input);
+          });
 
           var up = el("button", "icon-btn icon-btn--up", "↑");
           up.type = "button";
@@ -225,8 +288,6 @@ pageKey: content
             card.addBtn.focus();
           });
 
-          r.appendChild(label);
-          r.appendChild(value);
           r.appendChild(up);
           r.appendChild(down);
           r.appendChild(rm);
@@ -254,9 +315,14 @@ pageKey: content
 
       function renderPreview(card) {
         card.previewSlot.textContent = "";
-        var rows = card.rows.filter(function (r) { return r[0].trim() || r[1].trim(); });
+        var rows = card.rows.filter(function (r) {
+          return r.some(function (cell) { return cell.trim(); });
+        });
         if (!rows.length) {
-          card.previewSlot.appendChild(el("p", "field-help", "Add a row to see the preview."));
+          card.previewSlot.appendChild(el("p", "field-help",
+            card.allowEmpty
+              ? "No rows. The public page shows its reserved-space message."
+              : "Add a row to see the preview."));
           return;
         }
         card.previewSlot.appendChild(card.preview(rows));
@@ -265,7 +331,9 @@ pageKey: content
       cards.forEach(function (card) { card.editor.appendChild(skeleton(4)); });
       api("/api/content").then(function (content) {
         cards.forEach(function (card) {
-          card.rows = (content[card.key] || []).map(function (r) { return [r[0], r[1]]; });
+          card.rows = (content[card.key] || []).map(function (r) {
+            return card.fields.map(function (_, c) { return typeof r[c] === "string" ? r[c] : ""; });
+          });
           renderEditor(card);
           renderPreview(card);
           var ts = updatedAtFor(content, card.key);
