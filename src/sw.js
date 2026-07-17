@@ -1,23 +1,38 @@
-// Woods of Parkview service worker.
+// Woods of Parkview — service worker.
 // Network-first so updates always show when online; cache fallback offline.
 // Bump the cache name when shipping big changes.
-var CACHE = "wopha-v2";
+var CACHE = "wopha-v3";
 
 var CORE = [
-  "./",
-  "index.html",
-  "membership.html",
-  "pool.html",
-  "tennis.html",
-  "swim-team.html",
-  "community.html",
-  "board.html",
-  "suggestions.html",
-  "contact.html",
-  "assets/css/styles.css",
-  "assets/js/site.js",
-  "assets/img/wop-map.jpg",
-  "assets/img/icon-192.png"
+  "/",
+  "/membership/",
+  "/amenities/",
+  "/amenities/pool/",
+  "/amenities/tennis/",
+  "/amenities/swim-team/",
+  "/community/",
+  "/about/",
+  "/about/board/",
+  "/about/documents/",
+  "/about/contact/",
+  // "/thanks.html" is deliberately NOT precached: on Cloudflare Pages (and
+  // wrangler pages dev) literal .html URLs 301/308-redirect to their clean
+  // equivalent (here, "/thanks"). A precached response that followed that
+  // redirect carries redirected=true, and navigation requests are always
+  // made with redirect: "manual"; the platform refuses to fulfill a
+  // manual-redirect request with a redirected response, so an offline visit
+  // to /thanks.html would hard-fail instead of falling back to cache. The
+  // runtime fetch handler below still opportunistically caches "/thanks"
+  // (no redirect) the first time a visitor lands there online.
+  "/assets/css/styles.css",
+  "/assets/js/site.js",
+  "/assets/img/wop-map.jpg",
+  "/assets/img/icon-192.png",
+  "/assets/fonts/fraunces-latin-500-normal.woff2",
+  "/assets/fonts/fraunces-latin-600-normal.woff2",
+  "/assets/fonts/public-sans-latin-400-normal.woff2",
+  "/assets/fonts/public-sans-latin-600-normal.woff2",
+  "/assets/fonts/public-sans-latin-700-normal.woff2"
 ];
 
 self.addEventListener("install", function (e) {

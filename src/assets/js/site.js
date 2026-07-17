@@ -1,6 +1,6 @@
 // Woods of Parkview shared behavior (mobile nav + PWA registration)
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
+  navigator.serviceWorker.register("/sw.js");
 }
 
 (function () {
@@ -103,10 +103,10 @@ if ("serviceWorker" in navigator) {
   var m = new Date().getMonth(); // 0 = January
   if (m >= 4 && m <= 8) {
     cta.textContent = "Pool hours & booking";
-    cta.href = "pool.html";
+    cta.href = "/amenities/pool/";
   } else if (m >= 9) {
     cta.textContent = "Annual meeting & minutes";
-    cta.href = "board.html#minutes";
+    cta.href = "/about/documents/#minutes";
   }
 })();
 
