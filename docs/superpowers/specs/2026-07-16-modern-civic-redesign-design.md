@@ -27,8 +27,12 @@ Both sites share one token set; the portal extends, never forks, the public toke
 ### Typography
 - **Display (h1/h2 only):** Fraunces — kept but dialed back: weights 500–600, tighter tracking.
   Dropped from h3 down. In the portal, Fraunces appears only on page titles and KPI numbers.
-- **Body & UI:** **Inter** (replaces Public Sans everywhere, portal included) — body, h3, labels,
-  buttons, nav. Neutral, institutional, excellent numerals for dues/dates.
+- **Body & UI:** **Public Sans** — kept (decision revised 2026-07-16 after a frontend-design
+  review with a side-by-side visual comparison; Inter was rejected as the default face of
+  AI/startup UIs). Public Sans is the U.S. government's open-source civic typeface (USWDS) —
+  the "civic" story is literal, and it is already the site's body face (zero migration). Used
+  with new discipline: body, h3, labels, buttons, nav; `font-variant-numeric: tabular-nums`
+  wherever dues/dates/figures line up; 600-weight uppercase micro-caps for labels.
 - Both are free Google Fonts; **self-host** them (drop the fonts.gstatic.com round-trip).
 
 ### Color tokens
@@ -55,9 +59,16 @@ Portal-only semantic status tokens (all fg/bg pairs must clear WCAG AA 4.5:1):
 - **Retire the jagged canopy-polygon SVG divider.** Heroes become flat pine color blocks,
   optionally with duotone **real photography** (pool, courts, streets) — photography is the
   primary warmth vehicle. Solid color blocks where no photo exists; never clip-art.
+- **Signature element (added 2026-07-16, user-approved): the pine-ridge line.** A single
+  drafted 1px stroke treeline SVG (fern `#4C7A5B` stroke, `vector-effect: non-scaling-stroke`,
+  fill none — a fine line, never a filled silhouette) — the same idea as the old canopy,
+  executed precisely. Exactly one static asset (an 11ty partial, `pine-ridge.njk`; exact path
+  data recorded in the public-site plan), used in exactly three places: the hero's baseline
+  rule, a pre-footer divider, and a small footer mark. This is the site's one bold element;
+  everything around it stays quiet.
 - Cards: hairline 1px border + soft shadow + small line icon (replaces colored top-border +
   bounce hover). Buttons: radius 8px, darken on hover (no lift), 44px min target.
-- Stat rows: Fraunces number + Inter uppercase micro-caps label.
+- Stat rows: Fraunces number + Public Sans uppercase micro-caps label, tabular numerals.
 - Motion: 150ms ease on hover/focus only; `prefers-reduced-motion` honored (already is).
 
 ## 3. Public site
@@ -93,7 +104,7 @@ lands with the wopha.com/Cloudflare cutover (redirects don't run on GitHub Pages
 ### Homepage, top to bottom
 1. Pine header: wordmark + tree glyph (kept), 5-item nav, Pay-dues button.
 2. Hero: flat pine block (no canopy), eyebrow, Fraunces h1, lede, primary + ghost CTA; optional
-   duotone pool photo.
+   duotone pool photo; the pine-ridge line runs as the hero's baseline rule.
 3. Quick actions, tiered: 3 primary (Pay dues · Reserve a court · Book a pool party) + 3
    secondary links (Report issue · ARC request · Suggestion).
 4. Season-at-a-glance panel (kept concept, restyled: clean dividers, Fern/Canopy).
@@ -170,7 +181,7 @@ documented workflows, chosen by the treasurer:
 **Endpoint:** extend `GET /api/admin/ledger-export?year=YYYY` with `format=`:
 | `format` | Output | Filename |
 |---|---|---|
-| absent / `board` | current board CSV (back-compat, unchanged) | `wopha-ledger-<year>[.unpaid].csv` |
+| absent / `board` | current board CSV (back-compat, unchanged) | `wopha-ledger-<year>[-unpaid].csv` (existing `-unpaid` suffix kept for back-compat) |
 | `qbo-customers` | QBO Customers import CSV (year-independent) | `wopha-qbo-customers.csv` |
 | `qbo-invoices` | QBO Invoices import CSV, 1 row per household; honors `only=unpaid` | `wopha-qbo-invoices-<year>.csv` |
 | `qbo-payments` | payments reference CSV (paid rows only) | `wopha-qbo-payments-<year>.csv` |
