@@ -15,15 +15,13 @@ var CORE = [
   "/about/board/",
   "/about/documents/",
   "/about/contact/",
-  // "/thanks.html" is deliberately NOT precached: on Cloudflare Pages (and
-  // wrangler pages dev) literal .html URLs 301/308-redirect to their clean
-  // equivalent (here, "/thanks"). A precached response that followed that
-  // redirect carries redirected=true, and navigation requests are always
-  // made with redirect: "manual"; the platform refuses to fulfill a
-  // manual-redirect request with a redirected response, so an offline visit
-  // to /thanks.html would hard-fail instead of falling back to cache. The
-  // runtime fetch handler below still opportunistically caches "/thanks"
-  // (no redirect) the first time a visitor lands there online.
+  "/thanks",
+  // "/thanks" is precached in clean-URL form. Cloudflare Pages (and
+  // wrangler pages dev) 301/308-redirect literal .html URLs to their clean
+  // equivalent; a precached redirected response cannot fulfill manual-mode
+  // navigation requests (causing offline visits to hard-fail). By caching
+  // "/thanks" (not "/thanks.html"), we get a direct 200 with no redirect.
+  // The runtime fetch handler also opportunistically caches this URL.
   "/assets/css/styles.css",
   "/assets/js/site.js",
   "/assets/img/wop-map.jpg",
