@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
 import pricing from "../src/_data/pricing.json";
 import { PLAN_KEYS } from "../functions/api/_lib/validate.js";
@@ -88,5 +89,24 @@ describe("pricing.json shape", () => {
 describe("plan settings key stays in lockstep with the tier data", () => {
   it("PLAN_KEYS equals the pricing.json tier ids", () => {
     expect(PLAN_KEYS).toEqual(pricing.tiers.map((t) => t.id));
+  });
+});
+
+describe("docs stay in sync with pricing.json", () => {
+  const addendum = readFileSync("docs/board-proposal-addendum-2.md", "utf8");
+  it("addendum names every tier and shows its draft gross price and the PayHOA anchor", () => {
+    for (const t of pricing.tiers) {
+      expect(addendum).toContain(t.name);
+      expect(addendum).toContain(fmt(t.gross_monthly_cents));
+    }
+    expect(addendum).toContain(fmt(pricing.payhoa_anchor_monthly_cents));
+  });
+  it("addendum contains no em dashes (copy rule)", () => {
+    expect(addendum.includes("—")).toBe(false);
+  });
+  it("addendum carries the verification honesty markers", () => {
+    for (const tag of ["[F1]", "[F4]", "[F6]", "[V1]", "[V2]", "[V3]"]) {
+      expect(addendum).toContain(tag);
+    }
   });
 });
