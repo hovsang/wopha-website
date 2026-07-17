@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Suggestion Box — Woods of Parkview HOA</title>
+  <meta name="description" content="Tell the Woods of Parkview board what would make the neighborhood better. Every suggestion is read, and you can send yours anonymously if you prefer.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#1f3d2b">
+  <link rel="icon" href="assets/img/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/icon-180.png">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html">
+        <svg width="22" height="26" viewBox="0 0 22 26" aria-hidden="true"><path fill="#a8d5c2" d="M11 0 3 10h4L1 19h8v7h4v-7h8l-6-9h4L11 0z"/></svg>
+        Woods of Parkview
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="membership.html">Membership</a></li>
+          <li><a href="pool.html">Pool</a></li>
+          <li><a href="tennis.html">Tennis</a></li>
+          <li><a href="swim-team.html">Swim Team</a></li>
+          <li><a href="community.html">Community</a></li>
+          <li><a href="board.html">Board &amp; Docs</a></li>
+          <li><a href="suggestions.html" aria-current="page">Suggestions</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero hero--page">
+      <div class="container">
+        <span class="eyebrow">Your neighborhood, your ideas</span>
+        <h1>Suggestion box</h1>
+        <p class="lede">Tell the board what would make Woods of Parkview better. Every submission is read.</p>
+      </div>
+      <svg class="canopy" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><polygon fill="currentColor" points="0,60 0,40 30,18 60,38 90,10 120,34 150,22 180,42 210,14 240,36 270,26 300,44 330,12 360,34 390,24 420,40 450,8 480,32 510,20 540,42 570,16 600,36 630,28 660,44 690,10 720,34 750,22 780,40 810,14 840,36 870,24 900,42 930,18 960,38 990,8 1020,32 1050,26 1080,44 1110,12 1140,34 1170,20 1200,40 1200,60"/></svg>
+    </section>
+
+    <section class="section" aria-labelledby="form-heading">
+      <div class="container">
+        <span class="eyebrow">Send it in</span>
+        <h2 id="form-heading">Share your suggestion</h2>
+        <p class="lede">Name and email are optional — include them only if you'd like a reply.</p>
+
+        <form class="form-grid" action="/api/forms/submit" method="POST">
+          <input type="hidden" name="form_type" value="suggestion">
+          <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+          <div>
+            <label for="name">Your name (optional)</label>
+            <input type="text" id="name" name="name" autocomplete="name">
+          </div>
+          <div>
+            <label for="email">Email (optional — only if you'd like a reply)</label>
+            <input type="email" id="email" name="email" autocomplete="email">
+          </div>
+          <div>
+            <label for="street">Street (optional)</label>
+            <select id="street" name="street">
+              <option value="">Choose a street</option>
+              <option>Bowers Brook Drive</option>
+              <option>Bowers Brook Court</option>
+              <option>Planters Drive</option>
+              <option>Planters Court</option>
+              <option>Amsterdam Drive</option>
+              <option>Amsterdam Court</option>
+              <option>Huntshire Lane</option>
+            </select>
+          </div>
+          <div>
+            <label for="suggestion">Suggestion</label>
+            <textarea id="suggestion" name="suggestion" rows="6" required></textarea>
+          </div>
+          <div>
+            <button class="btn btn--primary" type="submit">Send suggestion</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section section--tint" aria-labelledby="anon-heading">
+      <div class="container">
+        <div class="card">
+          <h3 id="anon-heading">Prefer to stay anonymous?</h3>
+          <p>Use our anonymous Google Form instead. It asks for nothing but your suggestion — no name, no email, no address.</p>
+          <!-- PLACEHOLDER: Anonymous Google Form. Create a Google Form with a single suggestion field and no required identity fields, then paste its link below. -->
+          <div class="setup-note">
+            <p>Create a Google Form with no required identity fields (just a suggestion box) and paste its share link into the button below, replacing the <code>#</code> placeholder.</p>
+          </div>
+          <p><a class="btn btn--outline" href="#">Open the anonymous form</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="process-heading">
+      <div class="container">
+        <span class="eyebrow">What happens next</span>
+        <h2 id="process-heading">What happens to suggestions</h2>
+        <div class="grid grid--3">
+          <div class="card">
+            <h3>1. We read it</h3>
+            <p>The board reads every submission that comes in.</p>
+          </div>
+          <div class="card">
+            <h3>2. We discuss it</h3>
+            <p>Your suggestion goes on the table at the board's next meeting.</p>
+          </div>
+          <div class="card">
+            <h3>3. Big ideas go to the annual meeting</h3>
+            <p>Ideas that need budget go on the agenda for the annual meeting, held each January.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div>
+        <h3>Woods of Parkview HOA</h3>
+        <p>1 Planters Way<br>Lilburn, GA 30047</p>
+        <p><a href="https://www.facebook.com/Woods-of-Parkview-Homeowners-Association-269242857122/" target="_blank" rel="noopener">Facebook page</a></p>
+      </div>
+      <div>
+        <h3>Do it online</h3>
+        <ul>
+          <li><a href="membership.html#pay">Pay dues</a></li>
+          <li><a href="tennis.html#reserve">Reserve a court</a></li>
+          <li><a href="pool.html#party">Book a pool party</a></li>
+          <li><a href="suggestions.html">Suggestion box</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Documents</h3>
+        <ul>
+          <li><a href="board.html#documents">Covenants &amp; bylaws</a></li>
+          <li><a href="board.html#minutes">Meeting minutes</a></li>
+          <li><a href="contact.html">Update your info</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-note">
+      <p>© 2026 Woods of Parkview Homeowners Association · Lilburn, Georgia</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/site.js"></script>
+</body>
+</html>

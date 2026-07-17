@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Site content — WOPHA board portal</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/portal.css">
+</head>
+<body>
+  <main class="section">
+    <div class="container">
+      <span class="eyebrow">WOPHA board portal</span>
+      <h1>Site content</h1>
+      <nav class="portal-nav">
+        <a href="index.html">Dashboard</a>
+        <a href="announcements.html">Announcements</a>
+        <a href="inbox.html">Inbox</a>
+        <a href="ledger.html">Ledger</a>
+        <a href="content.html">Site content</a>
+        <a href="../index.html">← Public site</a>
+      </nav>
+      <div id="error" class="portal-error"></div>
+      <p class="lede">One row per line, in the form <code>label | value</code>. Changes appear on the public site on the next page load — no deploy needed.</p>
+
+      <h2>Season at a glance (homepage panel)</h2>
+      <form class="form-grid" data-key="season_glance">
+        <div><textarea rows="7"></textarea></div>
+        <div><button class="btn btn--primary" type="submit">Save</button> <span class="saved"></span></div>
+      </form>
+
+      <h2>Pool hours (pool page table)</h2>
+      <form class="form-grid" data-key="pool_hours">
+        <div><textarea rows="8"></textarea></div>
+        <div><button class="btn btn--primary" type="submit">Save</button> <span class="saved"></span></div>
+      </form>
+    </div>
+  </main>
+  <script src="portal.js"></script>
+  <script>
+    var forms = document.querySelectorAll("form[data-key]");
+
+    function toLines(rows) {
+      return rows.map(function (r) { return r[0] + " | " + r[1]; }).join("\n");
+    }
+    function toRows(text) {
+      return text.split("\n")
+        .map(function (line) { return line.trim(); })
+        .filter(function (line) { return line.length; })
+        .map(function (line) {
+          var i = line.indexOf("|");
+          if (i === -1) return [line, ""];
+          return [line.slice(0, i).trim(), line.slice(i + 1).trim()];
+        });
+    }
+
+    api("/api/content").then(function (content) {
+      forms.forEach(function (form) {
+        var rows = content[form.getAttribute("data-key")];
+        if (rows) form.querySelector("textarea").value = toLines(rows);
+      });
+    }).catch(showError);
+
+    forms.forEach(function (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        clearError();
+        var saved = form.querySelector(".saved");
+        api("/api/admin/content", {
+          method: "PUT",
+          body: { key: form.getAttribute("data-key"), value: toRows(form.querySelector("textarea").value) },
+        }).then(function () {
+          saved.textContent = "Saved ✓";
+          setTimeout(function () { saved.textContent = ""; }, 1500);
+        }).catch(showError);
+      });
+    });
+  </script>
+</body>
+</html>

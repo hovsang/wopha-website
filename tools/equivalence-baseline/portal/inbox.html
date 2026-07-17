@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Inbox — WOPHA board portal</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/portal.css">
+</head>
+<body>
+  <main class="section">
+    <div class="container">
+      <span class="eyebrow">WOPHA board portal</span>
+      <h1>Inbox</h1>
+      <nav class="portal-nav">
+        <a href="index.html">Dashboard</a>
+        <a href="announcements.html">Announcements</a>
+        <a href="inbox.html">Inbox</a>
+        <a href="ledger.html">Ledger</a>
+        <a href="content.html">Site content</a>
+        <a href="../index.html">← Public site</a>
+      </nav>
+      <div id="error" class="portal-error"></div>
+      <div class="portal-actions">
+        <div>
+          <label for="filter">Show</label>
+          <select id="filter">
+            <option value="">Everything</option>
+            <option value="new" selected>New</option>
+            <option value="in_progress">In progress</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
+      </div>
+      <div id="items"></div>
+    </div>
+  </main>
+  <script src="portal.js"></script>
+  <script>
+    var TYPE_LABELS = {
+      contact_update: "Contact update",
+      issue_report: "Issue report",
+      suggestion: "Suggestion",
+      arc_request: "Exterior change request",
+    };
+    var filter = document.getElementById("filter");
+    var items = document.getElementById("items");
+
+    function load() {
+      clearError();
+      var qs = filter.value ? "?status=" + filter.value : "";
+      api("/api/admin/submissions" + qs).then(function (data) {
+        items.textContent = "";
+        if (!data.submissions.length) {
+          var empty = document.createElement("p");
+          empty.textContent = "Nothing here.";
+          items.appendChild(empty);
+          return;
+        }
+        data.submissions.forEach(function (s) {
+          items.appendChild(renderItem(s));
+        });
+      }).catch(showError);
+    }
+
+    function renderItem(s) {
+      var card = document.createElement("div");
+      card.className = "card";
+
+      var head = document.createElement("h3");
+      head.textContent = (TYPE_LABELS[s.form_type] || s.form_type) + " — " + s.created_at.slice(0, 10);
+      card.appendChild(head);
+
+      var badge = document.createElement("span");
+      badge.className = "badge badge--" + s.status;
+      badge.textContent = s.status.replace("_", " ");
+      card.appendChild(badge);
+
+      var dl = document.createElement("dl");
+      Object.keys(s.fields).forEach(function (k) {
+        var dt = document.createElement("dt");
+        dt.textContent = k;
+        var dd = document.createElement("dd");
+        dd.textContent = s.fields[k];
+        dl.appendChild(dt);
+        dl.appendChild(dd);
+      });
+      card.appendChild(dl);
+
+      var statusSel = document.createElement("select");
+      ["new", "in_progress", "done"].forEach(function (st) {
+        var o = document.createElement("option");
+        o.value = st;
+        o.textContent = st.replace("_", " ");
+        if (st === s.status) o.selected = true;
+        statusSel.appendChild(o);
+      });
+      statusSel.addEventListener("change", function () {
+        api("/api/admin/submissions/" + s.id, { method: "PATCH", body: { status: statusSel.value } })
+          .then(load).catch(showError);
+      });
+      card.appendChild(statusSel);
+
+      var notes = document.createElement("textarea");
+      notes.rows = 2;
+      notes.placeholder = "Board notes (private)";
+      notes.value = s.notes;
+      card.appendChild(notes);
+
+      var save = document.createElement("button");
+      save.className = "btn";
+      save.type = "button";
+      save.textContent = "Save notes";
+      save.addEventListener("click", function () {
+        api("/api/admin/submissions/" + s.id, { method: "PATCH", body: { notes: notes.value } })
+          .then(function () { save.textContent = "Saved ✓"; setTimeout(function () { save.textContent = "Save notes"; }, 1500); })
+          .catch(showError);
+      });
+      card.appendChild(save);
+
+      return card;
+    }
+
+    filter.addEventListener("change", load);
+    load();
+  </script>
+</body>
+</html>
