@@ -416,19 +416,20 @@ pageKey: content
         if (dueDateEl.value !== (original.dues_due_date || "")) updates.push({ key: "dues_due_date", value: dueDateEl.value });
         if (qb !== (original.quickbooks_url || "")) updates.push({ key: "quickbooks_url", value: qb });
         var ruleFields = [
-          { el: windowEl, key: "booking_window_hours", label: "booking window" },
-          { el: dailyEl, key: "booking_daily_limit", label: "daily court limit" },
-          { el: weeklyEl, key: "booking_weekly_limit", label: "weekly court limit" },
+          { el: windowEl, key: "booking_window_hours", label: "booking window", max: 336, unit: "hours" },
+          { el: dailyEl, key: "booking_daily_limit", label: "daily court limit", max: 50, unit: "bookings" },
+          { el: weeklyEl, key: "booking_weekly_limit", label: "weekly court limit", max: 50, unit: "bookings" },
         ];
         for (var r = 0; r < ruleFields.length; r++) {
-          var rv = ruleFields[r].el.value.trim();
-          if (!/^\d+$/.test(rv) || Number(rv) < 1) {
-            settingsError.textContent = "Enter a whole number of at least 1 for the " + ruleFields[r].label + ".";
+          var rf = ruleFields[r];
+          var rv = rf.el.value.trim();
+          if (!/^\d+$/.test(rv) || Number(rv) < 1 || Number(rv) > rf.max) {
+            settingsError.textContent = "Enter a whole number for the " + rf.label + " (1 to " + rf.max + " " + rf.unit + ").";
             settingsError.hidden = false;
             settingsError.focus();
             return;
           }
-          if (rv !== original[ruleFields[r].key]) updates.push({ key: ruleFields[r].key, value: rv });
+          if (rv !== original[rf.key]) updates.push({ key: rf.key, value: rv });
         }
         if (!updates.length) {
           toast("No changes to save.");
