@@ -25,3 +25,8 @@ INSERT INTO site_content (key, value) VALUES
 
 INSERT INTO settings (key, value) VALUES
   ('dues_cents', '69300');
+
+INSERT INTO bookings (facility, date, start_time, end_time, name, email, address, status) VALUES
+  ('court-1', date('now', '+1 day'), '17:30', '19:00', 'Alex Morgan', 'alex@example.com', '101 Planters Way', 'booked'),
+  ('pavilion', date('now', '+1 day'), '12:00', '15:00', 'Casey Diaz', 'casey@example.com', '105 Planters Way', 'booked'),
+  ('pavilion', date('now', '+2 day'), '09:00', '21:00', 'Swim meet', '', '', 'blocked');

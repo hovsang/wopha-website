@@ -49,5 +49,24 @@ CREATE TABLE IF NOT EXISTS settings (
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS bookings (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  facility TEXT NOT NULL,           -- allowlisted in _lib/bookings.js (FACILITY_IDS)
+  date TEXT NOT NULL,               -- YYYY-MM-DD
+  start_time TEXT NOT NULL,         -- HH:MM, 24-hour
+  end_time TEXT NOT NULL,           -- HH:MM, 24-hour
+  name TEXT NOT NULL DEFAULT '',    -- household name; block-out reason when status = 'blocked'
+  email TEXT NOT NULL DEFAULT '',   -- stored lowercased; '' for block-outs
+  address TEXT NOT NULL DEFAULT '',
+  status TEXT NOT NULL DEFAULT 'booked',  -- booked | cancelled | blocked
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE INDEX IF NOT EXISTS idx_submissions_status ON submissions(status);
 CREATE INDEX IF NOT EXISTS idx_payments_year ON payments(year);
+CREATE INDEX IF NOT EXISTS idx_bookings_date ON bookings(date);
+-- Same-slot double-booking guard: of two concurrent booking POSTs, the second
+-- INSERT fails (handler maps it to 409). Only live resident bookings
+-- participate: cancelled rows free the slot, and block-outs may span slots.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_slot
+  ON bookings(facility, date, start_time) WHERE status = 'booked';
