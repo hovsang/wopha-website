@@ -1,6 +1,6 @@
 # WOPHA Website Launch Checklist
 
-The site is a plain static site — no build step. Every item the board must set up
+The site is a static site built with Eleventy — `npm run build` emits `_site/`. Every item the board must set up
 is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
 "Board setup needed" box on the page.
 
@@ -84,8 +84,8 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
 ## 6. Hosting & domain
 
 - [ ] Push this folder to a GitHub repository.
-- [ ] Create a **Cloudflare Pages** project from the repo (free; no build
-      command — it's plain HTML).
+- [ ] Create a **Cloudflare Pages** project from the repo (free; build command
+      `npm ci && npm run build`, output `_site`).
 - [ ] Point **wopha.com** nameservers at Cloudflare (free DNS) and attach the
       domain to the Pages project. Weebly keeps serving the old site until DNS
       moves, so there's no downtime window to manage.

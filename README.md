@@ -11,6 +11,9 @@ Replaces the old Weebly site.
   Payment Links, ReserveMyCourt, SwimTopia, Google Forms/Calendar, Web3Forms).
   The board portal (`/portal/`) and its API run on Cloudflare Pages
   Functions + D1 (`functions/`, unchanged by the build step).
+- QuickBooks: the board portal exports QBO-ready CSVs (one-way; D1 stays the
+  ledger of record) — rationale and treasurer runbook in
+  `docs/quickbooks-export.md`.
 - **To launch:** work through `docs/launch-checklist.md`. Placeholder spots are
   marked with `PLACEHOLDER:` comments in the HTML and visible "Board setup
   needed" boxes on the pages.
