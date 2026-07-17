@@ -60,6 +60,14 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
       2026 (2.22.26) and 2025 (2.23.25) annual-meeting minutes PDFs are
       attached to board emails from wophalilburn@gmail.com (sent Mar 2026 and
       Mar 2025). Save those attachments straight into `documents/minutes/`.
+- [x] 2026 annual-meeting minutes published
+      (`src/documents/minutes/2026-02-22-annual-meeting.pdf`, linked from
+      /about/documents/ and the About page's Safety & security section).
+- [ ] Each year after the annual meeting: save the minutes PDF into
+      `src/documents/minutes/` as `YYYY-MM-DD-annual-meeting.pdf`, add its
+      row to the minutes table on /about/documents/, update the PDF link in
+      the About page's Safety & security section, and refresh that page's
+      summary in the portal (Site content → Safety report).
 
 ## 4b. Email hygiene (no site change needed)
 
