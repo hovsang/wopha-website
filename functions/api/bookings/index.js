@@ -76,8 +76,15 @@ export async function onRequestPost({ request, env }) {
        VALUES (?, ?, ?, ?, ?, ?, ?)`
     ).bind(b.facility, b.date, b.start, b.end, b.name, b.email, b.address).run();
     id = r.meta.last_row_id;
-  } catch (_) {
-    // The partial unique index caught a same-slot race.
+  } catch (e) {
+    // The partial unique index caught a same-slot race: report it as a
+    // conflict. Anything else (SQLITE_BUSY, a missing table, a D1 network
+    // error) is an unexpected infrastructure failure, not a slot conflict —
+    // mislabeling it would hide real outages from operators, so it must
+    // surface instead. Matches admin/payments.js's and
+    // admin/households/[id].js's catch-and-rethrow convention for
+    // non-constraint DB errors.
+    if (!/UNIQUE constraint/i.test(String((e && e.message) || e))) throw e;
     return json({ error: "That time was just taken. Pick another slot." }, 409);
   }
 

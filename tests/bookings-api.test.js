@@ -133,6 +133,17 @@ describe("POST /api/bookings", () => {
     ]);
     expect((await onRequestPost({ request: postReq(GOOD), env: { DB: race } })).status).toBe(409);
   });
+  it("re-throws non-constraint INSERT errors instead of reporting a false conflict", async () => {
+    vi.spyOn(Date, "now").mockReturnValue(NOW);
+    const outage = fakeDb([
+      { match: "FROM settings", results: [] },
+      { match: "WHERE email = ?", results: [] },
+      { match: "start_time < ?", first: null },
+      { match: "INSERT INTO bookings", error: "database is locked" },
+    ]);
+    await expect(onRequestPost({ request: postReq(GOOD), env: { DB: outage } }))
+      .rejects.toThrow("database is locked");
+  });
   it("notifies via Web3Forms only when the key is set, and never fails the booking", async () => {
     vi.spyOn(Date, "now").mockReturnValue(NOW);
     const calls = [];
