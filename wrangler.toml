@@ -1,6 +1,6 @@
 name = "wopha-website"
 compatibility_date = "2026-07-01"
-pages_build_output_dir = "."
+pages_build_output_dir = "_site"
 
 [[d1_databases]]
 binding = "DB"

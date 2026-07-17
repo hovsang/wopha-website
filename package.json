@@ -3,13 +3,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler pages dev . --port 8200",
+    "build": "eleventy",
+    "dev": "eleventy && wrangler pages dev _site --port 8200",
+    "watch": "eleventy --watch",
+    "check": "eleventy && node tools/check-equivalence.mjs",
     "db:schema": "wrangler d1 execute wopha --local --file=schema.sql",
     "db:seed": "wrangler d1 execute wopha --local --file=seed.sql",
     "test": "vitest run",
     "lint": "eslint ."
   },
   "devDependencies": {
+    "@11ty/eleventy": "^3.1.0",
     "eslint": "^9.39.5",
     "vitest": "^3.2.0",
     "wrangler": "^4.24.0"

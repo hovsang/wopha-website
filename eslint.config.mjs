@@ -1,7 +1,7 @@
 export default [
-  { ignores: ["node_modules/**", "**/.wrangler/**", "docs/**"] },
+  { ignores: ["node_modules/**", "**/.wrangler/**", "docs/**", "_site/**"] },
   {
-    files: ["assets/js/*.js", "portal/*.js", "sw.js"],
+    files: ["src/assets/js/*.js", "src/portal/*.js", "src/sw.js"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "script",
@@ -28,6 +28,20 @@ export default [
         Response: "readonly", fetch: "readonly", URL: "readonly",
         Request: "readonly", console: "readonly",
       },
+    },
+    rules: {
+      "no-undef": "error",
+      "no-unused-vars": ["warn", { args: "none", caughtErrors: "none", varsIgnorePattern: "^_" }],
+      "eqeqeq": ["warn", "smart"],
+      "no-redeclare": "error",
+    },
+  },
+  {
+    files: ["eleventy.config.js", "src/*.11tydata.js", "tools/**/*.mjs"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "module",
+      globals: { console: "readonly", process: "readonly" },
     },
     rules: {
       "no-undef": "error",

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title | safe }}</title>
+  <meta name="description" content="{{ description | safe }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="{{ themeColor or '#1f3d2b' }}">
+  <link rel="icon" href="assets/img/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/icon-180.png">{% if canonical %}
+  <link rel="canonical" href="{{ canonical }}">{% endif %}
+</head>
+<body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+{% include "site-header.njk" %}
+
+  <main id="main">
+{{ content | safe }}  </main>
+
+{% include "site-footer.njk" %}
+
+  <script src="assets/js/site.js"></script>
+</body>
+</html>

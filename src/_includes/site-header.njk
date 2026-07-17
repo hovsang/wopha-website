@@ -1,0 +1,22 @@
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html">
+        <svg width="22" height="26" viewBox="0 0 22 26" aria-hidden="true"><path fill="#a8d5c2" d="M11 0 3 10h4L1 19h8v7h4v-7h8l-6-9h4L11 0z"/></svg>
+        Woods of Parkview
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html"{% if pageKey == "home" %} aria-current="page"{% endif %}>Home</a></li>
+          <li><a href="membership.html"{% if pageKey == "membership" %} aria-current="page"{% endif %}>Membership</a></li>
+          <li><a href="pool.html"{% if pageKey == "pool" %} aria-current="page"{% endif %}>Pool</a></li>
+          <li><a href="tennis.html"{% if pageKey == "tennis" %} aria-current="page"{% endif %}>Tennis</a></li>
+          <li><a href="swim-team.html"{% if pageKey == "swim-team" %} aria-current="page"{% endif %}>Swim Team</a></li>
+          <li><a href="community.html"{% if pageKey == "community" %} aria-current="page"{% endif %}>Community</a></li>
+          <li><a href="board.html"{% if pageKey == "board" %} aria-current="page"{% endif %}>Board &amp; Docs</a></li>
+          <li><a href="suggestions.html"{% if pageKey == "suggestions" %} aria-current="page"{% endif %}>Suggestions</a></li>
+          <li><a href="contact.html"{% if pageKey == "contact" %} aria-current="page"{% endif %}>Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
