@@ -108,7 +108,7 @@
       var tr = document.createElement("tr");
       var th = document.createElement("th");
       th.scope = "row";
-      th.textContent = fmtTime(rowSlot.start) + " – " + fmtTime(rowSlot.end);
+      th.textContent = fmtTime(rowSlot.start) + " to " + fmtTime(rowSlot.end);
       tr.appendChild(th);
       data.days.forEach(function (day) {
         var td = document.createElement("td");
