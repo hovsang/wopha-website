@@ -7,6 +7,7 @@
   var errorEl = document.getElementById("cancel-error");
   var done = document.getElementById("cancel-done");
   var btn = document.getElementById("cancel-btn");
+  var heading = document.getElementById("cancel-action-heading");
   if (!summary || !btn) return;
 
   var params = new URLSearchParams(location.search);
@@ -27,6 +28,17 @@
     errorEl.hidden = false;
   }
 
+  // Reveal the done state (booking cancelled, or already cancelled),
+  // relabel the shared section heading so a heading-navigating screen
+  // reader user doesn't hear the stale "Confirm cancellation" text, and
+  // move focus to the done message so keyboard/screen reader users land
+  // on the outcome instead of a disabled button.
+  function showDone(headingText) {
+    heading.textContent = headingText;
+    done.hidden = false;
+    done.focus();
+  }
+
   fetch("/api/bookings/cancel?id=" + encodeURIComponent(id) + "&token=" + encodeURIComponent(token))
     .then(function (r) {
       if (!r.ok) throw new Error("bad status");
@@ -34,7 +46,7 @@
     }).then(function (b) {
       if (b.status === "cancelled") {
         summary.textContent = b.label + " on " + b.date + " is already cancelled.";
-        done.hidden = false;
+        showDone("Booking already cancelled");
         return;
       }
       summary.textContent = "Your booking: " + b.label + " on " + b.date + ", " +
@@ -53,7 +65,7 @@
       if (!r.ok) throw new Error("bad status");
       actions.hidden = true;
       summary.textContent = "Your booking is cancelled.";
-      done.hidden = false;
+      showDone("Booking cancelled");
     }).catch(function () {
       btn.disabled = false;
       errorEl.textContent = "Could not cancel right now. Try again in a minute.";
