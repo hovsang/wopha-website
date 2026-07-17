@@ -102,7 +102,8 @@ The portal (announcements, inbox, dues ledger, content editing) ships with
 the site. Launch-time setup, in order:
 
 - [ ] Create the **Cloudflare Pages** project from the GitHub repo
-      (production branch: `deploy`, no build command, output `/`).
+      (production branch: `deploy`, build command `npm ci && npm run build`,
+      build output directory `_site`).
 - [ ] `npx wrangler d1 create wopha` → paste the database id into BOTH
       `wrangler.toml` and `workers/backup/wrangler.toml`.
 - [ ] Apply the schema remotely:
@@ -129,5 +130,6 @@ the site. Launch-time setup, in order:
 
 ## Local preview
 
-Open `index.html` in a browser, or from this folder run:
-`python -m http.server 8201` → http://localhost:8201
+`npm run dev` → http://127.0.0.1:8200 (site + portal + API). For the static
+pages only: `npm run build`, then
+`python -m http.server 8201 --directory _site` → http://localhost:8201
