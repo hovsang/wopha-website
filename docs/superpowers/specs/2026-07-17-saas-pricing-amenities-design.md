@@ -62,9 +62,18 @@ $69,078.16; 2023: $85,351.83).
 | Camera - Entrance (the Flock unit) | $1,750 | $2,000 | The replaceable subscription; ~$146-167/mo |
 | QuickBooks Payments fees | $700 | $503.66 | Payment processing (bank debit), not the QBO sub |
 | Telephone | $820 | $746.33 | Clubhouse line; possible future VoIP saving, out of scope |
-| ReserveMyCourt | not a line item | not a line item | No HOA cost found: RMC is free-tier or coordinator-run. Tier 2's pitch is consolidation/UX, NOT hard savings |
-| SwimTopia | not a line item | not a line item | Confirmed NOT HOA-paid: drops out of tier math per §6.3, becomes team-negotiated optional |
-| Weebly/website hosting | not broken out | not broken out | Likely inside Admin Misc ($1,000/$907.23); treat as <=$300/yr estimate, label as estimate |
+| ReserveMyCourt | not a line item | not a line item | UNVERIFIED [V1]: could hide inside Admin Misc or Professional Fees; RMC org plans run roughly $180-300/yr if paid |
+| SwimTopia | not a line item | not a line item | UNVERIFIED [V2]: not visible in the HOA budget; commonly team-paid from swim-team fees, but confirm before excluding from tier math |
+| Weebly/website hosting | not broken out | not broken out | UNVERIFIED [V3]: likely inside Admin Misc ($1,000/$907.23); estimate <=$300/yr |
+
+> **[V1]-[V3] verification (owner: the user, before the proposal finalizes):** the P&L's
+> category granularity can hide small subscriptions. Confirm each by any of: (a) asking the
+> treasurer for the QuickBooks detail under Admin Misc / Professional Fees / Property
+> Management Fees / Pool Expenses; (b) checking the RMC and SwimTopia account admin pages for
+> plan and billing status; (c) scanning bank/QBO statements for their charges. Record actual
+> amounts here when known. Tier math treats $0 as the conservative FLOOR: the consolidation
+> pitch stands even at $0, and every verified dollar of subscription cost strengthens the
+> Tier 2 savings column. Do not present RMC/SwimTopia savings as fact until verified.
 Context lines: pool expenses $54,000; landscaping $15,000; swim/tennis electric $17,750;
 insurance $6,503.70.
 
@@ -116,9 +125,10 @@ Draft-pricing notes (grounded in §2):
 - The camera line is the only large hard saving ($1,750-2,000/yr). Tier 3's headline: for
   roughly the price of Tier 1 plus the camera bill the HOA already pays, they get everything,
   and with a modest sponsor program the whole stack can pay for itself.
-- Tier 2's honest pitch is capability and consolidation (booking built-in, one calendar, the
-  hand-maintained pool-hours spreadsheet retired), NOT subscription savings: RMC shows no HOA
-  cost and SwimTopia is team-paid (§2 F4). Do not overclaim savings the budget doesn't show.
+- Tier 2's baseline pitch is capability and consolidation (booking built-in, one calendar,
+  the hand-maintained pool-hours spreadsheet retired). Subscription savings for RMC/SwimTopia
+  are pending [V1]/[V2] verification (§2): claim only verified amounts in the proposal; the
+  $0 floor keeps the pitch honest, and any confirmed cost moves into the Tier 2 savings row.
 - All gross prices stay well under the PayHOA $199/mo anchor at equal-or-better capability;
   annual totals ($1,188 / $1,788 / $2,388) are small next to the $121k expense budget and the
   $18.6k budgeted surplus, and the proposal must still respect the capital-projects backdrop
@@ -181,10 +191,11 @@ a Tier 1 saving; no build work.
 
 ### 6.3 Swim-team pages (SwimTopia-lite)
 Static schedule/roster/registration-info pages under /amenities/swim-team/ fed by site_content
-keys, plus a registration-interest form into the inbox. CAVEAT RESOLVED (§2 F4): SwimTopia is
-not in the HOA budget, so it is team-paid. This feature is an optional add-on negotiated with
-the swim team and contributes nothing to the HOA tier savings math; it stays listed in Tier 2/3
-as included capability if the team wants it.
+keys, plus a registration-interest form into the inbox. CAVEAT status: SwimTopia is not
+visible in the HOA budget, but whether the HOA, the team, or nobody pays for it is [V2]
+UNVERIFIED (§2). If team-paid: optional add-on negotiated with the team, no HOA tier savings.
+If HOA-paid (hidden in a budget category): its cost joins the Tier 2 savings row. Either way
+it stays listed in Tier 2/3 as included capability if the team wants it.
 
 ### 6.4 Camera replacement (Tier 3)
 An operations offering, not a website feature:
