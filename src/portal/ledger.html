@@ -231,7 +231,9 @@ pageKey: ledger
 
       /* ================= state ================= */
       var year = new Date().getFullYear();
-      var duesCents = 53500; // replaced by the API value on first load
+      // Real value is set inside load()'s fetch .then, before renderLedger() builds any
+      // row (and thus before any "Mark paid" button can exist to read this) — see load().
+      var duesCents = 0;
       var data = null;       // last GET /api/admin/households?year= payload
       var currentPopover = null;
 
@@ -316,6 +318,7 @@ pageKey: ledger
 
       function buildLedgerRow(h) {
         var tr = el("tr");
+        tr.setAttribute("data-household-id", h.id);
         tr.appendChild(cellFor("Address", h.address));
         tr.appendChild(cellFor("Owner", h.owner_name || ""));
 
@@ -462,6 +465,9 @@ pageKey: ledger
           }
           confirmBtn.disabled = true;
           cancelBtn.disabled = true;
+          // Guard against a year change swapping out `data` (and its .summary)
+          // while this request is in flight — see undoPayment for the same pattern.
+          var reqData = data;
           api("/api/admin/payments", {
             method: "POST",
             body: {
@@ -477,13 +483,20 @@ pageKey: ledger
             h.amount_cents = cents;
             h.method = method.value;
             h.paid_on = date.value;
-            data.summary.paidCount += 1;
-            data.summary.unpaidCount -= 1;
-            data.summary.collectedCents += cents;
-            data.summary.outstandingCents = data.summary.unpaidCount * duesCents;
-            renderSummary();
             closePopover(false);
-            refreshRow(h, tr, true);
+            if (data === reqData) {
+              // Still the same year's data set — safe to bump its summary counters.
+              data.summary.paidCount += 1;
+              data.summary.unpaidCount -= 1;
+              data.summary.collectedCents += cents;
+              data.summary.outstandingCents = data.summary.unpaidCount * duesCents;
+              renderSummary();
+            } // else: a year change already replaced `data`; its fresh load() has correct numbers.
+            // `tr` may be stale if some other render (a roster edit, a year change) already
+            // replaced it in the DOM. The shared `h` object above is already mutated
+            // correctly either way, so a full re-render still picks it up.
+            if (tr && tr.isConnected) refreshRow(h, tr, true);
+            else renderLedger();
             toast("Marked " + h.address + " paid.", {
               actionLabel: "Undo",
               onAction: function () { undoPayment(h, null); },
@@ -491,7 +504,17 @@ pageKey: ledger
           }).catch(function (err) {
             closePopover(false);
             if (err.status === 409) {
-              rowError(tr, "Already marked paid for " + year + ".", true);
+              var msg = "Already marked paid for " + year + ".";
+              if (tr && tr.isConnected) {
+                rowError(tr, msg, true);
+              } else {
+                // `tr` was replaced by some other render already. Re-render and find the
+                // fresh row for this household by id (set in buildLedgerRow) instead.
+                renderLedger();
+                var freshTr = rowsEl.querySelector('tr[data-household-id="' + h.id + '"]');
+                if (freshTr) rowError(freshTr, msg, true);
+                else showError(err); // e.g. filtered out post-render — don't go silent on a 409
+              }
             } else {
               showError(err);
             }
@@ -512,16 +535,21 @@ pageKey: ledger
 
       function undoPayment(h, tr) {
         var refundCents = h.amount_cents || duesCents;
+        // Guard against a year change swapping out `data` (and its .summary)
+        // while this request is in flight.
+        var reqData = data;
         api("/api/admin/payments/" + h.payment_id, { method: "DELETE" }).then(function () {
           h.payment_id = null;
           h.amount_cents = null;
           h.method = null;
           h.paid_on = null;
-          data.summary.paidCount -= 1;
-          data.summary.unpaidCount += 1;
-          data.summary.collectedCents -= refundCents;
-          data.summary.outstandingCents = data.summary.unpaidCount * duesCents;
-          renderSummary();
+          if (data === reqData) {
+            data.summary.paidCount -= 1;
+            data.summary.unpaidCount += 1;
+            data.summary.collectedCents -= refundCents;
+            data.summary.outstandingCents = data.summary.unpaidCount * duesCents;
+            renderSummary();
+          } // else: a year change already replaced `data`; its fresh load() has correct numbers.
           if (tr && tr.isConnected) refreshRow(h, tr, true);
           else renderLedger();
           toast("Payment removed.");
