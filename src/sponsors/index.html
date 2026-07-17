@@ -1,0 +1,86 @@
+---
+layout: base.njk
+title: Sponsors | Woods of Parkview HOA
+description: "Sponsor Woods of Parkview: put your local business in front of 170 neighborhood households at the pool, on the website, and in neighborhood announcements."
+pageKey: sponsors
+permalink: /sponsors/index.html
+---
+<section class="hero hero--page">
+  <div class="container">
+    <span class="eyebrow">Local businesses, neighborhood amenities</span>
+    <h1>Sponsors</h1>
+    <p class="lede">Woods of Parkview is 170 households with a busy pool, a summer swim team, and lighted tennis and pickleball courts. Sponsoring the neighborhood puts your business in front of the families who live here, all season long.</p>
+    <div class="hero-actions">
+      <a class="btn btn--primary" href="#become">Request the sponsorship packet</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="benefits-heading">
+  <div class="container">
+    <span class="eyebrow">What sponsors receive</span>
+    <h2 id="benefits-heading">Where your name appears</h2>
+    <div class="grid grid--3">
+      <div class="card">
+        <h3>At the pool</h3>
+        <p>A sponsor banner at the pool, seen by member families every day of the swim season and by swim-meet visitors from across the county.</p>
+      </div>
+      <div class="card">
+        <h3>On this website</h3>
+        <p>Your logo, a link to your website, and a short blurb on this page, year round.</p>
+      </div>
+      <div class="card">
+        <h3>In announcements</h3>
+        <p>Thank-you mentions in neighborhood announcements and at community events through the year.</p>
+      </div>
+    </div>
+    <p>Sponsorship levels are set for each season. Request the packet below and the board will send the current options.</p>
+  </div>
+</section>
+
+<section class="section section--tint" id="current" aria-labelledby="current-heading">
+  <div class="container">
+    <span class="eyebrow">Thank you</span>
+    <h2 id="current-heading">Our sponsors</h2>
+    <p id="sponsors-empty">The sponsor program is just getting started, and this space is reserved. Your business could be the first name here.</p>
+    <div class="grid grid--3" id="sponsors-grid" hidden></div>
+  </div>
+</section>
+
+<section class="section" id="become" aria-labelledby="become-heading">
+  <div class="container">
+    <span class="eyebrow">Get the details</span>
+    <h2 id="become-heading">Become a sponsor</h2>
+    <p class="lede">Tell us a little about your business and the board will follow up with the sponsorship packet.</p>
+    <form class="form-card form-grid" action="/api/forms/submit" method="POST">
+      <input type="hidden" name="form_type" value="sponsor_inquiry">
+      <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+      <div>
+        <label for="sp-business">Business name</label>
+        <input id="sp-business" name="business" type="text" required autocomplete="organization">
+      </div>
+      <div>
+        <label for="sp-name">Contact name</label>
+        <input id="sp-name" name="name" type="text" required autocomplete="name">
+      </div>
+      <div>
+        <label for="sp-email">Email</label>
+        <input id="sp-email" name="email" type="email" required autocomplete="email">
+      </div>
+      <div>
+        <label for="sp-phone">Phone (optional)</label>
+        <input id="sp-phone" name="phone" type="tel" autocomplete="tel">
+      </div>
+      <div>
+        <label for="sp-message">Anything we should know? (optional)</label>
+        <textarea id="sp-message" name="message" rows="4" placeholder="What your business does, and what you have in mind"></textarea>
+      </div>
+      <div>
+        <button class="btn btn--primary" type="submit">Request the sponsorship packet</button>
+      </div>
+    </form>
+    <div class="notice">
+      <p>Sponsorship payments go to the homeowners association and support neighborhood amenities and events.</p>
+    </div>
+  </div>
+</section>

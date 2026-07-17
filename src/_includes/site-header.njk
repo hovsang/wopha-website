@@ -20,7 +20,7 @@
         </li>
         <li><a class="nav-link" href="/membership/"{% if pageKey == 'membership' %} aria-current="page"{% endif %}>Membership</a></li>
         <li class="nav-group">
-          <button type="button" class="nav-disclosure{% if pageKey == 'community' %} is-current-section{% endif %}" aria-expanded="false" aria-controls="menu-community">
+          <button type="button" class="nav-disclosure{% if pageKey in ['community', 'sponsors'] %} is-current-section{% endif %}" aria-expanded="false" aria-controls="menu-community">
             Community
             <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
@@ -28,6 +28,7 @@
             <li><a href="/community/#events">Events &amp; calendar</a></li>
             <li><a href="/community/#connect">Get connected</a></li>
             <li><a href="/community/#announcements">Announcements</a></li>
+            <li><a href="/sponsors/"{% if pageKey == 'sponsors' %} aria-current="page"{% endif %}>Sponsors</a></li>
           </ul>
         </li>
         <li class="nav-group">
