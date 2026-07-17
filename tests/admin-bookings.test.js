@@ -40,6 +40,12 @@ describe("GET /api/admin/bookings", () => {
     const b2 = await (await onRequestGet({ request: getReq("?from=2026-07-01&days=999"), env: { DB: capped } })).json();
     expect(b2.days).toBe(60);
   });
+  it("400s on a calendar-invalid from date without touching the DB", async () => {
+    const db = fakeDb([]);
+    const res = await onRequestGet({ request: getReq("?from=2026-13-01"), env: { DB: db } });
+    expect(res.status).toBe(400);
+    expect(db.calls.length).toBe(0);
+  });
 });
 
 describe("POST /api/admin/bookings (block-outs)", () => {

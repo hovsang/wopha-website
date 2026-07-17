@@ -13,7 +13,9 @@ export async function onRequestGet({ request, env }) {
   let days = Number(url.searchParams.get("days")) || 14;
   if (!Number.isInteger(days) || days < 1) days = 14;
   if (days > MAX_DAYS) days = MAX_DAYS;
-  const to = new Date(Date.parse(from + "T00:00:00Z") + (days - 1) * 86400000).toISOString().slice(0, 10);
+  const fromMs = Date.parse(from + "T00:00:00Z");
+  if (Number.isNaN(fromMs)) return json({ error: "Invalid from date" }, 400);
+  const to = new Date(fromMs + (days - 1) * 86400000).toISOString().slice(0, 10);
   const { results } = await env.DB.prepare(
     `SELECT id, facility, date, start_time, end_time, name, email, address, status, created_at
      FROM bookings
