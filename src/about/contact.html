@@ -1,0 +1,192 @@
+---
+layout: base.njk
+title: Contact & Report | Woods of Parkview HOA
+description: "Reach the Woods of Parkview board: update your contact info, report a neighborhood issue, drop a suggestion in the box, and find the right person to call."
+pageKey: about-contact
+permalink: /about/contact/index.html
+---
+<section class="hero hero--page">
+  <div class="container">
+    <span class="eyebrow">Neighbors, not a call center</span>
+    <h1>Contact &amp; report</h1>
+    <p class="lede">Update your contact information, report something broken, drop an idea in the suggestion box, and find the right neighbor to reach, all in one place.</p>
+  </div>
+</section>
+
+<section class="section" id="update" aria-labelledby="update-heading">
+  <div class="container">
+    <span class="eyebrow">Stay in the loop</span>
+    <h2 id="update-heading">Update your contact information</h2>
+    <p class="lede">We use this to send your annual dues invoice and infrequent important announcements: nothing else.</p>
+    <form class="form-card form-grid" action="/api/forms/submit" method="POST">
+      <input type="hidden" name="form_type" value="contact_update">
+      <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+      <div>
+        <label for="address">Home address</label>
+        <input type="text" id="address" name="address" required autocomplete="street-address">
+      </div>
+      <div>
+        <label for="name">First and last name</label>
+        <input type="text" id="name" name="name" required autocomplete="name">
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required autocomplete="email">
+      </div>
+      <div>
+        <label for="phone">Phone (optional)</label>
+        <input type="tel" id="phone" name="phone" autocomplete="tel">
+      </div>
+      <div>
+        <label for="comments">Comments (optional)</label>
+        <textarea id="comments" name="comments" rows="4"></textarea>
+      </div>
+      <div>
+        <button class="btn btn--primary" type="submit">Send my info</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="section section--tint" id="reach" aria-labelledby="reach-heading">
+  <div class="container">
+    <span class="eyebrow">Neighbors, not a call center</span>
+    <h2 id="reach-heading">Who to reach</h2>
+    <div class="grid grid--3">
+      <div class="person">
+        <span class="role">Membership &amp; pool party reservations</span>
+        <h3>Joel Tarpley</h3>
+        <p><a href="tel:+14045787138">(404) 578-7138</a><br><a href="mailto:JTarpley40@yahoo.com">JTarpley40@yahoo.com</a></p>
+      </div>
+      <div class="person">
+        <span class="role">Tennis director</span>
+        <h3>Gretchen Hughes</h3>
+        <p><a href="tel:+16788608026">678-860-8026</a></p>
+      </div>
+      <div class="person">
+        <span class="role">Treasurer / dues questions</span>
+        <h3>Treasurer</h3>
+        <p><a href="mailto:wophatreasurer@gmail.com">wophatreasurer@gmail.com</a></p>
+      </div>
+      <div class="person">
+        <span class="role">Board / announcements</span>
+        <h3>WOPHA Board</h3>
+        <p><a href="mailto:wophalilburn@gmail.com">wophalilburn@gmail.com</a><br>Neighborhood announcements come from this address: add it to your contacts.</p>
+      </div>
+    </div>
+    <div class="setup-note">
+      <p>Recommended: create role email addresses (board@wopha.com, treasurer@wopha.com) with free Cloudflare Email Routing and forward them to whoever currently holds the role: contact addresses then survive board turnover without editing this page. Also: send announcement emails with recipients in <strong>BCC</strong> (or via a free newsletter tool). Recent announcements have exposed 200+ resident addresses in open CC.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="report" aria-labelledby="report-heading">
+  <div class="container">
+    <span class="eyebrow">See something broken?</span>
+    <h2 id="report-heading">Report a neighborhood issue</h2>
+    <p class="lede">Burned-out court light, gate that won't latch, pool problem, damaged picnic table. Tell us and the right person gets on it.</p>
+    <form class="form-card form-grid" action="/api/forms/submit" method="POST">
+      <input type="hidden" name="form_type" value="issue_report">
+      <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+      <div>
+        <label for="issue-where">Where is the problem?</label>
+        <select id="issue-where" name="location" required>
+          <option value="">Choose a location…</option>
+          <option>Pool area</option>
+          <option>Tennis / pickleball courts</option>
+          <option>Clubhouse or pavilion</option>
+          <option>Picnic tables</option>
+          <option>Entrance or common grounds</option>
+          <option>Somewhere else</option>
+        </select>
+      </div>
+      <div>
+        <label for="issue-what">What's wrong?</label>
+        <textarea id="issue-what" name="message" rows="4" required placeholder="What you saw, and when"></textarea>
+      </div>
+      <div>
+        <label for="issue-name">Your name (optional)</label>
+        <input id="issue-name" name="name" type="text" autocomplete="name">
+      </div>
+      <div>
+        <label for="issue-email">Email (optional, if you'd like an update)</label>
+        <input id="issue-email" name="email" type="email" autocomplete="email">
+      </div>
+      <div>
+        <button class="btn btn--primary" type="submit">Send report</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="section section--tint" id="suggestions" aria-labelledby="suggestions-heading">
+  <div class="container">
+    <span class="eyebrow">Your neighborhood, your ideas</span>
+    <h2 id="suggestions-heading">Suggestion box</h2>
+    <p class="lede">Tell the board what would make Woods of Parkview better. Every submission is read, goes on the table at the board's next meeting, and ideas that need budget go on the agenda for the annual meeting each January. Name and email are optional: include them only if you'd like a reply.</p>
+    <form class="form-card form-grid" action="/api/forms/submit" method="POST">
+      <input type="hidden" name="form_type" value="suggestion">
+      <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+      <div>
+        <label for="sugg-name">Your name (optional)</label>
+        <input type="text" id="sugg-name" name="name" autocomplete="name">
+      </div>
+      <div>
+        <label for="sugg-email">Email (optional, only if you'd like a reply)</label>
+        <input type="email" id="sugg-email" name="email" autocomplete="email">
+      </div>
+      <div>
+        <label for="sugg-street">Street (optional)</label>
+        <select id="sugg-street" name="street">
+          <option value="">Choose a street</option>
+          <option>Bowers Brook Drive</option>
+          <option>Bowers Brook Court</option>
+          <option>Planters Drive</option>
+          <option>Planters Court</option>
+          <option>Amsterdam Drive</option>
+          <option>Amsterdam Court</option>
+          <option>Huntshire Lane</option>
+        </select>
+      </div>
+      <div>
+        <label for="sugg-text">Suggestion</label>
+        <textarea id="sugg-text" name="suggestion" rows="6" required></textarea>
+      </div>
+      <div>
+        <button class="btn btn--primary" type="submit">Send suggestion</button>
+      </div>
+    </form>
+    <div class="card" style="margin-top:1.5rem;max-width:48rem">
+      <h3>Prefer to stay anonymous?</h3>
+      <p>Use our anonymous Google Form instead. It asks for nothing but your suggestion: no name, no email, no address.</p>
+      <!-- PLACEHOLDER: Anonymous Google Form. Create a Google Form with a single suggestion field and no required identity fields, then paste its link below. -->
+      <div class="setup-note">
+        <p>Create a Google Form with no required identity fields (just a suggestion box) and paste its share link into the button below, replacing the <code>#</code> placeholder.</p>
+      </div>
+      <p><a class="btn btn--outline" href="#">Open the anonymous form</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="know" aria-labelledby="know-heading">
+  <div class="container">
+    <span class="eyebrow">The basics</span>
+    <h2 id="know-heading">Good to know</h2>
+    <div class="grid grid--3">
+      <div class="card">
+        <h3>Clubhouse</h3>
+        <p>1 Planters Way<br>Lilburn, GA 30047</p>
+      </div>
+      <div class="card">
+        <h3>Trash &amp; recycling</h3>
+        <p>Pickup is Thursday mornings (Waste Management).</p>
+      </div>
+      <div class="card">
+        <h3>Schools</h3>
+        <p>Arcado Elementary, Trickum Middle, and Parkview High.</p>
+      </div>
+    </div>
+    <h3>Neighborhood map</h3>
+    <img src="/assets/img/wop-map.jpg" alt="Street map of the Woods of Parkview subdivision">
+  </div>
+</section>

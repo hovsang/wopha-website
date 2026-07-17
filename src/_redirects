@@ -1,0 +1,13 @@
+# Old flat URLs → Modern Civic IA. Runs on Cloudflare Pages only: GitHub
+# Pages ignores this file, so the restructure lands with the
+# wopha.com/Cloudflare cutover (spec §9). /thanks.html did NOT move:
+# it is the backend's post-submit 303 target.
+/membership.html   /membership/                  301
+/pool.html         /amenities/pool/              301
+/tennis.html       /amenities/tennis/            301
+/swim-team.html    /amenities/swim-team/         301
+/community.html    /community/                   301
+/board.html        /about/board/                 301
+/suggestions.html  /about/contact/#suggestions   301
+/contact.html      /about/contact/               301
+/index.html        /                             301

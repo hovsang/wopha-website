@@ -9,6 +9,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/site.webmanifest");
   eleventyConfig.addPassthroughCopy("src/sw.js");
   eleventyConfig.addPassthroughCopy("src/portal/portal.js");
+  eleventyConfig.addPassthroughCopy({ "src/_redirects": "_redirects" });
 
   return {
     dir: {

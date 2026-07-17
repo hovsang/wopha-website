@@ -1,0 +1,149 @@
+---
+layout: base.njk
+title: Governing Documents | Woods of Parkview HOA
+description: Woods of Parkview HOA covenants and bylaws, meeting minutes, the exterior change request (ARC) form, and answers to common questions.
+pageKey: about-documents
+permalink: /about/documents/index.html
+---
+<section class="hero hero--page">
+  <div class="container">
+    <span class="eyebrow">The rules of record</span>
+    <h1>Governing documents</h1>
+    <p class="lede">What the board decided, and the documents that govern the neighborhood: covenants, bylaws, meeting minutes, and the exterior change request form.</p>
+  </div>
+</section>
+
+<section class="section" id="documents" aria-labelledby="documents-heading">
+  <div class="container">
+    <span class="eyebrow">The rules of record</span>
+    <h2 id="documents-heading">Covenants &amp; bylaws</h2>
+    <div class="grid grid--2">
+      <div class="card">
+        <h3>Declaration of Covenants</h3>
+        <p>Revised September 2009. The covenants run with the land and govern what owners may do with their property.</p>
+        <p><a class="btn btn--outline" href="/documents/final_declaration_of_covenants.pdf">Download the covenants (PDF)</a></p>
+      </div>
+      <div class="card">
+        <h3>Bylaws</h3>
+        <p>How the association itself operates: meetings, elections, and the duties of the board.</p>
+        <p><a class="btn btn--outline" href="/documents/final_bylaws_copy.pdf">Download the bylaws (PDF)</a></p>
+      </div>
+    </div>
+    <div class="notice">
+      <p>Membership in the association is automatic and mandatory for property owners under the recorded covenants. Georgia law (OCGA 44-5-60) governs how covenants run with the land.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tint" id="minutes" aria-labelledby="minutes-heading">
+  <div class="container">
+    <span class="eyebrow">What the board decided</span>
+    <h2 id="minutes-heading">Meeting minutes</h2>
+    <p>The annual meeting is held each winter at the Lilburn Municipal Courtroom at Police HQ, 4600 Lawrenceville Hwy. Can't attend? The board circulates a proxy form ahead of the meeting: signed proxies count toward quorum, and the board can send yours by DocuSign on request. Minutes are posted here as PDFs.</p>
+
+    <!-- PLACEHOLDER: Meeting minutes PDFs. Gather the minutes from the old site (some are pasted as text on pages, some are PDFs inside blog posts), convert each to a PDF, and save them in documents/minutes/ using the exact filenames linked in the table below. -->
+    <div class="setup-note">
+      <p>Gather the minutes from the old site (some are pasted as text on pages, some are PDFs attached to blog posts), convert each to a PDF, and save them in <code>documents/minutes/</code> using the exact filenames the table below links to.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Meeting</th>
+            <th scope="col">Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Feb 22, 2026</td><td>Annual meeting</td><td><a href="/documents/minutes/2026-02-22-annual-meeting.pdf">Minutes (PDF)</a></td></tr>
+          <tr><td>Feb 23, 2025</td><td>Annual meeting</td><td><a href="/documents/minutes/2025-02-23-annual-meeting.pdf">Minutes (PDF)</a></td></tr>
+          <tr><td>Jun 28, 2022</td><td>Board meeting (Pool Pavilion)</td><td><a href="/documents/minutes/2022-06-28-board-meeting.pdf">Minutes (PDF)</a></td></tr>
+          <tr><td>2020</td><td>Annual meeting</td><td><a href="/documents/minutes/2020-annual-meeting.pdf">Minutes (PDF)</a></td></tr>
+          <tr><td>Jan 26, 2019</td><td>Annual meeting</td><td><a href="/documents/minutes/2019-01-26-annual-meeting.pdf">Minutes (PDF)</a></td></tr>
+          <tr><td>Jan 24, 2018</td><td>Annual meeting (Lilburn City Hall)</td><td><a href="/documents/minutes/2018-01-24-annual-meeting.pdf">Minutes (PDF)</a></td></tr>
+          <tr><td>Jan 31, 2016</td><td>Annual meeting</td><td><a href="/documents/minutes/2016-01-31-annual-meeting.pdf">Minutes (PDF)</a></td></tr>
+          <tr><td>Jan 26, 2014</td><td>Annual meeting</td><td><a href="/documents/minutes/2014-01-26-annual-meeting.pdf">Minutes (PDF)</a></td></tr>
+          <tr><td>Nov 5, 2013</td><td>Enhancement Projects letter</td><td><a href="/documents/minutes/2013-11-05-enhancement-projects-letter.pdf">Letter (PDF)</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="arc" aria-labelledby="arc-heading">
+  <div class="container">
+    <span class="eyebrow">Before you build, paint, or fence</span>
+    <h2 id="arc-heading">Exterior change request</h2>
+    <p class="lede">The covenants require board approval before exterior changes: fences, paint colors, roofs, additions, major landscaping. Send your request here and get a written answer before work starts; it protects you at resale.</p>
+    <form class="form-card form-grid" action="/api/forms/submit" method="POST">
+      <input type="hidden" name="form_type" value="arc_request">
+      <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+      <div>
+        <label for="arc-name">Your name</label>
+        <input id="arc-name" name="name" type="text" required autocomplete="name">
+      </div>
+      <div>
+        <label for="arc-address">Property address</label>
+        <input id="arc-address" name="address" type="text" required autocomplete="street-address">
+      </div>
+      <div>
+        <label for="arc-email">Email</label>
+        <input id="arc-email" name="email" type="email" required autocomplete="email">
+      </div>
+      <div>
+        <label for="arc-type">Type of change</label>
+        <select id="arc-type" name="project_type" required>
+          <option value="">Choose one…</option>
+          <option>Fence</option>
+          <option>Exterior paint</option>
+          <option>Roof</option>
+          <option>Addition or structure</option>
+          <option>Major landscaping / tree removal</option>
+          <option>Something else</option>
+        </select>
+      </div>
+      <div>
+        <label for="arc-desc">Describe the project</label>
+        <textarea id="arc-desc" name="message" rows="5" required placeholder="What you're changing, materials and colors, and roughly when work would start"></textarea>
+      </div>
+      <div>
+        <button class="btn btn--primary" type="submit">Submit for board review</button>
+      </div>
+    </form>
+    <div class="notice">
+      <p>Have drawings, paint chips, or photos? After submitting, email them to the board referencing your address. The board reviews requests at its next meeting and replies in writing.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tint" aria-labelledby="faq-heading">
+  <div class="container">
+    <span class="eyebrow">Common questions</span>
+    <h2 id="faq-heading">FAQ</h2>
+    <details class="rule">
+      <summary>Is HOA membership optional?</summary>
+      <div class="rule-body">
+        <p>No. Membership is automatic and mandatory: it comes with the property under the recorded covenants. There are three member types: Full, Social, and Annual non-resident. See <a href="/membership/">Membership</a> for what each includes.</p>
+      </div>
+    </details>
+    <details class="rule">
+      <summary>What's the difference between covenants and bylaws?</summary>
+      <div class="rule-body">
+        <p>The covenants govern the land: what owners may do with their property. The bylaws govern how the association itself operates: meetings, elections, and the duties of the board.</p>
+      </div>
+    </details>
+    <details class="rule">
+      <summary>When is the annual meeting?</summary>
+      <div class="rule-body">
+        <p>Usually late January (weather can push it later: the 2026 meeting moved to February 22 for an ice storm), at the Lilburn Municipal Courtroom at Police HQ, 4600 Lawrenceville Hwy. If you can't attend, sign a proxy so the meeting makes quorum. Watch the calendar on the <a href="/community/#events">Community</a> page for the exact date.</p>
+      </div>
+    </details>
+    <details class="rule">
+      <summary>Can non-residents use the pool or courts?</summary>
+      <div class="rule-body">
+        <p>Yes, in a few ways: a limited number of <a href="/membership/">Annual non-resident memberships</a>, seasonal <a href="/amenities/tennis/">tennis fees</a>, and open <a href="/amenities/swim-team/">swim-team registration</a>.</p>
+      </div>
+    </details>
+  </div>
+</section>
