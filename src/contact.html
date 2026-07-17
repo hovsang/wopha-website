@@ -1,7 +1,7 @@
 ---
 layout: base.njk
 title: "Contact | Woods of Parkview HOA"
-description: "Update your contact information with the Woods of Parkview HOA, find the right board volunteer to reach, and get key neighborhood details."
+description: "Update your contact information with the Woods of Parkview HOA, find the right board contact to reach, and get key neighborhood details."
 pageKey: contact
 ---
     <section class="hero hero--page">
@@ -49,7 +49,7 @@ pageKey: contact
 
     <section class="section section--tint" id="reach" aria-labelledby="reach-heading">
       <div class="container">
-        <span class="eyebrow">Volunteers, not a call center</span>
+        <span class="eyebrow">Neighbors, not a call center</span>
         <h2 id="reach-heading">Who to reach</h2>
         <div class="grid grid--3">
           <div class="person">
@@ -74,7 +74,7 @@ pageKey: contact
           </div>
         </div>
         <div class="setup-note">
-          <p>Recommended: create role email addresses (board@wopha.com, treasurer@wopha.com) with free Cloudflare Email Routing and forward them to the current volunteers: contact addresses then survive volunteer turnover without editing this page. Also: send announcement emails with recipients in <strong>BCC</strong> (or via a free newsletter tool). Recent announcements have exposed 200+ resident addresses in open CC.</p>
+          <p>Recommended: create role email addresses (board@wopha.com, treasurer@wopha.com) with free Cloudflare Email Routing and forward them to whoever currently holds the role: contact addresses then survive board turnover without editing this page. Also: send announcement emails with recipients in <strong>BCC</strong> (or via a free newsletter tool). Recent announcements have exposed 200+ resident addresses in open CC.</p>
         </div>
       </div>
     </section>
@@ -83,7 +83,7 @@ pageKey: contact
       <div class="container">
         <span class="eyebrow">See something broken?</span>
         <h2 id="report-heading">Report a neighborhood issue</h2>
-        <p class="lede">Burned-out court light, gate that won't latch, pool problem, damaged picnic table. Tell us and the right volunteer gets on it.</p>
+        <p class="lede">Burned-out court light, gate that won't latch, pool problem, damaged picnic table. Tell us and the right person gets on it.</p>
         <form class="form-grid" action="/api/forms/submit" method="POST">
           <input type="hidden" name="form_type" value="issue_report">
           <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
