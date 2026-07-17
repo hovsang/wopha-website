@@ -5,6 +5,7 @@ const SUBJECTS = {
   issue_report: "WOPHA issue report",
   suggestion: "WOPHA suggestion",
   arc_request: "WOPHA exterior change request",
+  sponsor_inquiry: "WOPHA sponsorship inquiry",
 };
 
 export async function onRequestPost({ request, env }) {

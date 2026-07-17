@@ -53,6 +53,7 @@ var TYPE_LABELS = {
   issue_report: "Issue report",
   suggestion: "Suggestion",
   arc_request: "Exterior change request",
+  sponsor_inquiry: "Sponsorship inquiry",
 };
 
 /* ---- page-top banner: fetch/auth failures only ---------------------------- */

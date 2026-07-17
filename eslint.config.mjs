@@ -32,7 +32,7 @@ export default [
       sourceType: "module",
       globals: {
         Response: "readonly", fetch: "readonly", URL: "readonly",
-        Request: "readonly", console: "readonly",
+        Request: "readonly", console: "readonly", URLSearchParams: "readonly",
       },
     },
     rules: {

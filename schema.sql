@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS announcements (
 
 CREATE TABLE IF NOT EXISTS submissions (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  form_type TEXT NOT NULL,          -- contact_update | issue_report | suggestion | arc_request
+  form_type TEXT NOT NULL,          -- contact_update | issue_report | suggestion | arc_request | sponsor_inquiry
   fields TEXT NOT NULL,             -- JSON object of submitted fields
   status TEXT NOT NULL DEFAULT 'new',  -- new | in_progress | done
   notes TEXT NOT NULL DEFAULT '',

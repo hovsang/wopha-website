@@ -1,5 +1,5 @@
 // Input validation for everything that crosses the API boundary.
-export const FORM_TYPES = ["contact_update", "issue_report", "suggestion", "arc_request"];
+export const FORM_TYPES = ["contact_update", "issue_report", "suggestion", "arc_request", "sponsor_inquiry"];
 export const PAYMENT_METHODS = ["stripe", "zelle", "check", "other"];
 export const CONTENT_KEYS = ["season_glance", "pool_hours"];
 

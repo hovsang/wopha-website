@@ -12,6 +12,13 @@ describe("validateSubmission", () => {
   it("accepts a known form type with normal fields", () => {
     expect(validateSubmission("issue_report", { message: "gate broken" }, "").ok).toBe(true);
   });
+  it("accepts the sponsor_inquiry form type", () => {
+    expect(validateSubmission("sponsor_inquiry", {
+      business: "Lilburn Hardware",
+      name: "Pat Doe",
+      email: "pat@example.com",
+    }, "").ok).toBe(true);
+  });
   it("rejects when the honeypot is filled", () => {
     expect(validateSubmission("issue_report", { message: "x" }, "on").ok).toBe(false);
   });
