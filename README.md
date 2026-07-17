@@ -39,9 +39,6 @@ tables with fake demo data (safe — no real residents).
 - `npm run dev` — one-shot build + local server on port 8200.
 - `npm run watch` — run in a **second terminal** to rebuild `_site/` whenever
   `src/` changes; refresh the browser to see edits.
-- `npm run check` — build, then verify `_site/` still matches the pre-Eleventy
-  page snapshots byte-for-byte (`tools/`). Delete the check + snapshots when
-  the redesign intentionally changes page output.
 - `npm test` — vitest for `functions/api/_lib` pure logic.
 - `npm run lint` — eslint.
 

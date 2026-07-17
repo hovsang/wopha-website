@@ -6,7 +6,6 @@
     "build": "eleventy",
     "dev": "eleventy && wrangler pages dev _site --port 8200",
     "watch": "eleventy --watch",
-    "check": "eleventy && node tools/check-equivalence.mjs",
     "db:schema": "wrangler d1 execute wopha --local --file=schema.sql",
     "db:seed": "wrangler d1 execute wopha --local --file=seed.sql",
     "test": "vitest run",
