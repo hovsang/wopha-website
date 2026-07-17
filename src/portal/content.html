@@ -5,58 +5,352 @@ pageKey: content
 ---
   <main class="section">
     <div class="container">
-      <h1>Site content</h1>
-      <p class="lede">One row per line, in the form <code>label | value</code>. Changes appear on the public site on the next page load: no deploy needed.</p>
+      <div class="portal-page-head">
+        <h1>Site content</h1>
+      </div>
+      <p class="lede">Changes appear on the public site immediately. No deploy needed.</p>
 
-      <h2>Season at a glance (homepage panel)</h2>
-      <form class="form-grid" data-key="season_glance">
-        <div><textarea rows="7"></textarea></div>
-        <div><button class="btn btn--primary" type="submit">Save</button> <span class="saved"></span></div>
-      </form>
+      <section class="portal-card portal-section content-card" data-key="season_glance" aria-labelledby="cc-season">
+        <h2 id="cc-season">Season at a glance</h2>
+        <p class="field-help">Shown in the homepage "This season at a glance" panel.</p>
+        <div class="row-editor"></div>
+        <p><button type="button" class="btn btn--sm add-row">+ Add row</button></p>
+        <h3>Preview: how residents will see it</h3>
+        <div class="content-preview preview-slot"></div>
+        <p>
+          <button type="button" class="btn btn--primary save-btn">Save</button>
+          <span class="field-error save-error" tabindex="-1" hidden></span>
+        </p>
+        <p class="field-help updated-note"></p>
+      </section>
 
-      <h2>Pool hours (pool page table)</h2>
-      <form class="form-grid" data-key="pool_hours">
-        <div><textarea rows="8"></textarea></div>
-        <div><button class="btn btn--primary" type="submit">Save</button> <span class="saved"></span></div>
-      </form>
+      <section class="portal-card portal-section content-card" data-key="pool_hours" aria-labelledby="cc-pool">
+        <h2 id="cc-pool">Pool hours</h2>
+        <p class="field-help">Shown in the pool page hours table.</p>
+        <div class="row-editor"></div>
+        <p><button type="button" class="btn btn--sm add-row">+ Add row</button></p>
+        <h3>Preview: how residents will see it</h3>
+        <div class="content-preview preview-slot"></div>
+        <p>
+          <button type="button" class="btn btn--primary save-btn">Save</button>
+          <span class="field-error save-error" tabindex="-1" hidden></span>
+        </p>
+        <p class="field-help updated-note"></p>
+      </section>
+
+      <section class="portal-card portal-section" aria-labelledby="settings-heading">
+        <h2 id="settings-heading">Portal settings</h2>
+        <p class="field-help">Used by the portal itself. The dues amount drives the ledger's outstanding math and the mark-paid prefill. The QuickBooks link shows the Open QuickBooks button on the Dues &amp; households page when set.</p>
+        <div class="portal-grid portal-grid--3">
+          <p>
+            <label for="set-dues">Annual dues ($)</label><br>
+            <input type="number" id="set-dues" step="0.01" min="1" style="width:100%" aria-describedby="set-dues-hint">
+            <span class="field-help" id="set-dues-hint"></span>
+          </p>
+          <p>
+            <label for="set-due-date">Dues due date (optional)</label><br>
+            <input type="date" id="set-due-date" style="width:100%">
+          </p>
+          <p>
+            <label for="set-qb">QuickBooks URL (optional)</label><br>
+            <input type="url" id="set-qb" placeholder="https://" style="width:100%">
+          </p>
+        </div>
+        <p>
+          <button type="button" class="btn btn--primary" id="settings-save">Save settings</button>
+          <span class="field-error" id="settings-error" tabindex="-1" hidden></span>
+        </p>
+      </section>
     </div>
   </main>
   <script>
-    var forms = document.querySelectorAll("form[data-key]");
+    (function () {
+      var MAX_ROWS = 50;
 
-    function toLines(rows) {
-      return rows.map(function (r) { return r[0] + " | " + r[1]; }).join("\n");
-    }
-    function toRows(text) {
-      return text.split("\n")
-        .map(function (line) { return line.trim(); })
-        .filter(function (line) { return line.length; })
-        .map(function (line) {
-          var i = line.indexOf("|");
-          if (i === -1) return [line, ""];
-          return [line.slice(0, i).trim(), line.slice(i + 1).trim()];
+      /* MIRROR of the public board-panel markup in src/index.html (div.board-panel
+         > h2#season-heading, ul#season-glance) plus src/assets/js/site.js fill()'s
+         row shape for #season-glance (li > span label, text node, strong value).
+         The h3 here (vs. the public page's h2) is just this preview's own heading
+         level inside the admin card. Keep the row shape in sync. */
+      function renderGlancePreview(rows) {
+        var panel = el("div", "board-panel");
+        panel.appendChild(el("h3", null, "This season at a glance"));
+        var ul = el("ul");
+        rows.forEach(function (r) {
+          var li = el("li");
+          li.appendChild(el("span", null, r[0]));
+          li.appendChild(document.createTextNode(" "));
+          li.appendChild(el("strong", null, r[1]));
+          ul.appendChild(li);
         });
-    }
+        panel.appendChild(ul);
+        return panel;
+      }
 
-    api("/api/content").then(function (content) {
-      forms.forEach(function (form) {
-        var rows = content[form.getAttribute("data-key")];
-        if (rows) form.querySelector("textarea").value = toLines(rows);
-      });
-    }).catch(showError);
+      /* MIRROR of the Day/Hours table in src/amenities/pool.html (table.table-wrap
+         > thead th x2, tbody#pool-hours-body) plus site.js fill()'s row shape for
+         #pool-hours-body (tr > td day, td hours). Keep in sync. */
+      function renderHoursPreview(rows) {
+        var wrap = el("div", "table-wrap");
+        var table = el("table");
+        var thead = el("thead");
+        var hr = el("tr");
+        ["Day", "Hours"].forEach(function (t) {
+          var th = el("th", null, t);
+          th.scope = "col";
+          hr.appendChild(th);
+        });
+        thead.appendChild(hr);
+        table.appendChild(thead);
+        var tbody = el("tbody");
+        rows.forEach(function (r) {
+          var tr = el("tr");
+          tr.appendChild(el("td", null, r[0]));
+          tr.appendChild(el("td", null, r[1]));
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        wrap.appendChild(table);
+        return wrap;
+      }
 
-    forms.forEach(function (form) {
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        clearError();
-        var saved = form.querySelector(".saved");
-        api("/api/admin/content", {
-          method: "PUT",
-          body: { key: form.getAttribute("data-key"), value: toRows(form.querySelector("textarea").value) },
-        }).then(function () {
-          saved.textContent = "Saved ✓";
-          setTimeout(function () { saved.textContent = ""; }, 1500);
-        }).catch(showError);
+      function updatedAtFor(content, key) {
+        // Backend-seam contract: content GET gains per-key updated_at as an
+        // additive sibling object: { ..., updated_at: { season_glance: "..." } }.
+        // If the seam shipped a different additive shape, change only this
+        // accessor.
+        if (content && content.updated_at && typeof content.updated_at === "object") {
+          return content.updated_at[key] || null;
+        }
+        return null;
+      }
+
+      var cards = [
+        { key: "season_glance", preview: renderGlancePreview },
+        { key: "pool_hours", preview: renderHoursPreview },
+      ];
+
+      cards.forEach(function (card) {
+        card.root = document.querySelector('.content-card[data-key="' + card.key + '"]');
+        card.editor = card.root.querySelector(".row-editor");
+        card.previewSlot = card.root.querySelector(".preview-slot");
+        card.saveError = card.root.querySelector(".save-error");
+        card.addBtn = card.root.querySelector(".add-row");
+        card.rows = [];
+
+        card.addBtn.addEventListener("click", function () {
+          if (card.rows.length >= MAX_ROWS) return; // button is disabled at the cap; guard anyway
+          card.rows.push(["", ""]);
+          renderEditor(card);
+          renderPreview(card);
+          var rowsEls = card.editor.querySelectorAll(".re-row input");
+          if (rowsEls.length) rowsEls[rowsEls.length - 2].focus(); // new row's label input
+        });
+
+        card.root.querySelector(".save-btn").addEventListener("click", function () {
+          var btn = this;
+          card.saveError.hidden = true;
+          // Capture the serialized rows now, before the request goes out. Nothing
+          // below reads card.rows again on success, so further edits the user
+          // makes while the PUT is in flight are never clobbered.
+          var value = card.rows.filter(function (r) { return r[0].trim() || r[1].trim(); });
+          if (!value.length) {
+            card.saveError.textContent = "Add at least one row before saving.";
+            card.saveError.hidden = false;
+            card.saveError.focus();
+            return;
+          }
+          if (value.length > MAX_ROWS) {
+            card.saveError.textContent = "Too many rows: maximum is " + MAX_ROWS + ".";
+            card.saveError.hidden = false;
+            card.saveError.focus();
+            return;
+          }
+          btn.disabled = true;
+          api("/api/admin/content", { method: "PUT", body: { key: card.key, value: value } })
+            .then(function () {
+              if (!card.root.isConnected) return; // page torn down while the request was in flight
+              toast("Saved. Live on the site now.");
+            })
+            .catch(function (err) {
+              if (!card.root.isConnected) return;
+              card.saveError.textContent = err.message;
+              card.saveError.hidden = false;
+              card.saveError.focus();
+            })
+            .finally(function () {
+              if (btn.isConnected) btn.disabled = false;
+            });
+        });
       });
-    });
+
+      function renderEditor(card) {
+        card.editor.textContent = "";
+        card.rows.forEach(function (row, i) {
+          var r = el("div", "re-row");
+
+          var label = el("input");
+          label.type = "text";
+          label.maxLength = 200;
+          label.value = row[0];
+          label.setAttribute("aria-label", "Row " + (i + 1) + " label");
+          label.addEventListener("input", function () { row[0] = label.value; renderPreview(card); });
+
+          var value = el("input");
+          value.type = "text";
+          value.maxLength = 200;
+          value.value = row[1];
+          value.setAttribute("aria-label", "Row " + (i + 1) + " value");
+          value.addEventListener("input", function () { row[1] = value.value; renderPreview(card); });
+
+          var up = el("button", "icon-btn icon-btn--up", "↑");
+          up.type = "button";
+          up.setAttribute("aria-label", "Move row " + (i + 1) + " up");
+          up.disabled = i === 0;
+          up.addEventListener("click", function () { moveRow(card, i, i - 1, "up"); });
+
+          var down = el("button", "icon-btn icon-btn--down", "↓");
+          down.type = "button";
+          down.setAttribute("aria-label", "Move row " + (i + 1) + " down");
+          down.disabled = i === card.rows.length - 1;
+          down.addEventListener("click", function () { moveRow(card, i, i + 1, "down"); });
+
+          var rm = el("button", "icon-btn", "×");
+          rm.type = "button";
+          rm.setAttribute("aria-label", "Remove row " + (i + 1));
+          rm.addEventListener("click", function () {
+            card.rows.splice(i, 1);
+            renderEditor(card);
+            renderPreview(card);
+            card.addBtn.focus();
+          });
+
+          r.appendChild(label);
+          r.appendChild(value);
+          r.appendChild(up);
+          r.appendChild(down);
+          r.appendChild(rm);
+          card.editor.appendChild(r);
+        });
+        card.addBtn.disabled = card.rows.length >= MAX_ROWS;
+        card.addBtn.title = card.addBtn.disabled ? "Maximum " + MAX_ROWS + " rows reached." : "";
+      }
+
+      function moveRow(card, i, j, dir) {
+        var t = card.rows[i];
+        card.rows[i] = card.rows[j];
+        card.rows[j] = t;
+        renderEditor(card);
+        renderPreview(card);
+        var moved = card.editor.querySelectorAll(".re-row")[j];
+        var focusBtn = moved.querySelector(dir === "up" ? ".icon-btn--up" : ".icon-btn--down");
+        // The up/down button we just moved can land back in the disabled edge
+        // state (e.g. moving a row up to the new top row disables its own "up"
+        // button) - the remove button is never disabled, so it's always a safe,
+        // reachable fallback for keyboard focus.
+        if (focusBtn.disabled) focusBtn = moved.querySelector(".icon-btn:not(.icon-btn--up):not(.icon-btn--down)");
+        focusBtn.focus();
+      }
+
+      function renderPreview(card) {
+        card.previewSlot.textContent = "";
+        var rows = card.rows.filter(function (r) { return r[0].trim() || r[1].trim(); });
+        if (!rows.length) {
+          card.previewSlot.appendChild(el("p", "field-help", "Add a row to see the preview."));
+          return;
+        }
+        card.previewSlot.appendChild(card.preview(rows));
+      }
+
+      cards.forEach(function (card) { card.editor.appendChild(skeleton(4)); });
+      api("/api/content").then(function (content) {
+        cards.forEach(function (card) {
+          card.rows = (content[card.key] || []).map(function (r) { return [r[0], r[1]]; });
+          renderEditor(card);
+          renderPreview(card);
+          var ts = updatedAtFor(content, card.key);
+          card.root.querySelector(".updated-note").textContent = ts ? "Last updated " + ts + " (UTC)." : "";
+        });
+      }).catch(function (err) {
+        cards.forEach(function (card) { card.editor.textContent = ""; }); // don't strand the skeleton behind the error banner
+        showError(err);
+      });
+
+      /* ---------------- Portal settings ---------------- */
+      var original = null;
+      var duesEl = document.getElementById("set-dues");
+      var duesHintEl = document.getElementById("set-dues-hint");
+      var dueDateEl = document.getElementById("set-due-date");
+      var qbEl = document.getElementById("set-qb");
+      var settingsError = document.getElementById("settings-error");
+
+      function updateDuesHint() {
+        var n = parseFloat(duesEl.value);
+        duesHintEl.textContent = isFinite(n) && n > 0 ? "= " + Math.round(n * 100) + " cents." : "";
+      }
+      duesEl.addEventListener("input", updateDuesHint);
+
+      api("/api/admin/settings").then(function (s) {
+        if (!duesEl.isConnected) return;
+        original = s;
+        duesEl.value = s.dues_cents ? (Number(s.dues_cents) / 100).toFixed(2) : "";
+        dueDateEl.value = s.dues_due_date || "";
+        qbEl.value = s.quickbooks_url || "";
+        updateDuesHint();
+      }).catch(showError);
+
+      document.getElementById("settings-save").addEventListener("click", async function () {
+        if (!original) return;
+        var btn = this;
+        settingsError.hidden = true;
+
+        var cents = Math.round(parseFloat(duesEl.value) * 100);
+        if (!isFinite(cents) || cents <= 0) {
+          settingsError.textContent = "Enter the annual dues in dollars.";
+          settingsError.hidden = false;
+          settingsError.focus();
+          return;
+        }
+        var qb = qbEl.value.trim();
+        if (qb && qb.indexOf("https://") !== 0) {
+          settingsError.textContent = "QuickBooks link must start with https://";
+          settingsError.hidden = false;
+          settingsError.focus();
+          return;
+        }
+
+        // Capture-and-compare: each entry is {key, value} exactly as it will be
+        // PUT. Diffing against `original` (the last-confirmed server state)
+        // means an unchanged field never fires a request.
+        var updates = [];
+        if (String(cents) !== original.dues_cents) updates.push({ key: "dues_cents", value: String(cents) });
+        if (dueDateEl.value !== (original.dues_due_date || "")) updates.push({ key: "dues_due_date", value: dueDateEl.value });
+        if (qb !== (original.quickbooks_url || "")) updates.push({ key: "quickbooks_url", value: qb });
+        if (!updates.length) {
+          toast("No changes to save.");
+          return;
+        }
+
+        btn.disabled = true;
+        try {
+          for (var i = 0; i < updates.length; i++) {
+            await api("/api/admin/settings", { method: "PUT", body: updates[i] });
+            // Commit each key to `original` right after its own PUT confirms, not
+            // after the whole loop finishes - if a later key in this batch fails
+            // (e.g. dues_cents saves fine but quickbooks_url 400s), the already-
+            // persisted keys stay correctly reflected instead of going stale and
+            // re-firing a redundant PUT next Save.
+            original[updates[i].key] = updates[i].value;
+          }
+          if (duesEl.isConnected) toast("Settings saved.");
+        } catch (err) {
+          if (duesEl.isConnected) {
+            settingsError.textContent = err.message;
+            settingsError.hidden = false;
+            settingsError.focus();
+          }
+        }
+        if (btn.isConnected) btn.disabled = false;
+      });
+    })();
   </script>
