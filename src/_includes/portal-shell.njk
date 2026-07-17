@@ -1,6 +1,6 @@
 {# Board portal app shell. Behavior in /portal/portal-shell.js (loaded at the
    end so the sidebar markup above it is already parsed). Pages set
-   pageKey: dashboard | announcements | inbox | ledger | content. #}
+   pageKey: dashboard | announcements | inbox | ledger | bookings | content. #}
 <a class="skip-link" href="#portal-main">Skip to main content</a>
 <header class="portal-topbar">
   <span class="portal-topbar-brand">Woods of Parkview <span>Board portal</span></span>
@@ -17,6 +17,7 @@
     <a href="/portal/announcements.html"{% if pageKey == "announcements" %} aria-current="page"{% endif %}>Announcements</a>
     <a href="/portal/inbox.html"{% if pageKey == "inbox" %} aria-current="page"{% endif %}>Inbox <span class="nav-count" id="nav-inbox-count" hidden>0</span></a>
     <a href="/portal/ledger.html"{% if pageKey == "ledger" %} aria-current="page"{% endif %}>Dues &amp; households</a>
+    <a href="/portal/bookings.html"{% if pageKey == "bookings" %} aria-current="page"{% endif %}>Bookings</a>
     <a href="/portal/content.html"{% if pageKey == "content" %} aria-current="page"{% endif %}>Site content</a>
   </nav>
   <div class="portal-side-foot">

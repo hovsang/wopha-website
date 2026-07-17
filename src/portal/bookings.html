@@ -1,0 +1,240 @@
+---
+layout: portal-base.njk
+title: "Bookings"
+pageKey: bookings
+---
+  <main class="section" id="portal-main" tabindex="-1">
+    <div class="container">
+      <div class="portal-page-head">
+        <h1>Bookings</h1>
+      </div>
+      <p class="lede">Court and pavilion reservations for the next two weeks. Cancel a booking, or block out times for swim meets and maintenance.</p>
+
+      <section class="portal-card portal-section" aria-labelledby="block-heading">
+        <h2 id="block-heading">Block out a time</h2>
+        <p class="field-help">Blocked times show as unavailable on the public calendar and stop new bookings. Bookings that already exist in the window stay until you cancel them in the list below.</p>
+        <form id="block-form">
+          <div class="portal-grid portal-grid--2">
+            <p>
+              <label for="block-facility">Facility</label><br>
+              <select id="block-facility" style="width:100%"><option value="all">All facilities</option></select>
+            </p>
+            <p>
+              <label for="block-date">Date</label><br>
+              <input type="date" id="block-date" required style="width:100%">
+            </p>
+            <p>
+              <label for="block-start">From</label><br>
+              <input type="time" id="block-start" required style="width:100%">
+            </p>
+            <p>
+              <label for="block-end">To</label><br>
+              <input type="time" id="block-end" required style="width:100%">
+            </p>
+          </div>
+          <p>
+            <label for="block-reason">Reason (shown only to the board)</label><br>
+            <input type="text" id="block-reason" maxlength="200" required placeholder="Swim meet" style="width:100%">
+          </p>
+          <p>
+            <button class="btn btn--primary" type="submit" id="block-btn">Block out</button>
+            <span class="field-error" id="block-error" tabindex="-1" hidden></span>
+          </p>
+        </form>
+      </section>
+
+      <div class="portal-toolbar">
+        <label class="visually-hidden" for="facility-filter">Filter by facility</label>
+        <select id="facility-filter"><option value="">All facilities</option></select>
+      </div>
+
+      <div class="table-card">
+        <table class="portal-table">
+          <caption class="visually-hidden">Bookings for the next 14 days</caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Time</th>
+              <th scope="col">Facility</th>
+              <th scope="col">Who</th>
+              <th scope="col">Status</th>
+              <th scope="col"><span class="visually-hidden">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="booking-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <script>
+    (function () {
+      var data = null;
+      var labels = {};   // facility id → label
+      var rowsEl = document.getElementById("booking-rows");
+      var filterEl = document.getElementById("facility-filter");
+      var blockFacilityEl = document.getElementById("block-facility");
+      var blockError = document.getElementById("block-error");
+
+      /* MIRROR of fmtTime in src/assets/js/book.js. Keep in sync. */
+      function fmtTime(hhmm) {
+        var h = Number(hhmm.slice(0, 2));
+        var suffix = h >= 12 ? " p.m." : " a.m.";
+        var h12 = h % 12 === 0 ? 12 : h % 12;
+        return h12 + ":" + hhmm.slice(3, 5) + suffix;
+      }
+
+      function load() {
+        clearError();
+        rowsEl.textContent = "";
+        for (var i = 0; i < 4; i++) {
+          var tr = el("tr");
+          var td = el("td");
+          td.colSpan = 6;
+          td.appendChild(skeleton(1));
+          tr.appendChild(td);
+          rowsEl.appendChild(tr);
+        }
+        api("/api/admin/bookings").then(function (d) {
+          data = d;
+          labels = {};
+          d.facilities.forEach(function (f) { labels[f.id] = f.label; });
+          fillFacilitySelects(d.facilities);
+          render();
+        }).catch(function (err) {
+          rowsEl.textContent = ""; // don't strand the skeleton behind the error banner
+          showError(err);
+        });
+      }
+
+      var selectsFilled = false;
+      function fillFacilitySelects(facilities) {
+        if (selectsFilled) return; // options are static; only the list reloads
+        selectsFilled = true;
+        facilities.forEach(function (f) {
+          var o1 = el("option", null, f.label);
+          o1.value = f.id;
+          filterEl.appendChild(o1);
+          var o2 = el("option", null, f.label);
+          o2.value = f.id;
+          blockFacilityEl.appendChild(o2);
+        });
+      }
+
+      function render() {
+        rowsEl.textContent = "";
+        var shown = data.bookings.filter(function (b) {
+          return !filterEl.value || b.facility === filterEl.value;
+        });
+        if (!shown.length) {
+          var tr = el("tr");
+          var td = el("td", "empty-state", data.bookings.length
+            ? "No bookings for this facility in the next 14 days."
+            : "No bookings in the next 14 days.");
+          td.colSpan = 6;
+          tr.appendChild(td);
+          rowsEl.appendChild(tr);
+          return;
+        }
+        shown.forEach(function (b) { rowsEl.appendChild(buildRow(b)); });
+      }
+
+      function cellFor(label, text) {
+        var td = el("td", null, text);
+        td.setAttribute("data-label", label);
+        return td;
+      }
+
+      function buildRow(b) {
+        var tr = el("tr");
+        tr.setAttribute("data-booking-id", b.id);
+        tr.appendChild(cellFor("Date", b.date));
+        tr.appendChild(cellFor("Time", fmtTime(b.start_time) + " to " + fmtTime(b.end_time)));
+        tr.appendChild(cellFor("Facility", labels[b.facility] || b.facility));
+
+        var who = b.status === "blocked"
+          ? b.name
+          : b.name + (b.address ? " (" + b.address + ")" : "");
+        var whoTd = cellFor("Who", who);
+        if (b.email) {
+          whoTd.appendChild(el("br"));
+          whoTd.appendChild(el("span", "field-help", b.email));
+        }
+        tr.appendChild(whoTd);
+
+        var statusTd = el("td");
+        statusTd.setAttribute("data-label", "Status");
+        statusTd.appendChild(el("span",
+          "badge " + (b.status === "blocked" ? "badge--unpaid" : "badge--paid"),
+          b.status === "blocked" ? "blocked" : "booked"));
+        tr.appendChild(statusTd);
+
+        var actionTd = el("td");
+        var btn = el("button", "btn btn--sm", b.status === "blocked" ? "Remove" : "Cancel");
+        btn.type = "button";
+        btn.addEventListener("click", function () {
+          var what = b.status === "blocked"
+            ? "Remove the block on " + (labels[b.facility] || b.facility) + " for " + b.date + "?"
+            : "Cancel the " + (labels[b.facility] || b.facility) + " booking for " + b.name + " on " + b.date + "?";
+          confirmDialog(what).then(function (yes) {
+            if (yes) cancelBooking(b, tr);
+          });
+        });
+        actionTd.appendChild(btn);
+        tr.appendChild(actionTd);
+        return tr;
+      }
+
+      function cancelBooking(b, tr) {
+        api("/api/admin/bookings/" + b.id, { method: "DELETE" }).then(function () {
+          data.bookings = data.bookings.filter(function (x) { return x.id !== b.id; });
+          // Same stale-row guard class as the ledger: only splice in place
+          // when the row is still connected, otherwise re-render the list.
+          if (tr.isConnected) tr.remove();
+          else render();
+          toast(b.status === "blocked" ? "Block removed." : "Booking cancelled.");
+        }).catch(function (err) {
+          if (err.status === 404) { load(); return; } // already gone: resync
+          showError(err);
+        });
+      }
+
+      filterEl.addEventListener("change", function () { if (data) render(); });
+
+      document.getElementById("block-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        blockError.hidden = true;
+        var start = document.getElementById("block-start").value;
+        var end = document.getElementById("block-end").value;
+        if (start >= end) {
+          blockError.textContent = "End time must be after the start time.";
+          blockError.hidden = false;
+          blockError.focus();
+          return;
+        }
+        var btn = document.getElementById("block-btn");
+        btn.disabled = true;
+        api("/api/admin/bookings", {
+          method: "POST",
+          body: {
+            facility: blockFacilityEl.value,
+            date: document.getElementById("block-date").value,
+            start: start,
+            end: end,
+            reason: document.getElementById("block-reason").value.trim(),
+          },
+        }).then(function () {
+          document.getElementById("block-form").reset();
+          toast("Time blocked out.");
+          load();
+        }).catch(function (err) {
+          blockError.textContent = err.message;
+          blockError.hidden = false;
+          blockError.focus();
+        }).finally(function () {
+          if (btn.isConnected) btn.disabled = false;
+        });
+      });
+
+      load();
+    })();
+  </script>
