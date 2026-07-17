@@ -284,68 +284,56 @@ a:hover { color: var(--poolwater); }
   }
 }
 
-/* ---- Hero -------------------------------------------------------------- */
+/* ---- Hero — flat pine block, no divider ---------------------------------- */
 
 .hero {
   background: var(--pine);
-  color: var(--card);
-  padding-block: 3.5rem 0;
-  overflow: hidden;
+  color: #fff;
+  padding-block: var(--space-12) var(--space-10);
 }
 
-.hero h1 { color: var(--card); }
-.hero .eyebrow { color: #d9a06b; }
-.hero p { color: rgba(255, 253, 247, 0.88); max-width: 40rem; }
+.hero h1 { color: #fff; }
+.hero .eyebrow { color: #d9a06b; } /* 5.22:1 on Pine */
+.hero p { color: rgba(255, 255, 255, 0.88); max-width: 40rem; }
 
-.hero--page { padding-block: 2.5rem 0; }
-.hero--page .container { padding-bottom: 2.5rem; }
+.hero--page { padding-block: var(--space-10) var(--space-8); }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
 }
 
-/* Pine canopy divider — bottom edge of hero sections */
-.canopy {
-  display: block;
-  width: 100%;
-  height: 42px;
-  margin-top: 2.5rem;
-  color: var(--paper);
-}
-.section--tint + * .canopy, .canopy--tint { color: var(--sand); }
-
-/* ---- Buttons ------------------------------------------------------------ */
+/* ---- Buttons — radius 8, darken on hover, no lift, 44px targets ---------- */
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  font: 700 1rem var(--body);
+  gap: var(--space-2);
+  font: 600 1rem var(--body);
   text-decoration: none;
   border-radius: var(--radius);
-  padding: 0.8rem 1.4rem;
+  padding: 0.7rem 1.4rem;
   min-height: 44px;
-  border: 2px solid transparent;
+  border: 1.5px solid transparent;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-.btn--primary { background: var(--poolwater); color: var(--card); }
-.btn--primary:hover { background: var(--poolwater-dark); color: var(--card); }
+.btn--primary { background: var(--poolwater); color: #fff; }        /* 5.95:1 */
+.btn--primary:hover { background: var(--poolwater-dark); color: #fff; } /* 8.86:1 */
 
 .btn--outline { border-color: var(--poolwater); color: var(--poolwater-dark); background: transparent; }
-.btn--outline:hover { background: var(--poolwater); color: var(--card); }
+.btn--outline:hover { background: var(--poolwater); color: #fff; }
 
-.hero .btn--outline { border-color: rgba(255, 253, 247, 0.7); color: var(--card); }
-.hero .btn--outline:hover { background: var(--card); color: var(--pine); }
+.hero .btn--outline { border-color: rgba(255, 255, 255, 0.7); color: #fff; }
+.hero .btn--outline:hover { background: #fff; color: var(--pine); border-color: #fff; }
 
-/* ---- Cards -------------------------------------------------------------- */
+/* ---- Cards — hairline border, soft shadow, line icon; no colored top bar -- */
 
-.grid { display: grid; gap: 1.25rem; }
+.grid { display: grid; gap: var(--space-6); }
 @media (min-width: 640px) { .grid--2 { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 900px) {
   .grid--3 { grid-template-columns: repeat(3, 1fr); }
@@ -357,9 +345,10 @@ a:hover { color: var(--poolwater); }
 
 .card {
   background: var(--card);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 1.5rem;
+  padding: var(--space-6);
 }
 
 .card h3 { margin-top: 0; }
@@ -369,46 +358,66 @@ a:hover { color: var(--poolwater); }
   display: block;
   text-decoration: none;
   color: var(--ink);
-  border-top: 4px solid var(--poolwater);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease;
 }
-.card--action:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(31, 61, 43, 0.16);
-  color: var(--ink);
-}
-.card--action .card-cta { color: var(--poolwater-dark); font-weight: 700; }
+.card--action:hover { border-color: var(--poolwater); color: var(--ink); }
+.card--action:hover .card-cta { text-decoration: underline; }
+.card-cta { color: var(--poolwater-dark); font-weight: 700; }
 
-/* Clubhouse board — the season-at-a-glance panel */
+.card-icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+  color: var(--fern);
+  margin-bottom: var(--space-3);
+}
+
+.card-status {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--canopy);
+  margin-bottom: var(--space-2);
+}
+
+/* ---- Clubhouse board — season-at-a-glance panel (Fern/Canopy, clean rules) */
+
 .board-panel {
   background: var(--canopy);
-  color: var(--card);
+  color: #fff;
+  border: 1px solid var(--fern);
   border-radius: var(--radius);
-  border: 2px solid rgba(255, 253, 247, 0.25);
   box-shadow: var(--shadow);
-  padding: 1.75rem 1.5rem;
+  padding: var(--space-6);
 }
-.board-panel h2, .board-panel h3 { color: var(--card); }
+.board-panel h2, .board-panel h3 { color: #fff; }
+.board-panel h2 { font-size: 1.375rem; }
 .board-panel ul { list-style: none; margin: 0; padding: 0; }
 .board-panel li {
-  padding: 0.75rem 0;
-  border-bottom: 1px dashed rgba(255, 253, 247, 0.3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-4);
   flex-wrap: wrap;
 }
 .board-panel li:last-child { border-bottom: none; }
-.board-panel strong { color: #f0c98f; font-family: var(--display); }
+.board-panel strong {
+  color: #f0c98f; /* 5.14:1 on Canopy */
+  font-family: var(--display);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums; /* dues/dates line up (spec §2 numeral discipline) */
+}
 
-/* ---- Notices ------------------------------------------------------------ */
+/* ---- Notices ------------------------------------------------------------- */
 
 .notice {
   background: var(--card);
-  border-left: 5px solid var(--clay);
-  border-radius: 0 var(--radius) var(--radius) 0;
-  padding: 1rem 1.25rem;
-  margin-block: 1.25rem;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--clay); /* decorative — text inside is Ink */
+  border-radius: var(--radius);
+  padding: var(--space-4) var(--space-6);
+  margin-block: var(--space-6);
 }
 .notice > :last-child { margin-bottom: 0; }
 
@@ -416,9 +425,9 @@ a:hover { color: var(--poolwater); }
   background: repeating-linear-gradient(-45deg, #fdf6e3, #fdf6e3 12px, #faf0d7 12px, #faf0d7 24px);
   border: 2px dashed var(--clay);
   border-radius: var(--radius);
-  padding: 0.875rem 1.125rem;
+  padding: var(--space-3) var(--space-4);
   font-size: 0.9375rem;
-  margin-block: 1rem;
+  margin-block: var(--space-4);
 }
 .setup-note::before {
   content: "Board setup needed";
@@ -427,144 +436,259 @@ a:hover { color: var(--poolwater); }
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--clay);
-  margin-bottom: 0.25rem;
+  color: var(--clay-deep);
+  margin-bottom: var(--space-1);
 }
 
-/* ---- Tables -------------------------------------------------------------- */
+/* ---- Tables --------------------------------------------------------------- */
 
-.table-wrap { overflow-x: auto; margin-block: 1.25rem; }
+.table-wrap { overflow-x: auto; margin-block: var(--space-6); }
 
 table {
   width: 100%;
   border-collapse: collapse;
   background: var(--card);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
   font-size: 0.9375rem;
 }
 
-th, td { text-align: left; padding: 0.75rem 1rem; }
-thead th { background: var(--pine); color: var(--card); font-weight: 700; }
+th, td { text-align: left; padding: var(--space-3) var(--space-4); }
+td { font-variant-numeric: tabular-nums; } /* fee/date columns line up (spec §2) */
+thead th { background: var(--pine); color: #fff; font-weight: 600; }
 tbody tr:nth-child(even) { background: var(--paper); }
 
-/* ---- Accordions (rules) --------------------------------------------------- */
+/* ---- Accordions (rules, FAQ) ----------------------------------------------- */
 
 details.rule {
   background: var(--card);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-3);
   padding: 0;
 }
 
 details.rule summary {
   cursor: pointer;
-  font-weight: 700;
-  font-family: var(--display);
-  font-size: 1.0625rem;
+  font: 700 1rem var(--body);
   color: var(--pine);
-  padding: 1rem 1.25rem;
+  padding: var(--space-4) var(--space-6);
   list-style-position: outside;
+  min-height: 44px;
 }
 
-details.rule[open] summary { border-bottom: 1px solid var(--sand); }
-details.rule .rule-body { padding: 1rem 1.25rem; }
+details.rule[open] summary { border-bottom: 1px solid var(--line); }
+details.rule .rule-body { padding: var(--space-4) var(--space-6); }
 details.rule .rule-body > :last-child { margin-bottom: 0; }
 
-/* ---- People (board roster) ------------------------------------------------ */
+/* ---- People (board roster) -------------------------------------------------- */
 
 .person {
   background: var(--card);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 1.25rem 1.5rem;
+  padding: var(--space-4) var(--space-6);
 }
 .person .role {
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--clay);
+  color: var(--clay-deep);
 }
-.person h3 { margin: 0.25rem 0; }
+.person h3 { margin: var(--space-1) 0; }
 .person p { margin: 0; font-size: 0.9375rem; color: var(--ink-soft); }
 
-/* ---- Forms ----------------------------------------------------------------- */
+/* ---- Forms — one shared system: .form-card container, labels above ------- */
 
-.form-grid { display: grid; gap: 1rem; max-width: 38rem; }
+.form-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-6);
+  max-width: var(--container-narrow);
+}
 
-label { font-weight: 600; display: block; margin-bottom: 0.3rem; }
+.form-grid { display: grid; gap: var(--space-4); max-width: 38rem; }
+
+label { font-weight: 600; display: block; margin-bottom: var(--space-1); }
 
 input, textarea, select {
   width: 100%;
   font: 400 1rem var(--body);
   color: var(--ink);
   background: var(--card);
-  border: 2px solid #cfc9b4;
+  border: 1px solid var(--line-strong); /* 5.58:1 on Card — clears 1.4.11 */
   border-radius: var(--radius);
   padding: 0.7rem 0.9rem;
+  min-height: 44px;
 }
 
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--poolwater);
-  box-shadow: 0 0 0 3px rgba(23, 114, 127, 0.2);
+  box-shadow: 0 0 0 3px rgba(14, 110, 122, 0.18);
 }
+
+/* Inline validation: browsers flag fields after user interaction */
+input:user-invalid, textarea:user-invalid, select:user-invalid {
+  border-color: #a13324; /* 6.97:1 on Card */
+}
+input:user-invalid:focus, textarea:user-invalid:focus, select:user-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(161, 51, 36, 0.15);
+}
+
+.field-note { font-size: 0.875rem; color: var(--ink-soft); margin: var(--space-1) 0 0; }
 
 /* ---- Footer ------------------------------------------------------------------ */
 
 .site-footer {
   background: var(--pine);
-  color: rgba(255, 253, 247, 0.85);
-  padding-block: 2.5rem 2rem;
-  margin-top: 3rem;
+  color: rgba(255, 255, 255, 0.85);
+  padding-block: var(--space-10) var(--space-8);
+  margin-top: 0; /* the pre-footer pine-ridge strip (Step 9) supplies the gap */
   font-size: 0.9375rem;
 }
 
-.site-footer .container {
-  display: grid;
-  gap: 1.5rem;
-}
+.site-footer .container { display: grid; gap: var(--space-6); }
 @media (min-width: 768px) {
   .site-footer .container { grid-template-columns: 2fr 1fr 1fr; }
 }
 
-.site-footer h3 { color: var(--card); font-size: 1.0625rem; }
-.site-footer a { color: #a8d5c2; }
-.site-footer a:hover { color: var(--card); }
+.site-footer h3 { color: #fff; font-size: 1.0625rem; }
+.site-footer a { color: #a8d5c2; } /* 7.36:1 on Pine */
+.site-footer a:hover { color: #fff; }
 .site-footer ul { list-style: none; margin: 0; padding: 0; }
-.site-footer li { padding-block: 0.2rem; }
+.site-footer li { padding-block: var(--space-1); }
 .footer-note {
-  border-top: 1px solid rgba(255, 253, 247, 0.2);
-  margin-top: 2rem;
-  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: var(--space-8);
+  padding-top: var(--space-4);
   font-size: 0.875rem;
-  color: rgba(255, 253, 247, 0.6);
+  color: rgba(255, 255, 255, 0.7);
 }
+
+/* ---- Stats — Fraunces number (tabular), Public Sans micro-caps label ----------- */
+
+.stat-row { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-block: var(--space-6); }
+.stat-row .stat strong {
+  display: block;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.875rem;
+  line-height: 1.1;
+  color: var(--pine);
+  font-variant-numeric: tabular-nums;
+}
+.stat-row .stat span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ---- Quick-action secondary tier ------------------------------------------------ */
+
+.action-links {
+  list-style: none;
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-6);
+}
+.action-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  color: var(--poolwater-dark);
+}
+
+/* ---- PWA install banner (compact card) ------------------------------------------- */
+
+.install-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.install-banner h2 { font-family: var(--body); font-weight: 700; font-size: 1.125rem; margin: 0 0 var(--space-1); }
+.install-banner p { margin: 0; color: var(--ink-soft); }
+
+/* ---- Photography — duotone treatment + placeholder (never clip-art) --------------- */
+/* Real photos (board supplies) go in .photo-duotone; until then, .photo-placeholder
+   renders a solid green block. Placeholders are decorative: aria-hidden="true". */
+
+.photo-duotone {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--poolwater);
+}
+.photo-duotone--pine { background: var(--pine); }
+.photo-duotone img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  filter: grayscale(1) contrast(1.05) brightness(1.05);
+  mix-blend-mode: multiply; /* highlights take the panel color; shadows stay deep */
+}
+
+.photo-placeholder {
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--fern), var(--canopy));
+  aspect-ratio: 3 / 2;
+}
+
+.photo-strip { display: grid; gap: var(--space-3); grid-template-columns: 1fr; }
+@media (min-width: 640px) { .photo-strip { grid-template-columns: repeat(3, 1fr); } }
+
+/* ---- Pine-ridge line — THE signature element (spec §2) -------------------- */
+/* One drafted 1px fern treeline (src/_includes/pine-ridge.njk), used in
+   exactly three places: homepage hero baseline, pre-footer divider, footer
+   mark. This is the site's one bold element — do not use it anywhere else.
+   Decorative: the svg carries aria-hidden; no contrast requirement. */
+
+.pine-ridge { display: block; width: 100%; height: 40px; }
+
+.pine-ridge-strip { line-height: 0; background: var(--paper); }
+.pine-ridge-strip--prefooter { margin-top: var(--space-10); }
+
+/* Footer mark: a 160px-wide slice of the same ridge at its natural 30:1
+   proportions — the wrapper CROPS (overflow hidden) rather than squeezing
+   1200 units into 160px, keeping the drafted line's rhythm. On pine the
+   fern stroke reads as a quiet emboss — intentional. */
+.pine-ridge--footer {
+  width: 160px;
+  overflow: hidden;
+  margin-inline: auto;
+  margin-bottom: var(--space-3);
+  line-height: 0;
+}
+.pine-ridge--footer .pine-ridge { width: 480px; height: 16px; }
 
 /* ---- Misc ---------------------------------------------------------------------- */
 
-.pill-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.pill-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .pill-list li {
   background: var(--card);
-  border: 1.5px solid var(--sand);
+  border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0.35rem 0.9rem;
   font-size: 0.875rem;
   font-weight: 600;
 }
 
-.stat-row { display: flex; flex-wrap: wrap; gap: 2rem; margin-block: 1.5rem; }
-.stat-row .stat strong {
-  display: block;
-  font-family: var(--display);
-  font-size: 1.75rem;
-  color: var(--pine);
-}
-.stat-row .stat span { font-size: 0.875rem; color: var(--ink-soft); }
-
 img { max-width: 100%; height: auto; border-radius: var(--radius); }
 
-.gallery { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+.gallery { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
