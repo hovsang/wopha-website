@@ -1,0 +1,151 @@
+---
+layout: portal-base.njk
+title: "Plan &amp; billing"
+pageKey: billing
+---
+  <main class="section" id="portal-main" tabindex="-1">
+    <div class="container">
+      <div class="portal-page-head">
+        <h1>Plan &amp; billing</h1>
+      </div>
+      <p class="lede">The association's website service plan. Subscriptions are billed monthly through Stripe, which hosts checkout, receipts, and the customer portal for upgrades or cancellation. No payment details touch this website.</p>
+
+      <div class="portal-grid portal-grid--3">
+        {% for tier in pricing.tiers %}
+        <section class="portal-card tier-card" aria-labelledby="tier-{{ tier.id }}">
+          <h2 id="tier-{{ tier.id }}">{{ tier.name }} <span class="tier-current-badge" id="plan-badge-{{ tier.id }}" hidden>Current plan</span></h2>
+          <p class="tier-price">{{ tier.gross_monthly_cents | dollars }}<span class="field-help">/month ({{ (tier.gross_monthly_cents * 12) | dollars }}/year)</span></p>
+          <ul>
+            {% for item in tier.includes %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {% if tier.stripe_link %}
+          <p><a class="btn btn--primary" href="{{ tier.stripe_link }}">Subscribe monthly</a></p>
+          {% else %}
+          <!-- PLACEHOLDER: the webmaster pastes the {{ tier.name }} tier's Stripe recurring Payment Link (his own business Stripe account, separate from the HOA dues Stripe) into stripe_link in src/_data/pricing.json, then rebuilds. -->
+          <p><a class="btn btn--primary" href="#">Subscribe monthly</a></p>
+          <div class="setup-note">
+            <p>Setup needed: the {{ tier.name }} subscribe button activates when the webmaster's Stripe Payment Link is added to the site configuration.</p>
+          </div>
+          {% endif %}
+        </section>
+        {% endfor %}
+      </div>
+
+      <section class="portal-card portal-section" aria-labelledby="net-heading">
+        <h2 id="net-heading">What each plan really costs</h2>
+        <div class="table-wrap">
+          <table>
+            <caption class="visually-hidden">Gross and net monthly cost per plan</caption>
+            <thead>
+              <tr>
+                <th scope="col">Line</th>
+                {% for tier in pricing.tiers %}<th scope="col">{{ tier.name }}</th>{% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Gross monthly</th>
+                {% for tier in pricing.tiers %}<td>{{ tier.gross_monthly_cents | dollars }}</td>{% endfor %}
+              </tr>
+              <tr>
+                <th scope="row">Cancelled subscriptions (verified)</th>
+                {% for tier in pricing.tiers %}<td>{% if tier.verified_cancellations.length %}{% for c in tier.verified_cancellations %}{{ c.label }} {{ c.monthly_cents | dollars }}/mo{% endfor %}{% else %}none yet{% endif %}</td>{% endfor %}
+              </tr>
+              <tr>
+                <th scope="row">Net after verified savings</th>
+                {% for tier in pricing.tiers %}<td><strong>{{ tier.net_verified_monthly_cents | dollars }}</strong></td>{% endfor %}
+              </tr>
+              <tr>
+                <th scope="row">Pending verification (estimates)</th>
+                {% for tier in pricing.tiers %}<td>{% if tier.pending_cancellations.length %}{{ tier.pending_low_monthly_cents | dollars }} to {{ tier.pending_high_monthly_cents | dollars }}{% else %}none{% endif %}</td>{% endfor %}
+              </tr>
+              <tr>
+                <th scope="row">Net if estimates confirm</th>
+                {% for tier in pricing.tiers %}<td>{{ tier.net_confirmed_low_monthly_cents | dollars }} to {{ tier.net_confirmed_high_monthly_cents | dollars }}</td>{% endfor %}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="field-help">Verified savings count only subscriptions in the approved 2026 budget (the entrance camera line, Complete plan). ReserveMyCourt and Weebly amounts are estimates pending the treasurer's confirmation and are never claimed as fact. The Complete plan's sponsorship program targets about {{ pricing.sponsor_target_monthly_cents | dollars }}/mo in offsetting revenue (4 sponsors at $250/yr); a target, not a commitment. Comparable HOA portal platforms run about {{ pricing.payhoa_anchor_monthly_cents | dollars }}/mo.</p>
+      </section>
+
+      <section class="portal-card portal-section" aria-labelledby="plan-heading">
+        <h2 id="plan-heading">Current plan</h2>
+        <p class="field-help">Set this after the board subscribes so the portal shows the active plan. It only changes what this page displays; the subscription itself is managed on Stripe's pages (the link is in every Stripe receipt email).</p>
+        <p>
+          <label for="set-plan">Plan</label><br>
+          <select id="set-plan">
+            <option value="">None yet</option>
+            {% for tier in pricing.tiers %}
+            <option value="{{ tier.id }}">{{ tier.name }}</option>
+            {% endfor %}
+          </select>
+        </p>
+        <p>
+          <button type="button" class="btn btn--primary" id="plan-save">Save</button>
+          <span class="field-error" id="plan-error" tabindex="-1" hidden></span>
+        </p>
+      </section>
+
+      <section class="portal-card portal-section" aria-labelledby="howpay-heading">
+        <h2 id="howpay-heading">How billing works</h2>
+        <ul>
+          <li>Subscriptions are paid to the webmaster's business Stripe account. It is entirely separate from the association's own Stripe account that collects member dues.</li>
+          <li>Stripe hosts checkout, emails receipts, and provides the customer portal for changing or cancelling the subscription.</li>
+          <li>Either side can end the arrangement with 30 days notice, per the proposal terms, with full handover.</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+  <script>
+    (function () {
+      var select = document.getElementById("set-plan");
+      var planError = document.getElementById("plan-error");
+      var original = null;
+
+      function showBadge(plan) {
+        var badges = document.querySelectorAll(".tier-current-badge");
+        for (var i = 0; i < badges.length; i++) {
+          badges[i].hidden = badges[i].id !== "plan-badge-" + plan;
+        }
+      }
+
+      api("/api/admin/settings").then(function (s) {
+        if (!select.isConnected) return;
+        original = s;
+        select.value = s.plan || "";
+        showBadge(s.plan || "");
+      }).catch(showError);
+
+      document.getElementById("plan-save").addEventListener("click", function () {
+        if (!original) return;
+        var btn = this;
+        planError.hidden = true;
+        // Capture the value now; edits made while the PUT is in flight are never clobbered.
+        var value = select.value;
+        if (value === (original.plan || "")) {
+          toast("No changes to save.");
+          return;
+        }
+        btn.disabled = true;
+        api("/api/admin/settings", { method: "PUT", body: { key: "plan", value: value } })
+          .then(function () {
+            original.plan = value;
+            if (!select.isConnected) return;
+            showBadge(value);
+            toast("Plan saved.");
+          })
+          .catch(function (err) {
+            if (!select.isConnected) return;
+            planError.textContent = err.message;
+            planError.hidden = false;
+            planError.focus();
+          })
+          .finally(function () {
+            if (btn.isConnected) btn.disabled = false;
+          });
+      });
+    })();
+  </script>

@@ -11,6 +11,16 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/portal/portal-shell.js");
   eleventyConfig.addPassthroughCopy({ "src/_redirects": "_redirects" });
 
+  // Build-time money formatting; mirrors dollars() in src/portal/portal-shell.js.
+  // Money is integer cents everywhere in code; only display formats it.
+  eleventyConfig.addFilter("dollars", (cents) => {
+    const abs = (Math.abs(cents) / 100).toLocaleString("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
+    return (cents < 0 ? "-$" : "$") + abs;
+  });
+
   return {
     dir: {
       input: "src",
