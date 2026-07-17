@@ -1,24 +1,32 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
-  <title>{{ title | safe }} | WOPHA board portal</title>
-  <link rel="stylesheet" href="../assets/css/styles.css">
-  <link rel="stylesheet" href="../assets/css/portal.css">
-</head>
-<body>
-  <main class="section">
-    <div class="container">
-      <span class="eyebrow">WOPHA board portal</span>
-      <h1>{{ heading | safe }}</h1>
-      <nav class="portal-nav">
-        <a href="index.html">Dashboard</a>
-        <a href="announcements.html">Announcements</a>
-        <a href="inbox.html">Inbox</a>
-        <a href="ledger.html">Ledger</a>
-        <a href="content.html">Site content</a>
-        <a href="../index.html">← Public site</a>
-      </nav>
-      <div id="error" class="portal-error"></div>
+{# Board portal app shell. Behavior in /portal/portal-shell.js (loaded at the
+   end so the sidebar markup above it is already parsed). Pages set
+   pageKey: dashboard | announcements | inbox | ledger | content. #}
+<a class="skip-link" href="#portal-main">Skip to main content</a>
+<header class="portal-topbar">
+  <span class="portal-topbar-brand">Woods of Parkview <span>Board portal</span></span>
+  <button class="portal-menu-toggle" type="button" aria-expanded="false" aria-controls="portal-sidebar">Menu</button>
+</header>
+<div class="portal-scrim" hidden></div>
+<aside class="portal-sidebar" id="portal-sidebar">
+  <div class="portal-brand">
+    <strong>Woods of Parkview</strong>
+    <span>Board portal</span>
+  </div>
+  <nav class="portal-sidenav" aria-label="Portal">
+    <a href="/portal/"{% if pageKey == "dashboard" %} aria-current="page"{% endif %}>Dashboard</a>
+    <a href="/portal/announcements.html"{% if pageKey == "announcements" %} aria-current="page"{% endif %}>Announcements</a>
+    <a href="/portal/inbox.html"{% if pageKey == "inbox" %} aria-current="page"{% endif %}>Inbox <span class="nav-count" id="nav-inbox-count" hidden>0</span></a>
+    <a href="/portal/ledger.html"{% if pageKey == "ledger" %} aria-current="page"{% endif %}>Dues &amp; households</a>
+    <a href="/portal/content.html"{% if pageKey == "content" %} aria-current="page"{% endif %}>Site content</a>
+  </nav>
+  <div class="portal-side-foot">
+    <a href="/">&#8599; Public site</a>
+    <span class="portal-identity" id="portal-identity"></span>
+    <a href="/cdn-cgi/access/logout">Sign out</a>
+  </div>
+</aside>
+<div id="error" class="portal-error" role="alert" tabindex="-1" hidden>
+  <span id="error-message"></span>
+  <button type="button" class="btn btn--sm" id="error-reload">Reload</button>
+</div>
+<script src="/portal/portal-shell.js"></script>

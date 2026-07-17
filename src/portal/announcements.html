@@ -1,9 +1,23 @@
 ---
 title: "Announcements"
 heading: "Announcements"
+pageKey: announcements
 ---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>{{ title | safe }} | WOPHA board portal</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/portal.css">
+</head>
+<body>
 {% include "portal-shell.njk" %}
-
+  <main class="section">
+    <div class="container">
+      <h1>Announcements</h1>
       <form class="form-grid" id="ann-form">
         <input type="hidden" id="ann-id" value="">
         <div>
@@ -31,7 +45,6 @@ heading: "Announcements"
       </table>
     </div>
   </main>
-  <script src="portal.js"></script>
   <script>
     var form = document.getElementById("ann-form");
     var idEl = document.getElementById("ann-id");

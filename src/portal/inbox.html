@@ -1,8 +1,23 @@
 ---
 title: "Inbox"
 heading: "Inbox"
+pageKey: inbox
 ---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>{{ title | safe }} | WOPHA board portal</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/portal.css">
+</head>
+<body>
 {% include "portal-shell.njk" %}
+  <main class="section">
+    <div class="container">
+      <h1>Inbox</h1>
       <div class="portal-actions">
         <div>
           <label for="filter">Show</label>
@@ -17,7 +32,6 @@ heading: "Inbox"
       <div id="items"></div>
     </div>
   </main>
-  <script src="portal.js"></script>
   <script>
     var TYPE_LABELS = {
       contact_update: "Contact update",
