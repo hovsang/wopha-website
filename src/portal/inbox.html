@@ -39,6 +39,7 @@ pageKey: inbox
       var selectedId = null;
       var currentStatus = "new";
       var rowRefs = {}; // submission id -> { item: <button>, badge: <span> }
+      var loaded = false; // guards renderQueue's empty-state branch until the first fetch resolves
 
       var queue = document.getElementById("queue");
       var queueEmpty = document.getElementById("queue-empty");
@@ -51,6 +52,11 @@ pageKey: inbox
         "done": "Nothing marked done yet.",
         "": "No submissions yet.",
       };
+
+      // Conservative addr-spec shape check for the mailto Reply button. A resident-submitted
+      // email is untrusted input; reject anything with mailto-metacharacters (RFC 6068 hfields
+      // like ?cc=/?bcc= start with ?/&/#) before ever building an href from it.
+      var EMAIL_ADDR_RE = /^[^\s@?&#\/;,]+@[^\s@?&#\/;,]+\.[^\s@?&#\/;,]+$/;
 
       initTabs(document.getElementById("inbox-tabs"), function (tab) {
         currentStatus = tab.getAttribute("data-status");
@@ -96,7 +102,10 @@ pageKey: inbox
         queue.textContent = "";
         rowRefs = {};
         var shown = currentStatus ? all.filter(function (s) { return s.status === currentStatus; }) : all;
-        queueEmpty.hidden = shown.length > 0;
+        // Before the first fetch resolves, `all` is always empty — don't show the empty-state
+        // text next to the loading skeleton (initTabs's synchronous initial onChange calls this
+        // before the fetch below even starts).
+        queueEmpty.hidden = !loaded || shown.length > 0;
         queueEmpty.textContent = EMPTY[currentStatus];
         shown.forEach(function (s) {
           var li = el("li");
@@ -209,10 +218,15 @@ pageKey: inbox
         Object.keys(s.fields).forEach(function (k) {
           if (!email && /email/i.test(k) && /@/.test(s.fields[k])) email = s.fields[k];
         });
-        if (email) {
+        // Only render the Reply button for a strictly-shaped addr-spec. A resident-submitted
+        // value like "victim@x.com?cc=attacker@evil.com" would otherwise smuggle mailto hfields
+        // (RFC 6068) into the href; if it doesn't pass the conservative check, skip the button.
+        if (email && EMAIL_ADDR_RE.test(email)) {
           actions.appendChild(document.createTextNode(" "));
           var reply = el("a", "btn btn--sm btn--outline", "Reply by email ↗");
-          reply.href = "mailto:" + email + "?subject=" +
+          // encodeURIComponent the addr-spec too: valid per RFC 6068 and neutralizes any
+          // residual metacharacters even though EMAIL_ADDR_RE already rejects the known-bad ones.
+          reply.href = "mailto:" + encodeURIComponent(email) + "?subject=" +
             encodeURIComponent("Re: your " + (TYPE_LABELS[s.form_type] || s.form_type).toLowerCase() + " to the WOPHA board");
           actions.appendChild(reply);
         }
@@ -239,14 +253,22 @@ pageKey: inbox
 
         function saveNotes() {
           if (notes.value === s.notes) return; // nothing changed — no request
+          // Capture what we're sending now; compare against this at resolution instead of
+          // re-reading notes.value live (the field may have changed again by then).
+          var sent = notes.value;
           noteErr.hidden = true;
-          api("/api/admin/submissions/" + s.id, { method: "PATCH", body: { notes: notes.value } })
+          api("/api/admin/submissions/" + s.id, { method: "PATCH", body: { notes: sent } })
             .then(function () {
-              s.notes = notes.value;
+              s.notes = sent;
               // Guard: the user may have navigated to a different submission
               // (blur fires before the click that swaps detailBody) while
               // this request was in flight — don't touch the detached notes.
               if (!notes.isConnected) return;
+              // If the field no longer holds what we just sent, it was edited again while the
+              // request was in flight — it's dirty again, so leave the indicator unset; the
+              // next blur will re-save (its short-circuit above compares against the now-current
+              // s.notes, so it will correctly fire a fresh request).
+              if (notes.value !== sent) return;
               var t = new Date();
               saved.textContent = "Saved ✓ " +
                 t.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
@@ -274,6 +296,7 @@ pageKey: inbox
       queue.appendChild(el("li")).appendChild(skeleton(4));
       api("/api/admin/submissions").then(function (data) {
         all = data.submissions;
+        loaded = true;
         updateCounts();
         renderQueue();
       }).catch(showError);
