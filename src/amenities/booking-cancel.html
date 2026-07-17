@@ -1,0 +1,28 @@
+---
+layout: base.njk
+title: Cancel a booking | Woods of Parkview HOA
+description: "Cancel a Woods of Parkview court or pavilion reservation using the cancel link from your booking confirmation."
+pageKey: amenities-book
+permalink: /amenities/booking-cancel/index.html
+---
+    <section class="hero hero--page">
+      <div class="container">
+        <h1>Cancel a booking</h1>
+        <p class="lede" id="cancel-summary">Checking your booking&hellip;</p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="cancel-action-heading">
+      <div class="container">
+        <h2 id="cancel-action-heading" class="visually-hidden">Confirm cancellation</h2>
+        <p class="form-error" id="cancel-error" role="alert" hidden></p>
+        <p id="cancel-actions" hidden>
+          <button class="btn btn--primary" type="button" id="cancel-btn">Cancel this booking</button>
+          <a class="btn btn--outline" href="/amenities/book/">Keep it</a>
+        </p>
+        <p id="cancel-done" hidden>The time is freed up. <a href="/amenities/book/">Book another time</a> whenever you like.</p>
+        <noscript><p>Cancelling needs JavaScript. If you can't use it, reach the board through the <a href="/about/contact/">contact page</a>.</p></noscript>
+      </div>
+    </section>
+
+    <script src="/assets/js/booking-cancel.js"></script>
