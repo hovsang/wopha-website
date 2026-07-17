@@ -1,22 +1,50 @@
-  <header class="site-header">
-    <div class="container">
-      <a class="brand" href="index.html">
-        <svg width="22" height="26" viewBox="0 0 22 26" aria-hidden="true"><path fill="#a8d5c2" d="M11 0 3 10h4L1 19h8v7h4v-7h8l-6-9h4L11 0z"/></svg>
-        Woods of Parkview
-      </a>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
-      <nav class="site-nav" id="site-nav" aria-label="Main">
-        <ul>
-          <li><a href="index.html"{% if pageKey == "home" %} aria-current="page"{% endif %}>Home</a></li>
-          <li><a href="membership.html"{% if pageKey == "membership" %} aria-current="page"{% endif %}>Membership</a></li>
-          <li><a href="pool.html"{% if pageKey == "pool" %} aria-current="page"{% endif %}>Pool</a></li>
-          <li><a href="tennis.html"{% if pageKey == "tennis" %} aria-current="page"{% endif %}>Tennis</a></li>
-          <li><a href="swim-team.html"{% if pageKey == "swim-team" %} aria-current="page"{% endif %}>Swim Team</a></li>
-          <li><a href="community.html"{% if pageKey == "community" %} aria-current="page"{% endif %}>Community</a></li>
-          <li><a href="board.html"{% if pageKey == "board" %} aria-current="page"{% endif %}>Board &amp; Docs</a></li>
-          <li><a href="suggestions.html"{% if pageKey == "suggestions" %} aria-current="page"{% endif %}>Suggestions</a></li>
-          <li><a href="contact.html"{% if pageKey == "contact" %} aria-current="page"{% endif %}>Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="/">
+      <svg width="22" height="26" viewBox="0 0 22 26" aria-hidden="true"><path fill="#a8d5c2" d="M11 0 3 10h4L1 19h8v7h4v-7h8l-6-9h4L11 0z"/></svg>
+      Woods of Parkview
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul>
+        <li class="nav-group">
+          <button type="button" class="nav-disclosure{% if pageKey in ['amenities', 'amenities-pool', 'amenities-tennis', 'amenities-swim-team'] %} is-current-section{% endif %}" aria-expanded="false" aria-controls="menu-amenities">
+            Amenities
+            <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="nav-menu" id="menu-amenities">
+            <li><a href="/amenities/"{% if pageKey == 'amenities' %} aria-current="page"{% endif %}>Overview</a></li>
+            <li><a href="/amenities/pool/"{% if pageKey == 'amenities-pool' %} aria-current="page"{% endif %}>Pool</a></li>
+            <li><a href="/amenities/tennis/"{% if pageKey == 'amenities-tennis' %} aria-current="page"{% endif %}>Tennis &amp; pickleball</a></li>
+            <li><a href="/amenities/swim-team/"{% if pageKey == 'amenities-swim-team' %} aria-current="page"{% endif %}>Swim team</a></li>
+          </ul>
+        </li>
+        <li><a class="nav-link" href="/membership/"{% if pageKey == 'membership' %} aria-current="page"{% endif %}>Membership</a></li>
+        <li class="nav-group">
+          <button type="button" class="nav-disclosure{% if pageKey == 'community' %} is-current-section{% endif %}" aria-expanded="false" aria-controls="menu-community">
+            Community
+            <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="nav-menu" id="menu-community">
+            <li><a href="/community/#events">Events &amp; calendar</a></li>
+            <li><a href="/community/#connect">Get connected</a></li>
+            <li><a href="/community/#announcements">Announcements</a></li>
+          </ul>
+        </li>
+        <li class="nav-group">
+          <button type="button" class="nav-disclosure{% if pageKey in ['about', 'about-board', 'about-documents', 'about-contact'] %} is-current-section{% endif %}" aria-expanded="false" aria-controls="menu-about">
+            About
+            <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="nav-menu" id="menu-about">
+            <li><a href="/about/"{% if pageKey == 'about' %} aria-current="page"{% endif %}>The neighborhood</a></li>
+            <li><a href="/about/board/"{% if pageKey == 'about-board' %} aria-current="page"{% endif %}>Board &amp; volunteers</a></li>
+            <li><a href="/about/documents/"{% if pageKey == 'about-documents' %} aria-current="page"{% endif %}>Governing documents</a></li>
+            <li><a href="/about/contact/"{% if pageKey == 'about-contact' %} aria-current="page"{% endif %}>Contact &amp; report</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <a class="btn btn--primary nav-cta" href="/membership/#pay">Pay dues <span aria-hidden="true">→</span></a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
+  </div>
+</header>

@@ -14,6 +14,87 @@ if ("serviceWorker" in navigator) {
   });
 })();
 
+// Disclosure dropdown menus (Amenities / Community / About). ARIA APG
+// disclosure-navigation pattern: button[aria-expanded] toggles its menu;
+// Esc closes and refocuses the button; ArrowDown/ArrowUp walk the open
+// menu; click-outside and focus-leaving close. Same markup drives the
+// desktop dropdowns and the mobile accordion drawer.
+(function () {
+  var groups = document.querySelectorAll(".nav-group");
+  if (!groups.length) return;
+
+  function menuLinks(group) {
+    return Array.prototype.slice.call(group.querySelectorAll(".nav-menu a"));
+  }
+  function setOpen(group, open) {
+    group.querySelector(".nav-disclosure")
+      .setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  function closeAll(except) {
+    Array.prototype.forEach.call(groups, function (g) {
+      if (g !== except) setOpen(g, false);
+    });
+  }
+
+  Array.prototype.forEach.call(groups, function (group) {
+    var btn = group.querySelector(".nav-disclosure");
+
+    btn.addEventListener("click", function () {
+      var open = btn.getAttribute("aria-expanded") === "true";
+      closeAll(group);
+      setOpen(group, !open);
+    });
+
+    btn.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        closeAll(group);
+        setOpen(group, true);
+        var links = menuLinks(group);
+        if (links.length) links[0].focus();
+      } else if (e.key === "Escape") {
+        setOpen(group, false);
+      }
+    });
+
+    group.addEventListener("keydown", function (e) {
+      if (e.target === btn) return;
+      var links = menuLinks(group);
+      var i = links.indexOf(document.activeElement);
+      if (i === -1) return;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (i < links.length - 1) links[i + 1].focus();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (i === 0) { setOpen(group, false); btn.focus(); }
+        else links[i - 1].focus();
+      } else if (e.key === "Escape") {
+        setOpen(group, false);
+        btn.focus();
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        links[0].focus();
+      } else if (e.key === "End") {
+        e.preventDefault();
+        links[links.length - 1].focus();
+      }
+    });
+
+    // Close when keyboard focus leaves the group entirely (tabbing past it).
+    group.addEventListener("focusout", function () {
+      window.setTimeout(function () {
+        if (!group.contains(document.activeElement)) setOpen(group, false);
+      }, 0);
+    });
+  });
+
+  document.addEventListener("click", function (e) {
+    var header = document.querySelector(".site-header");
+    if (header && !header.contains(e.target)) closeAll(null);
+  });
+})();
+
 // Seasonal hero button: dues season (Jan-Apr, invoices due Mar 31) shows the
 // default "Pay your dues"; pool season and meeting season swap it out.
 (function () {

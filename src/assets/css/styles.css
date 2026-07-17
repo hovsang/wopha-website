@@ -181,53 +181,56 @@ a:hover { color: var(--poolwater); }
 }
 .skip-link:focus { left: 0; }
 
-/* ---- Header / nav ------------------------------------------------------ */
+/* ---- Header / nav — 5 groups + persistent Pay dues ----------------------- */
 
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
   background: var(--pine);
-  color: var(--card);
+  color: #fff;
   box-shadow: var(--shadow);
 }
 
 .site-header .container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-3);
   min-height: 3.75rem;
 }
 
 .brand {
   font-family: var(--display);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1.1875rem;
-  color: var(--card);
+  color: #fff;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding-block: 0.5rem;
+  padding-block: var(--space-2);
+  margin-right: auto;
 }
-.brand:hover { color: var(--card); }
+.brand:hover { color: #fff; }
 .brand svg { flex: none; }
+
+.nav-cta { padding: 0.45rem 0.9rem; font-size: 0.9375rem; white-space: nowrap; }
 
 .nav-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   background: none;
-  border: 2px solid rgba(255, 253, 247, 0.4);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
   border-radius: var(--radius);
-  color: var(--card);
-  font: 700 0.9375rem var(--body);
+  color: #fff;
+  font: 600 0.9375rem var(--body);
   padding: 0.5rem 0.875rem;
+  min-height: 44px;
   cursor: pointer;
 }
 
-/* Mobile: dropdown panel below the bar — the bar itself never grows */
+/* Mobile: single-column accordion drawer below the bar */
 .site-nav {
   display: none;
   position: absolute;
@@ -235,36 +238,68 @@ a:hover { color: var(--poolwater); }
   left: 0;
   right: 0;
   background: var(--pine);
-  border-top: 1px solid rgba(255, 253, 247, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 14px 24px rgba(22, 45, 32, 0.35);
+  max-height: calc(100vh - 3.75rem);
+  overflow-y: auto;
 }
 .site-nav.open { display: block; }
 
-.site-nav ul {
+.site-nav > ul {
   list-style: none;
   margin: 0;
-  padding: 0.75rem 1.25rem 1rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.25rem 1rem;
+  padding: var(--space-3) var(--space-4) var(--space-6);
 }
 
-.site-nav a {
-  display: block;
-  color: var(--card);
+.nav-link, .nav-disclosure {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.6rem var(--space-2);
+  color: #fff;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9375rem;
-  padding: 0.65rem 0.5rem;
+  font: 600 0.9375rem var(--body);
+  background: none;
+  border: 0;
   border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+.nav-link:hover, .nav-disclosure:hover,
+.nav-link:focus-visible, .nav-disclosure:focus-visible {
+  background: var(--canopy);
+  color: #fff;
 }
 
-.site-nav a:hover,
-.site-nav a:focus-visible { background: var(--canopy); color: var(--card); }
+.chev { flex: none; margin-left: auto; transition: transform 0.15s ease; }
+.nav-disclosure[aria-expanded="true"] .chev { transform: rotate(180deg); }
 
-.site-nav a[aria-current="page"] {
+.nav-menu {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0 0 var(--space-2) var(--space-4);
+}
+.nav-disclosure[aria-expanded="true"] + .nav-menu { display: block; }
+
+.nav-menu a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.55rem var(--space-2);
+  border-radius: 6px;
+  color: #fff;
+  text-decoration: none;
+  font: 600 0.9375rem var(--body);
+}
+.nav-menu a:hover, .nav-menu a:focus-visible { background: var(--canopy); color: #fff; }
+
+.nav-link[aria-current="page"], .nav-menu a[aria-current="page"] {
   background: var(--canopy);
-  box-shadow: inset 3px 0 0 var(--clay);
+  box-shadow: inset 3px 0 0 #a8d5c2; /* mint 7.36:1 on pine; poolwater is 2.0:1 — do not swap */
 }
 
 @media (min-width: 960px) {
@@ -275,12 +310,40 @@ a:hover { color: var(--poolwater); }
     background: transparent;
     border-top: 0;
     box-shadow: none;
+    max-height: none;
+    overflow: visible;
   }
-  .site-nav ul { display: flex; gap: 0.125rem; padding: 0; }
-  .site-nav a { padding: 1.05rem 0.7rem; border-radius: 0; white-space: nowrap; }
-  .site-nav a[aria-current="page"] {
-    box-shadow: inset 0 -3px 0 var(--clay);
+  .site-nav > ul { display: flex; align-items: center; gap: var(--space-1); padding: 0; }
+  .nav-group { position: relative; }
+  .nav-link, .nav-disclosure { width: auto; padding: 0.6rem 0.7rem; white-space: nowrap; }
+  .chev { margin-left: 0; }
+  .nav-link[aria-current="page"] {
     background: transparent;
+    box-shadow: inset 0 -3px 0 #a8d5c2;
+    border-radius: 0;
+  }
+  .nav-disclosure.is-current-section {
+    box-shadow: inset 0 -3px 0 #a8d5c2;
+    border-radius: 0;
+  }
+  .nav-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 14rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(30, 42, 34, 0.14);
+    padding: var(--space-1);
+    z-index: 60;
+  }
+  .nav-menu a { color: var(--ink); }
+  .nav-menu a:hover, .nav-menu a:focus-visible { background: var(--sand); color: var(--ink); }
+  .nav-menu a[aria-current="page"] {
+    background: var(--sand);
+    box-shadow: inset 3px 0 0 var(--poolwater); /* on Sand, poolwater is fine as a bar */
+    color: var(--ink);
   }
 }
 
