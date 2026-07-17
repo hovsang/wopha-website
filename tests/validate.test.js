@@ -108,6 +108,9 @@ describe("validateSetting", () => {
     expect(validateSetting("dues_cents", "1000001").ok).toBe(false);
     expect(validateSetting("dues_cents", "").ok).toBe(false);
   });
+  it("accepts dues_cents at the upper boundary", () => {
+    expect(validateSetting("dues_cents", "1000000")).toEqual({ ok: true, value: "1000000" });
+  });
   it("requires YYYY-MM-DD for dues_due_date but allows empty to clear it", () => {
     expect(validateSetting("dues_due_date", "Apr 30").ok).toBe(false);
     expect(validateSetting("dues_due_date", "2026-4-30").ok).toBe(false);

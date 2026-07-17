@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { onRequestGet, onRequestPut } from "../functions/api/admin/settings.js";
+import { onRequestGet, onRequestPut, DEFAULTS } from "../functions/api/admin/settings.js";
+import { SETTING_KEYS } from "../functions/api/_lib/validate.js";
 import { fakeDb } from "./helpers/fake-db.js";
 
 function putReq(body) {
@@ -52,5 +53,11 @@ describe("PUT /api/admin/settings", () => {
     const bad = new Request("http://localhost:8200/api/admin/settings", { method: "PUT", body: "not json" });
     expect((await onRequestPut({ request: bad, env: { DB: db } })).status).toBe(400);
     expect(db.calls.length).toBe(0);
+  });
+});
+
+describe("DEFAULTS consistency", () => {
+  it("has keys that match SETTING_KEYS", () => {
+    expect(Object.keys(DEFAULTS).sort()).toEqual([...SETTING_KEYS].sort());
   });
 });

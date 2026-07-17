@@ -5,7 +5,7 @@ import { DUES_CENTS } from "../_lib/ledger.js";
 // Operator-editable configuration (dues amount, dues due date, QuickBooks
 // link). GET always returns every allowlisted key so the portal can render a
 // settings form without null checks; values are always strings.
-const DEFAULTS = {
+export const DEFAULTS = {
   dues_cents: String(DUES_CENTS),
   dues_due_date: "",
   quickbooks_url: "",
