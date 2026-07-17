@@ -1,7 +1,7 @@
 // Woods of Parkview — service worker.
 // Network-first so updates always show when online; cache fallback offline.
 // Bump the cache name when shipping big changes.
-var CACHE = "wopha-v4";
+var CACHE = "wopha-v5";
 
 var CORE = [
   "/",
@@ -10,6 +10,8 @@ var CORE = [
   "/amenities/pool/",
   "/amenities/tennis/",
   "/amenities/swim-team/",
+  "/amenities/book/",
+  "/amenities/booking-cancel/",
   "/community/",
   "/sponsors/",
   "/about/",

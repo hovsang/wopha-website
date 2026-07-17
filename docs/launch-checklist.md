@@ -156,6 +156,10 @@ the site. Launch-time setup, in order:
       (idempotent: safe to run on the existing database).
 - [ ] Demo to the board on the free `*.pages.dev` URL (seed data) before the
       wopha.com DNS cutover in section 6.
+- [ ] Booking cutover: run the built-in booking side by side with
+      ReserveMyCourt for one month after launch. Then remove the
+      ReserveMyCourt button and the "side by side" sentence from
+      `src/amenities/tennis.html`, and the HOA cancels the RMC subscription.
 
 ## Local preview
 

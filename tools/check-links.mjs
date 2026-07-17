@@ -28,7 +28,8 @@ for (const file of htmlFiles) {
     if (/^(https?:|mailto:|tel:|data:)/.test(url)) continue;
     if (/^\/(api|portal)\//.test(url)) continue;
     if (/^\/cdn-cgi\//.test(url)) { runtime++; continue; }
-    const target = url.startsWith("/") ? join(ROOT, url) : join(dirname(file), url);
+    const path = url.split("?")[0];
+    const target = path.startsWith("/") ? join(ROOT, path) : join(dirname(file), path);
     const ok = [target, join(target, "index.html")].some((c) => existsSync(c));
     if (!ok) {
       const where = file.slice(ROOT.length + 1);

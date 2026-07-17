@@ -7,7 +7,7 @@
     <nav class="site-nav" id="site-nav" aria-label="Main">
       <ul>
         <li class="nav-group">
-          <button type="button" class="nav-disclosure{% if pageKey in ['amenities', 'amenities-pool', 'amenities-tennis', 'amenities-swim-team'] %} is-current-section{% endif %}" aria-expanded="false" aria-controls="menu-amenities">
+          <button type="button" class="nav-disclosure{% if pageKey in ['amenities', 'amenities-pool', 'amenities-tennis', 'amenities-swim-team', 'amenities-book'] %} is-current-section{% endif %}" aria-expanded="false" aria-controls="menu-amenities">
             Amenities
             <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
@@ -15,6 +15,7 @@
             <li><a href="/amenities/"{% if pageKey == 'amenities' %} aria-current="page"{% endif %}>Overview</a></li>
             <li><a href="/amenities/pool/"{% if pageKey == 'amenities-pool' %} aria-current="page"{% endif %}>Pool</a></li>
             <li><a href="/amenities/tennis/"{% if pageKey == 'amenities-tennis' %} aria-current="page"{% endif %}>Tennis &amp; pickleball</a></li>
+            <li><a href="/amenities/book/"{% if pageKey == 'amenities-book' %} aria-current="page"{% endif %}>Book online</a></li>
             <li><a href="/amenities/swim-team/"{% if pageKey == 'amenities-swim-team' %} aria-current="page"{% endif %}>Swim team</a></li>
           </ul>
         </li>
