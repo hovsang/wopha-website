@@ -1,20 +1,8 @@
 ---
+layout: portal-base.njk
 title: "Dashboard"
-heading: "Dashboard"
 pageKey: dashboard
 ---
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
-  <title>{{ title | safe }} | WOPHA board portal</title>
-  <link rel="stylesheet" href="../assets/css/styles.css">
-  <link rel="stylesheet" href="../assets/css/portal.css">
-</head>
-<body>
-{% include "portal-shell.njk" %}
   <main class="section">
     <div class="container">
       <h1>Dashboard</h1>
@@ -39,5 +27,3 @@ pageKey: dashboard
         : "No announcements yet.";
     }).catch(showError);
   </script>
-</body>
-</html>
