@@ -40,7 +40,7 @@ Three anchors:
 - The 2026 budget already carries $1,750 a year (about $146/mo) for the
   entrance camera subscription; 2025 actual was $2,000 [F4].
 - HOA portal platforms at our size run about $199/mo, which is $2,388 a year
-  for a portal alone (PayHOA, cited in the original proposal).
+  for a portal alone (PayHOA, cited in the original proposal) [M1].
 - The approved 2026 budget projects income of $139,925, expenses of
   $121,307, and an operating surplus of $18,618 [F1].
 
@@ -54,8 +54,8 @@ Three anchors:
 | **Net monthly after verified savings** | **$99** | **$149** | **$53** |
 | Pending verification, estimates only | Weebly $17-25 [V3] | Weebly + ReserveMyCourt $34-55 [V1][V3] | Weebly + ReserveMyCourt $34-55 [V1][V3] |
 | Net monthly if estimates confirm | $74-82 | $94-115 | -$2 to $19 |
-| Sponsorship revenue at target | | | about $83/mo |
-| Net monthly with 4 sponsors at $250/yr | | | at or below zero |
+| Sponsorship revenue at target | | | about $83/mo [T1] |
+| Net monthly with 4 sponsors at $250/yr | | | below zero (about -$30/mo) [T1] |
 
 An honesty note on the pending rows: the P&L's category totals can hide small
 subscriptions [V1][V2][V3]. Until the treasurer confirms what the association
@@ -67,9 +67,9 @@ cancelled the moment wopha.com cuts over to the new site, which is part of
 this rollout, not a separate open question. What is unconfirmed is only the
 dollar amount Weebly was costing, so that saving stays in the estimated
 column below until the treasurer confirms the bill [V3]. What is already
-known: ReserveMyCourt has no free tier; published plans run $200-450 a year
-per amenity plus transaction fees, so the association or a volunteer is
-paying something today [V1]. SwimTopia may be paid by the swim team rather
+known: ReserveMyCourt has no free tier; published plans run $200-360 a year
+per amenity (the $360/yr Standard-plan cap) plus transaction fees, so the
+association or a volunteer is paying something today [V1]. SwimTopia may be paid by the swim team rather
 than the association [V2]; if so, it stays out of the savings math entirely
 and remains an included capability instead.
 
@@ -143,8 +143,8 @@ The Complete tier includes managing a small sponsorship program for local
 businesses: a public sponsors page, sponsor placement (pool banner, website
 logo, newsletter mention, at levels the board sets), and an inquiry form
 that lands in the board's portal inbox. The target is four sponsors at
-$250 a year: about $1,000 a year, or $83 a month, which offsets most or all
-of the Complete tier's remaining net cost. This is a target, not a
+$250 a year: about $1,000 a year, or $83 a month [T1], which offsets most
+or all of the Complete tier's remaining net cost. This is a target, not a
 commitment, and the cost table above never counts it as verified.
 
 ## Roadmap, not priced
