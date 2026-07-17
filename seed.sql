@@ -19,7 +19,7 @@ INSERT INTO submissions (form_type, fields) VALUES
   ('suggestion', '{"message":"More shade by the baby pool would be great"}');
 
 INSERT INTO site_content (key, value) VALUES
-  ('season_glance', '[["2026 annual dues","$535"],["Membership year","May 1, 2026 – Apr 30, 2027"],["Pool open","May 17 – Sep 20"],["Tennis courts","7 a.m. – 11 p.m. daily"],["Trash & recycling","Thursday mornings"],["Refer a new member","Earn $50"]]'),
+  ('season_glance', '[["2026 annual dues","$693"],["Membership year","May 1, 2026 – Apr 30, 2027"],["Pool open","May 17 – Sep 20"],["Tennis courts","7 a.m. – 11 p.m. daily"],["Trash & recycling","Thursday mornings"],["Refer a new member","Earn $50"]]'),
   ('pool_hours', '[["Monday","11 a.m. – 8 p.m."],["Tuesday","11 a.m. – 8 p.m."],["Wednesday","11 a.m. – 8 p.m."],["Thursday","11 a.m. – 8 p.m."],["Friday","11 a.m. – 9 p.m."],["Saturday","10 a.m. – 9 p.m."],["Sunday","12 p.m. – 8 p.m."]]');
 
 INSERT INTO settings (key, value) VALUES

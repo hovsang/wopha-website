@@ -16,9 +16,9 @@ is also marked in the HTML with a `PLACEHOLDER:` comment and a visible
 
 - [ ] Create a free **Stripe** account for the association (needs the HOA's EIN
       and bank account).
-- [ ] Create two **Payment Links** for the $535 annual dues:
-      one with **ACH/bank transfer** as the default method (fee ≈ $4–5),
-      one card-enabled (fee ≈ $16). Optionally make them yearly subscriptions
+- [ ] Create two **Payment Links** for the $693 full-member annual dues:
+      one with **ACH/bank transfer** as the default method (fee ≈ $5),
+      one card-enabled (fee ≈ $20). Optionally make them yearly subscriptions
       so renewal invoices go out automatically.
 - [ ] Paste the two URLs into `membership.html` (search `PLACEHOLDER`).
 - [ ] Confirm whether the HOA's bank supports **Zelle** on the association
