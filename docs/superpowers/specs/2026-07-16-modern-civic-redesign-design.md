@@ -60,6 +60,14 @@ board/treasurer-facing docs. Reword with commas, periods, colons, or parentheses
 En dashes in numeric/date ranges (May 17 – Sep 20) are allowed. This overrides any literal
 copy blocks in the implementation plans; implementers reword during transcription.
 
+Additionally (user-directed, same date): no volunteer/self-managed **editorializing** in site
+copy. The site does not discuss the HOA's governance or labor model: no "volunteer-run",
+"self-managed", "no management company", "runs on volunteers" framing in heroes, eyebrows,
+teasers, or meta descriptions. The board page lists the board and committees factually
+(names, roles) with a neutral "Get involved" contact pathway. Factual uses that name a
+specific thing (e.g. a form field or an official title) are fine. This also overrides literal
+plan copy; implementers reword during transcription.
+
 ### Layout, components, motion
 - Container 68rem → **75rem**; `--container-narrow: 48rem` for prose pages. Systematic **4/8px
   spacing scale** as custom properties (`--space-1`…`--space-12`).
