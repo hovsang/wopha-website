@@ -1,6 +1,6 @@
 // Facility booking page (/amenities/book/). Fetches busy/free availability
 // from /api/bookings and books grid slots with name + email + address. All
-// dynamic text goes through textContent — never innerHTML. A load sequence
+// dynamic text goes through textContent, never innerHTML. A load sequence
 // counter (the capture-guard convention) keeps a slow response for one
 // facility from clobbering a newer selection.
 (function () {
