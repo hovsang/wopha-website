@@ -146,7 +146,22 @@ Draft-pricing notes (grounded in §2):
 2. **Pricing artifact**: a polished single-page web artifact (same private-artifact flow as the
    typeface comparison) presenting the three tiers with the gross/net table for the board
    meeting. No repo deployment.
-3. No public /pricing page. Nothing in `src/` mentions tiers, prices, or the SaaS.
+3. **Portal "Plan & billing" page** (`src/portal/billing.html`, sixth sidebar destination):
+   the subscription page where the board actually pays. Contents:
+   - The three tiers side by side with the gross/net table (same numbers as the proposal,
+     rendered from one source: a `site_content`-style JSON block or constants file so the
+     proposal and the page cannot drift).
+   - A **Subscribe** button per tier linking to the webmaster's OWN Stripe recurring Payment
+     Links (monthly subscriptions). CRITICAL separation: this is the webmaster's business
+     Stripe account, entirely separate from the HOA's dues Stripe; no payment data touches
+     the site; Stripe hosts checkout, receipts, and the customer portal for cancel/upgrade.
+   - Current-plan display once subscribed (manually set via the settings pattern, e.g. a
+     `plan` settings key; no Stripe API integration in this phase, same one-way philosophy
+     as the QuickBooks seam).
+   - Behind Cloudflare Access like every portal page, so pricing stays board-only and off
+     the public site. `noindex` inherited from the portal layout.
+4. No public /pricing page. Nothing in public `src/` pages mentions tiers, prices, or the
+   SaaS; the billing page lives under /portal/ only.
 
 ## 5. Booking engine (Tier 2's build; the one large new feature)
 
@@ -256,8 +271,10 @@ Write plans via subagents (the redesign's SDD pattern), one per track:
    safety block + minutes PDF publishing. Small, independent, ships first.
 2. `booking-engine` (backend + public UI + portal screen): §5. The big one; split backend/UI
    plans if the planner judges it too large for one.
-3. `proposal-pricing` (docs + artifact): addendum-2 + pricing artifact from §2/§3 numbers.
-   UNBLOCKED: §2 is fully extracted; the user finalizes the draft prices during this track.
+3. `proposal-pricing` (docs + artifact + portal billing page): addendum-2 + pricing artifact
+   + the §4.3 Plan & billing portal page (sidebar gains the sixth destination; Stripe
+   recurring Payment Links supplied by the user during the track). UNBLOCKED: §2 is fully
+   extracted; the user finalizes the draft prices during this track.
 4. Camera offering has no repo build; it lives inside track 3's proposal text.
 0. (first, small) the §8 dues-correction fix, either standalone or opening the
    sponsorship-safety track.
