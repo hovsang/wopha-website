@@ -109,4 +109,17 @@ describe("docs stay in sync with pricing.json", () => {
       expect(addendum).toContain(tag);
     }
   });
+
+  const artifact = readFileSync("docs/pricing-artifact.html", "utf8");
+  it("artifact names every tier and shows its draft gross price", () => {
+    for (const t of pricing.tiers) {
+      expect(artifact).toContain(t.name);
+      expect(artifact).toContain(fmt(t.gross_monthly_cents));
+    }
+    expect(artifact).toContain(fmt(pricing.payhoa_anchor_monthly_cents));
+  });
+  it("artifact contains no em dashes and carries the DRAFT marker", () => {
+    expect(artifact.includes("—")).toBe(false);
+    expect(artifact).toContain("DRAFT");
+  });
 });
