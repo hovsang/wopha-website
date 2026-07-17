@@ -55,6 +55,7 @@ pageKey: announcements
     (function () {
       var list = [];
       var lastTrigger = null;
+      var composeSession = 0;
 
       var compose = document.getElementById("compose");
       var composeHeading = document.getElementById("compose-heading");
@@ -89,6 +90,7 @@ pageKey: announcements
 
       function openCompose(a, trigger) {
         lastTrigger = trigger || null;
+        composeSession++;
         idEl.value = a ? String(a.id) : "";
         titleEl.value = a ? a.title : "";
         bodyEl.value = a ? a.body : "";
@@ -112,7 +114,7 @@ pageKey: announcements
         compose.hidden = true;
         form.reset();
         idEl.value = "";
-        if (lastTrigger) lastTrigger.focus();
+        if (lastTrigger && lastTrigger.isConnected) lastTrigger.focus();
         else newBtn.focus();
       }
 
@@ -131,6 +133,7 @@ pageKey: announcements
         // whatever they're editing now, even though the toast + list refresh
         // (which reflect this request's own outcome) should still happen.
         var submittedId = idEl.value;
+        var submittedSession = composeSession;
         var payload = {
           title: titleEl.value,
           body: bodyEl.value,
@@ -140,10 +143,10 @@ pageKey: announcements
           ? api("/api/admin/announcements/" + submittedId, { method: "PUT", body: payload })
           : api("/api/admin/announcements", { method: "POST", body: payload });
         req.then(function () {
-          if (idEl.value === submittedId) closeCompose();
+          if (idEl.value === submittedId && composeSession === submittedSession) closeCompose();
           toast(editing ? "Saved. It's live on the site now." : "Published. It's live on the homepage now.", {
             actionLabel: "View on site ↗",
-            onAction: function () { window.open("/community/#announcements", "_blank", "noopener"); },
+            onAction: function () { window.open("/community/#news-archive", "_blank", "noopener"); },
           });
           load();
         }).catch(showError).finally(function () { saveBtn.disabled = false; });
