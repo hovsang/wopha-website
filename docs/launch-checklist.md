@@ -136,14 +136,16 @@ the site. Launch-time setup, in order:
       before importing real resident data (if it was set for a seed-data
       demo, unset it first, it bypasses admin auth entirely).
 - [ ] **While any demo deploy runs with `DEMO_OPEN_ADMIN` set (no Cloudflare
-      Access):** delete `portal/billing.html` from the staging copy's
-      `public/` directory before `wrangler pages deploy`. Demo portal pages
-      are public static files; shipping the billing page there would publish
-      the service pricing. The sidebar's "Plan & billing" link falls back to
-      the index page on demos; that is expected until Access is live. Verify
-      the exclusion by fetching `/portal/billing.html` on the deployed demo
-      and checking the BODY is not the billing page (unknown paths serve
-      index content with status 200, so check the body, not the status).
+      Access):** delete `portal/billing.html` from the exact directory you are
+      about to deploy (the demo's `pages_build_output_dir`, which is whatever
+      you point `wrangler pages deploy` at, e.g. the staging `public/` or a
+      built `_site`) before running the deploy. Demo portal pages are public
+      static files; shipping the billing page there would publish the service
+      pricing. The sidebar's "Plan & billing" link falls back to the index
+      page on demos; that is expected until Access is live. Verify the
+      exclusion by fetching `/portal/billing.html` on the deployed demo and
+      checking the BODY is not the billing page (unknown paths serve index
+      content with status 200, so check the body, not the status).
 - [ ] **After Access is live on wopha.com and the pages.dev hostnames:**
       include `portal/billing.html` in deploys again, paste the webmaster's
       Stripe recurring Payment Links into `src/_data/pricing.json`

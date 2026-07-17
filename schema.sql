@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS payments (
 );
 
 CREATE TABLE IF NOT EXISTS site_content (
-  key TEXT PRIMARY KEY,             -- season_glance | pool_hours
+  key TEXT PRIMARY KEY,             -- season_glance | pool_hours | sponsors | safety_report
   value TEXT NOT NULL,              -- JSON array of [label, value] pairs
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
