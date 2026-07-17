@@ -1,0 +1,75 @@
+---
+layout: base.njk
+title: Book a court or the pavilion | Woods of Parkview HOA
+description: "Check live availability and book a tennis court, pickleball court, or the pavilion at Woods of Parkview. Pick an open time and reserve it with your name and address."
+pageKey: amenities-book
+permalink: /amenities/book/index.html
+---
+    <section class="hero hero--page">
+      <div class="container">
+        <span class="eyebrow">Courts &amp; pavilion</span>
+        <h1>Book a court or the pavilion</h1>
+        <p class="lede">Pick a facility, find an open time, and reserve it with your name and address. No account needed.</p>
+      </div>
+    </section>
+
+    <section class="section" id="availability" aria-labelledby="availability-heading">
+      <div class="container">
+        <h2 id="availability-heading">Availability</h2>
+        <div class="booking-controls">
+          <label for="facility-select">Facility</label>
+          <select id="facility-select" aria-describedby="window-note"></select>
+        </div>
+        <p class="field-note" id="window-note"></p>
+        <p class="field-note" id="calendar-status" role="status">Loading availability&hellip;</p>
+        <div class="table-wrap">
+          <table id="avail-table" hidden>
+            <caption id="avail-caption"></caption>
+            <thead id="avail-head"></thead>
+            <tbody id="avail-body"></tbody>
+          </table>
+        </div>
+        <noscript><p>The availability calendar needs JavaScript. If you can't use it, reach the board through the <a href="/about/contact/">contact page</a> to book a time.</p></noscript>
+      </div>
+    </section>
+
+    <section class="section section--tint" id="book" aria-labelledby="book-heading" hidden>
+      <div class="container">
+        <h2 id="book-heading" tabindex="-1">Reserve this time</h2>
+        <p class="lede" id="slot-summary"></p>
+        <form class="form-card form-grid" id="book-form">
+          <input type="checkbox" name="botcheck" id="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+          <div>
+            <label for="book-name">First and last name</label>
+            <input type="text" id="book-name" required autocomplete="name" maxlength="200">
+          </div>
+          <div>
+            <label for="book-email">Email</label>
+            <input type="email" id="book-email" required autocomplete="email" maxlength="200">
+            <p class="field-note">Your cancel link is tied to this email. Court limits are per household.</p>
+          </div>
+          <div>
+            <label for="book-address">Home address</label>
+            <input type="text" id="book-address" required autocomplete="street-address" maxlength="200">
+          </div>
+          <p class="form-error" id="book-error" role="alert" hidden></p>
+          <div>
+            <button class="btn btn--primary" type="submit" id="book-btn">Book it</button>
+            <button class="btn btn--outline" type="button" id="book-cancel-btn">Never mind</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="confirmation" aria-labelledby="confirm-heading" hidden>
+      <div class="container">
+        <h2 id="confirm-heading" tabindex="-1">You're booked</h2>
+        <p class="lede" id="confirm-summary"></p>
+        <div class="notice">
+          <p><strong>Save your cancel link.</strong> If plans change, open <a id="confirm-cancel-link" href="#">your cancel link</a> to free the time for your neighbors. The board also gets a copy of your booking by email.</p>
+        </div>
+        <p><a class="btn btn--outline" href="/amenities/book/">Book another time</a></p>
+      </div>
+    </section>
+
+    <script src="/assets/js/book.js"></script>

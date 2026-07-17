@@ -12,6 +12,7 @@ export default [
         clearTimeout: "readonly", localStorage: "readonly",
         location: "readonly", history: "readonly", FileReader: "readonly",
         Promise: "readonly", Object: "readonly",
+        URLSearchParams: "readonly",
       },
     },
     rules: {
