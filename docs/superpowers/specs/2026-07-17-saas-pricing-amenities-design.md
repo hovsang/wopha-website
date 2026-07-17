@@ -29,28 +29,68 @@ police report summary + meeting-minutes PDFs).
 **Standing copy rules (spec 2026-07-16 §2) apply to all new user-visible copy:** no em dashes;
 no governance editorializing; titles use the "Page | Woods of Parkview HOA" pipe style.
 
-## 2. Financial grounding (from the 2026-02-22 Annual Meeting minutes)
+## 2. Financial grounding (EXTRACTED from "WOPHA Annual Meeting 2.22.26.pdf", read 2026-07-17
+from the user's Google Drive, file id 17UmBediok9POi-VT4Kj9LuYmA5pQsvxT)
 
-> **STATUS: PENDING EXTRACTION.** Source: "WOPHA Annual Meeting 2.22.26.pdf" (Gmail attachment,
-> message id 19cb97a0ae116b71, sent 2026-03-04 by wophalilburn@gmail.com). The Gmail connector
-> cannot download attachments; the user is saving the PDF to Google Drive, after which this
-> section gets filled and the placeholder tokens below resolve. Until then, every `[F#]` token
-> is a named unknown, not a guess.
+**[F1] Budget & P&L.** 2026 budget: income $139,925, expenses $121,306.58, net operating
+income $18,618.42. 2025 actual: income $123,050.33, expenses $118,812.85, net $4,237.48.
+2024: net -$8,802.71. 2023: net -$3,956.16. (2026 is the first strongly positive budget;
+driven by the approved 10% dues increase.)
 
-To extract and record here:
-- [F1] Total annual budget / expenses for 2025 and 2026 budget.
-- [F2] Dues income (paid household count × $535) and delinquency.
-- [F3] Reserves / bank balance.
-- [F4] Line items for every third-party service: ReserveMyCourt, SwimTopia (if HOA-paid),
-  Flock Safety subscription, Weebly/website hosting, plus any others (lawn, pool mgmt,
-  insurance, utilities) for budget context.
-- [F5] The police report section: what Lilburn PD reported (incidents, trends, contact
-  guidance). This feeds §7 and must be summarized faithfully, not editorialized.
-- [F6] Any stated appetite/discussion about technology spending, cameras, or the website.
+**[F2] Membership & dues.** 171 homes: 138 full members, 25 social, 8 nonmembers, ~4 rentals;
+~40 outside members in 2025; 7 delinquent (board actively collecting). Rate history (full):
+$490 (2005-06), $525 (2007-23), $575 (2024), $630 (2025), **$693 approved for 2026**.
+Social: $115 (2025) → $126 (2026). Outside: $505 (2025) → $535 (2026) plus $250 first-time
+initiation. Pool party reservation: $125 (+$35/hr per lifeguard). Tennis leagues: $45 adult,
+$30 junior/non-member. Dues income lines (2026 budget): full $101,000 + outside $27,500 +
+social $2,625.
 
-**Pricing inputs derived:** replaceable-subscription total [R] = RMC + Flock + Weebly
-(+ SwimTopia only if HOA-paid). Sponsorship revenue target [S] from §6.2 tiers. Net-cost
-formula per tier: net = tier price − cancelled subs covered by that tier − [S] attributable.
+> **SITE CORRECTION REQUIRED (small fix, high priority):** the public site and the portal
+> seed say "2026 annual dues $535". Per the approved minutes, $535 is the OUTSIDE
+> (non-resident) rate; full-member dues are $693 for 2026. Correct the homepage season
+> glance, the membership page rate tables (all three member types + pool party + tennis
+> fees per the 2026 fee table above), and set the portal's dues_cents setting to 69300.
+> The ledger's per-household amounts for real data must use the real rates.
+
+**[F3] Reserves & bank (12/31/2025).** Checking (Swim_Tennis) $14,576.05; Reserve for
+Capital Expenses $45,486.17; Treasury I-Bond $11,240; total bank $71,302.22 (2024:
+$69,078.16; 2023: $85,351.83).
+
+**[F4] Third-party service line items (annual).**
+| Service | 2026 budget | 2025 actual | Notes |
+|---|---|---|---|
+| Camera - Entrance (the Flock unit) | $1,750 | $2,000 | The replaceable subscription; ~$146-167/mo |
+| QuickBooks Payments fees | $700 | $503.66 | Payment processing (bank debit), not the QBO sub |
+| Telephone | $820 | $746.33 | Clubhouse line; possible future VoIP saving, out of scope |
+| ReserveMyCourt | not a line item | not a line item | No HOA cost found: RMC is free-tier or coordinator-run. Tier 2's pitch is consolidation/UX, NOT hard savings |
+| SwimTopia | not a line item | not a line item | Confirmed NOT HOA-paid: drops out of tier math per §6.3, becomes team-negotiated optional |
+| Weebly/website hosting | not broken out | not broken out | Likely inside Admin Misc ($1,000/$907.23); treat as <=$300/yr estimate, label as estimate |
+Context lines: pool expenses $54,000; landscaping $15,000; swim/tennis electric $17,750;
+insurance $6,503.70.
+
+**[F5] Police & code enforcement (feeds §7).** Corporal Johnson (Lilburn PD): Neighborhood
+Watch presentation; noted the well-kept neighborhood and the entrance camera both help
+prevent crime; recommended well-lit homes and residential security cameras. Crime analysis
+01/01/24-02/20/25 for the neighborhood streets: five minor incidents (two suspicious
+vehicles, both cleared; two homeless-person calls at the pool, one given a courtesy ride to
+a shelter; one suspicious-persons call, gone on arrival) plus 7 animal complaints. Officer
+McCord (Code Enforcement): Feb 2025-Feb 2026 stats: high grass 7 cases, open/outdoor
+storage 3, junk vehicle 4 (1 open), illegal construction 1 (1 open), trees 1, misc 3;
+report via SeeClickFix (cityoflilburn.com/seeclickfix); residential contacts Officer
+Charles (470) 307-6533, Officer McCord (470) 226-6180.
+
+**[F6] Technology/budget appetite.** The board considered a ~$15,000 pool key-fob access
+system and deferred it (keypad + wristbands continue): tech budget exists but is deliberately
+conservative. Major capital projects loom (full tennis-court rebuild, major pool repairs;
+bank-loan exploration under way; special assessment would need a 2/3 member vote). Reading:
+monthly SaaS spend in the low hundreds is easily inside budget (2026 net op income $18.6k),
+but the pitch must respect the capital-projects backdrop: lead with net cost and savings,
+not features. Access control (key fob) is a plausible FUTURE SaaS add-on to mention as a
+roadmap item since the board already priced the problem at $15k.
+
+**Board changes recorded (proposal audience):** Gio Vargas expected President; Amanda Tarpley
+joined the board post-meeting; Peter Efremenko elected then stepped down; Seiji Ijuin
+elected; one board seat unfilled. Address the proposal to the current board.
 
 ## 3. The three tiers (structure; dollar amounts finalize after §2)
 
@@ -67,15 +107,27 @@ Cloudflare hosting, weekly backups + monthly retention, QuickBooks CSV exports, 
 | Swim-team pages (SwimTopia-lite, §6.3 caveat) | | optional | ✔ |
 | Sponsorship program management (§6.2) | | | ✔ |
 | Self-hosted LPR camera, maintained (§6.4; replaces Flock) | | | ✔ |
-| **Gross monthly** | [P1] | [P2] | [P3] |
-| **Minus cancelled subscriptions** | Weebly | + RMC | + Flock |
-| **Minus sponsorship revenue** | | | [S] |
-| **Net monthly cost to WOPHA** | [N1] | [N2] | [N3] |
+| **Gross monthly (DRAFT, user finalizes in proposal)** | $99 | $149 | $199 |
+| **Minus cancelled subscriptions** | Weebly ~$17-25/mo (est) | + RMC $0 (free tier, §2 F4) | + camera line $146-167/mo (F4) |
+| **Minus sponsorship revenue (target)** | | | ~$83/mo (4 sponsors x $250/yr, §6.2) |
+| **Net monthly cost to WOPHA (draft)** | ~$78 | ~$128 | **~$43, potentially net-negative with sponsors** |
 
-Pricing principles: each tier's gross must stay below the PayHOA anchor; each tier's NET must
-read as an obvious win (Tier 3 ideally nets near Tier 1's gross once Flock + sponsorships are
-counted). The presentation always shows both columns; the "see what they're paying for" table
-IS the product of this section.
+Draft-pricing notes (grounded in §2):
+- The camera line is the only large hard saving ($1,750-2,000/yr). Tier 3's headline: for
+  roughly the price of Tier 1 plus the camera bill the HOA already pays, they get everything,
+  and with a modest sponsor program the whole stack can pay for itself.
+- Tier 2's honest pitch is capability and consolidation (booking built-in, one calendar, the
+  hand-maintained pool-hours spreadsheet retired), NOT subscription savings: RMC shows no HOA
+  cost and SwimTopia is team-paid (§2 F4). Do not overclaim savings the budget doesn't show.
+- All gross prices stay well under the PayHOA $199/mo anchor at equal-or-better capability;
+  annual totals ($1,188 / $1,788 / $2,388) are small next to the $121k expense budget and the
+  $18.6k budgeted surplus, and the proposal must still respect the capital-projects backdrop
+  (F6): net-cost table first, features second.
+- One-time hardware for the Tier 3 camera (owned PoE LPR camera + small compute node):
+  state a real quote in the proposal, order-of-magnitude $400-800, HOA-owned.
+- The presentation always shows gross AND net columns; the "see what they're paying for"
+  table IS the product of this section. Roadmap mention (not priced): pool access control,
+  since the board already priced a key-fob system at ~$15k and deferred it (F6).
 
 ## 4. Deliverables for the pricing (private)
 
@@ -129,9 +181,10 @@ a Tier 1 saving; no build work.
 
 ### 6.3 Swim-team pages (SwimTopia-lite)
 Static schedule/roster/registration-info pages under /amenities/swim-team/ fed by site_content
-keys, plus a registration-interest form into the inbox. CAVEAT recorded: SwimTopia may be paid
-by the swim team's own budget, not the HOA; [F4] resolves this. If team-paid, this moves to
-"optional add-on negotiated with the team" and drops out of the HOA tier math.
+keys, plus a registration-interest form into the inbox. CAVEAT RESOLVED (§2 F4): SwimTopia is
+not in the HOA budget, so it is team-paid. This feature is an optional add-on negotiated with
+the swim team and contributes nothing to the HOA tier savings math; it stays listed in Tier 2/3
+as included capability if the team wants it.
 
 ### 6.4 Camera replacement (Tier 3)
 An operations offering, not a website feature:
@@ -161,10 +214,17 @@ An operations offering, not a website feature:
   a deploy).
 - Copy rules apply; the summary must not editorialize beyond what the PD reported.
 
-## 8. Small fixes (done this session)
+## 8. Small fixes
 
+Done this session:
 - Portal drawer no longer duplicates the "Woods of Parkview / Board portal" brand on mobile
   (topbar keeps it; drawer copy hidden below 900px). Commit 64b8b2b, deployed to the preview.
+
+Queued for the next session (first task of the sponsorship-safety track, or a standalone
+quick fix): the §2 dues correction. Site-wide: homepage season glance "$693" (full member),
+membership page rate tables per the approved 2026 fee table (full $693, social $126, outside
+$535 + $250 initiation, pool party $125 + $35/hr lifeguard, tennis league $45/$30), and the
+portal settings dues_cents → 69300. Copy rules apply.
 
 ## 9. Risks
 
@@ -186,9 +246,13 @@ Write plans via subagents (the redesign's SDD pattern), one per track:
 2. `booking-engine` (backend + public UI + portal screen): §5. The big one; split backend/UI
    plans if the planner judges it too large for one.
 3. `proposal-pricing` (docs + artifact): addendum-2 + pricing artifact from §2/§3 numbers.
-   Blocked on §2 extraction; everything else can proceed.
+   UNBLOCKED: §2 is fully extracted; the user finalizes the draft prices during this track.
 4. Camera offering has no repo build; it lives inside track 3's proposal text.
+0. (first, small) the §8 dues-correction fix, either standalone or opening the
+   sponsorship-safety track.
 
-Handoff state: this spec committed on `redesign-experiment`; §2 pending the PDF (extraction
-instructions inline above); progress ledger `.superpowers/sdd/progress.md` current; preview
-deploy live at redesign-preview.wopha-website.pages.dev.
+Handoff state: this spec committed on `redesign-experiment` with §2 COMPLETE (extracted from
+the minutes PDF in the user's Drive); progress ledger `.superpowers/sdd/progress.md` current;
+preview deploy live at redesign-preview.wopha-website.pages.dev; minutes PDF still needs to be
+placed into src/documents/minutes/ during the sponsorship-safety track (download from Drive
+file id 17UmBediok9POi-VT4Kj9LuYmA5pQsvxT or the original Gmail attachment).
