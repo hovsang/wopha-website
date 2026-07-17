@@ -33,6 +33,7 @@ export default [
       globals: {
         Response: "readonly", fetch: "readonly", URL: "readonly",
         Request: "readonly", console: "readonly", URLSearchParams: "readonly",
+        crypto: "readonly", TextEncoder: "readonly",
       },
     },
     rules: {
