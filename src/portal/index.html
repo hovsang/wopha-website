@@ -5,25 +5,139 @@ pageKey: dashboard
 ---
   <main class="section">
     <div class="container">
-      <h1>Dashboard</h1>
-      <div class="stat-row">
-        <div class="stat"><strong id="stat-paid">–</strong> <span id="stat-paid-label">households paid</span></div>
-        <div class="stat"><strong id="stat-new">–</strong> <span>new inbox items</span></div>
-        <div class="stat"><strong id="stat-households">–</strong> <span>households on file</span></div>
+      <div class="portal-page-head">
+        <h1>Dashboard</h1>
       </div>
-      <h2>Latest announcement</h2>
-      <p id="latest">–</p>
-      <p><a class="btn" href="/api/admin/export">Download full data export (JSON)</a></p>
+
+      <div class="portal-grid portal-grid--3">
+        <a class="portal-card kpi" href="ledger.html">
+          <span class="kpi-label" id="kpi-dues-label">Dues</span>
+          <span class="kpi-number" id="kpi-dues-number">–</span>
+          <span class="progress" aria-hidden="true"><span id="kpi-dues-bar" style="width:0%"></span></span>
+          <span class="kpi-sub" id="kpi-dues-sub"></span>
+        </a>
+        <a class="portal-card kpi" href="inbox.html">
+          <span class="kpi-label">Inbox</span>
+          <span class="kpi-number" id="kpi-inbox-number">–</span>
+          <span class="kpi-sub" id="kpi-inbox-sub"></span>
+        </a>
+        <a class="portal-card kpi" href="ledger.html#households">
+          <span class="kpi-label">Households</span>
+          <span class="kpi-number" id="kpi-households-number">–</span>
+          <span class="kpi-sub">on file. Manage roster.</span>
+        </a>
+      </div>
+
+      <section class="portal-section" aria-labelledby="attention-heading">
+        <h2 id="attention-heading">Needs attention</h2>
+        <div id="attention"></div>
+      </section>
+
+      <div class="portal-grid portal-grid--2">
+        <section class="portal-card" aria-labelledby="latest-heading">
+          <h2 id="latest-heading">Latest announcement</h2>
+          <div id="latest"></div>
+        </section>
+        <section class="portal-card" aria-labelledby="qa-heading">
+          <h2 id="qa-heading">Quick actions</h2>
+          <ul class="quick-actions">
+            <li><a href="announcements.html#new">+ Post announcement</a></li>
+            <li><a href="ledger.html">$ Record a payment</a></li>
+            <li><a href="ledger.html#households">&#8595; Import households</a></li>
+          </ul>
+        </section>
+      </div>
+
+      <section class="portal-card portal-section" aria-labelledby="backup-heading">
+        <h2 id="backup-heading">Backup &amp; data</h2>
+        <p>Everything the portal stores, in one file. Download one after big changes and keep it with the board records.</p>
+        <p>
+          <a class="btn btn--outline" id="backup-link" href="/api/admin/export">Download full data export (JSON)</a>
+        </p>
+        <p class="field-help" id="backup-last"></p>
+      </section>
     </div>
   </main>
   <script>
-    api("/api/admin/summary").then(function (s) {
-      document.getElementById("stat-paid").textContent = s.paid + " / " + s.households;
-      document.getElementById("stat-paid-label").textContent = "households paid for " + s.year;
-      document.getElementById("stat-new").textContent = String(s.newSubmissions);
-      document.getElementById("stat-households").textContent = String(s.households);
-      document.getElementById("latest").textContent = s.latestAnnouncement
-        ? s.latestAnnouncement.title + " (" + s.latestAnnouncement.created_at.slice(0, 10) + ")"
-        : "No announcements yet.";
-    }).catch(showError);
+    (function () {
+      portalSummary().then(function (s) {
+        document.getElementById("kpi-dues-label").textContent = "Dues " + s.year;
+        document.getElementById("kpi-dues-number").textContent = s.paid + " / " + s.households + " paid";
+        var pct = s.households ? Math.round((s.paid / s.households) * 100) : 0;
+        document.getElementById("kpi-dues-bar").style.width = pct + "%";
+        document.getElementById("kpi-dues-sub").textContent = dollars(s.collectedCents) + " collected";
+
+        var inboxNum = document.getElementById("kpi-inbox-number");
+        inboxNum.textContent = String(s.newSubmissions);
+        if (s.newSubmissions > 0) inboxNum.classList.add("is-alert");
+        document.getElementById("kpi-inbox-sub").textContent = s.newSubmissions === 0
+          ? "Inbox is clear"
+          : (s.newSubmissions === 1 ? "new item. Triage it." : "new items. Triage them.");
+
+        document.getElementById("kpi-households-number").textContent = String(s.households);
+
+        var latest = document.getElementById("latest");
+        latest.textContent = "";
+        if (s.latestAnnouncement) {
+          latest.appendChild(el("h3", null, s.latestAnnouncement.title));
+          latest.appendChild(el("p", "field-help", "Posted " + s.latestAnnouncement.created_at.slice(0, 10)));
+          var p = el("p");
+          var edit = el("a", "btn btn--sm", "Edit");
+          edit.href = "announcements.html#edit-latest";
+          var view = el("a", "btn btn--sm btn--outline", "View on site ↗");
+          view.href = "/";
+          view.target = "_blank";
+          view.rel = "noopener";
+          p.appendChild(edit);
+          p.appendChild(document.createTextNode(" "));
+          p.appendChild(view);
+          latest.appendChild(p);
+        } else {
+          latest.appendChild(el("p", "field-help", "No announcements yet. Post one and it appears on the homepage."));
+        }
+      }).catch(showError);
+
+      var attention = document.getElementById("attention");
+      attention.appendChild(skeleton(3));
+      api("/api/admin/submissions?status=new").then(function (data) {
+        attention.textContent = "";
+        var items = data.submissions.slice(0, 3);
+        if (!items.length) {
+          attention.appendChild(el("p", "field-help", "Inbox zero. Nothing new from residents."));
+          return;
+        }
+        var ul = el("ul", "attention-list");
+        items.forEach(function (s) {
+          var li = el("li");
+          li.appendChild(el("strong", null, TYPE_LABELS[s.form_type] || s.form_type));
+          var extract = s.fields.message || "";
+          if (!extract) {
+            var keys = Object.keys(s.fields);
+            for (var i = 0; i < keys.length; i++) {
+              if (s.fields[keys[i]]) { extract = s.fields[keys[i]]; break; }
+            }
+          }
+          if (extract.length > 90) extract = extract.slice(0, 90) + "…";
+          li.appendChild(el("span", "field-help extract", extract));
+          li.appendChild(el("span", "field-help", s.created_at.slice(0, 10)));
+          var open = el("a", "btn btn--sm", "Open");
+          open.href = "inbox.html";
+          li.appendChild(open);
+          ul.appendChild(li);
+        });
+        attention.appendChild(ul);
+      }).catch(showError);
+
+      var KEY = "wopha-backup-last-download";
+      var lastEl = document.getElementById("backup-last");
+      var last = localStorage.getItem(KEY);
+      lastEl.textContent = last
+        ? "Last downloaded from this browser: " + last + "."
+        : "Never downloaded from this browser.";
+      document.getElementById("backup-link").addEventListener("click", function () {
+        var today = new Date().toISOString().slice(0, 10);
+        localStorage.setItem(KEY, today);
+        lastEl.textContent = "Last downloaded from this browser: " + today + ".";
+      });
+    })();
   </script>
