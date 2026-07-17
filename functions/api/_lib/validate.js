@@ -108,3 +108,21 @@ export function validateSetting(key, value) {
   if (u.protocol !== "https:") return { ok: false, error: "quickbooks_url must be a valid https URL" };
   return { ok: true, value: s };
 }
+
+// Partial household update (admin/households/[id].js). Only the four editable
+// columns are accepted; address may not be blanked (it is the natural key).
+export function validateHouseholdUpdate(input) {
+  if (!input || typeof input !== "object" || Array.isArray(input)) return { ok: false, error: "Bad input" };
+  const editable = ["address", "owner_name", "email", "phone"];
+  const value = {};
+  for (const f of editable) {
+    if (input[f] === undefined) continue;
+    if (typeof input[f] !== "string") return { ok: false, error: f + " must be text" };
+    const s = input[f].trim();
+    if (s.length > 200) return { ok: false, error: f + " too long (max 200 characters)" };
+    if (f === "address" && !s) return { ok: false, error: "address cannot be empty" };
+    value[f] = s;
+  }
+  if (Object.keys(value).length === 0) return { ok: false, error: "Nothing to update" };
+  return { ok: true, value };
+}

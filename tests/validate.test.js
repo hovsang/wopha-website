@@ -5,6 +5,7 @@ import {
   validatePayment,
   validateContent,
   validateSetting,
+  validateHouseholdUpdate,
 } from "../functions/api/_lib/validate.js";
 
 describe("validateSubmission", () => {
@@ -117,5 +118,24 @@ describe("validateSetting", () => {
     expect(validateSetting("quickbooks_url", "not a url").ok).toBe(false);
     expect(validateSetting("quickbooks_url", "https://" + "a".repeat(500)).ok).toBe(false);
     expect(validateSetting("quickbooks_url", "")).toEqual({ ok: true, value: "" });
+  });
+});
+
+describe("validateHouseholdUpdate", () => {
+  it("accepts a partial update and trims the provided fields", () => {
+    const r = validateHouseholdUpdate({ owner_name: " New Owner ", email: "new@x.com" });
+    expect(r.ok).toBe(true);
+    expect(r.value).toEqual({ owner_name: "New Owner", email: "new@x.com" });
+  });
+  it("rejects an empty address, non-string fields, and oversized values", () => {
+    expect(validateHouseholdUpdate({ address: "  " }).ok).toBe(false);
+    expect(validateHouseholdUpdate({ phone: 5551234 }).ok).toBe(false);
+    expect(validateHouseholdUpdate({ owner_name: "x".repeat(201) }).ok).toBe(false);
+  });
+  it("rejects empty or malformed bodies", () => {
+    expect(validateHouseholdUpdate({}).ok).toBe(false);
+    expect(validateHouseholdUpdate(null).ok).toBe(false);
+    expect(validateHouseholdUpdate(["address"]).ok).toBe(false);
+    expect(validateHouseholdUpdate({ unrelated: "x" }).ok).toBe(false);
   });
 });

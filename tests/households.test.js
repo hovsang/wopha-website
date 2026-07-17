@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { onRequestGet } from "../functions/api/admin/households.js";
+import { onRequestPut } from "../functions/api/admin/households/[id].js";
 import { fakeDb } from "./helpers/fake-db.js";
 
 describe("GET /api/admin/households (ledger year view)", () => {
@@ -25,5 +26,49 @@ describe("GET /api/admin/households (ledger year view)", () => {
       collectedCents: 60000, outstandingCents: 60000,
     });
     expect(body.households.length).toBe(2);
+  });
+});
+
+function putReq(body) {
+  return new Request("http://localhost:8200/api/admin/households/3", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}
+
+describe("PUT /api/admin/households/:id", () => {
+  it("updates only the provided fields and returns ok", async () => {
+    const db = fakeDb([{ match: "UPDATE households SET" }]);
+    const res = await onRequestPut({
+      request: putReq({ owner_name: "New Owner", email: "new@x.com" }),
+      env: { DB: db }, params: { id: "3" },
+    });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true });
+    expect(db.calls[0].sql).toBe("UPDATE households SET owner_name = ?, email = ? WHERE id = ?");
+    expect(db.calls[0].args).toEqual(["New Owner", "new@x.com", 3]);
+  });
+  it("404s on an unknown id", async () => {
+    const db = fakeDb([{ match: "UPDATE households SET", run: { meta: { changes: 0 } } }]);
+    const res = await onRequestPut({
+      request: putReq({ owner_name: "X" }), env: { DB: db }, params: { id: "999" },
+    });
+    expect(res.status).toBe(404);
+  });
+  it("400s on bad ids, empty bodies, and empty addresses — without touching the DB", async () => {
+    const db = fakeDb([]);
+    expect((await onRequestPut({ request: putReq({ owner_name: "X" }), env: { DB: db }, params: { id: "abc" } })).status).toBe(400);
+    expect((await onRequestPut({ request: putReq({}), env: { DB: db }, params: { id: "3" } })).status).toBe(400);
+    expect((await onRequestPut({ request: putReq({ address: "" }), env: { DB: db }, params: { id: "3" } })).status).toBe(400);
+    expect(db.calls.length).toBe(0);
+  });
+  it("400s when the new address collides with another household", async () => {
+    const db = fakeDb([{ match: "UPDATE households SET", error: "UNIQUE constraint failed: households.address" }]);
+    const res = await onRequestPut({
+      request: putReq({ address: "101 Planters Way" }), env: { DB: db }, params: { id: "3" },
+    });
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toBe("That address is already on file");
   });
 });
