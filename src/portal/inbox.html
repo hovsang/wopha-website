@@ -5,106 +5,277 @@ pageKey: inbox
 ---
   <main class="section">
     <div class="container">
-      <h1>Inbox</h1>
-      <div class="portal-actions">
-        <div>
-          <label for="filter">Show</label>
-          <select id="filter">
-            <option value="">Everything</option>
-            <option value="new" selected>New</option>
-            <option value="in_progress">In progress</option>
-            <option value="done">Done</option>
-          </select>
+      <div class="portal-page-head">
+        <h1>Inbox</h1>
+      </div>
+
+      <div class="portal-tabs" role="tablist" aria-label="Filter submissions" id="inbox-tabs">
+        <button type="button" role="tab" data-hash="new" data-status="new" aria-controls="inbox-panel" aria-selected="true">New <span class="tab-count" id="count-new"></span></button>
+        <button type="button" role="tab" data-hash="in_progress" data-status="in_progress" aria-controls="inbox-panel" aria-selected="false" tabindex="-1">In progress <span class="tab-count" id="count-in_progress"></span></button>
+        <button type="button" role="tab" data-hash="done" data-status="done" aria-controls="inbox-panel" aria-selected="false" tabindex="-1">Done <span class="tab-count" id="count-done"></span></button>
+        <button type="button" role="tab" data-hash="all" data-status="" aria-controls="inbox-panel" aria-selected="false" tabindex="-1">All <span class="tab-count" id="count-all"></span></button>
+      </div>
+
+      <div id="inbox-panel" role="tabpanel" aria-label="Submissions">
+        <div class="inbox-split" id="inbox-split">
+          <div class="inbox-queue-col">
+            <ul class="inbox-queue" id="queue"></ul>
+            <p class="empty-state" id="queue-empty" hidden></p>
+          </div>
+          <section class="inbox-detail portal-card" id="detail" aria-labelledby="detail-heading">
+            <button type="button" class="btn btn--sm detail-back" id="detail-back">&#8249; Back to list</button>
+            <div id="detail-body">
+              <h2 id="detail-heading" class="visually-hidden">Submission detail</h2>
+              <p class="empty-state">Select an item from the queue to read it.</p>
+            </div>
+          </section>
         </div>
       </div>
-      <div id="items"></div>
     </div>
   </main>
   <script>
-    var TYPE_LABELS = {
-      contact_update: "Contact update",
-      issue_report: "Issue report",
-      suggestion: "Suggestion",
-      arc_request: "Exterior change request",
-    };
-    var filter = document.getElementById("filter");
-    var items = document.getElementById("items");
+    (function () {
+      var all = [];
+      var selectedId = null;
+      var currentStatus = "new";
+      var rowRefs = {}; // submission id -> { item: <button>, badge: <span> }
 
-    function load() {
-      clearError();
-      var qs = filter.value ? "?status=" + filter.value : "";
-      api("/api/admin/submissions" + qs).then(function (data) {
-        items.textContent = "";
-        if (!data.submissions.length) {
-          var empty = document.createElement("p");
-          empty.textContent = "Nothing here.";
-          items.appendChild(empty);
-          return;
+      var queue = document.getElementById("queue");
+      var queueEmpty = document.getElementById("queue-empty");
+      var detailBody = document.getElementById("detail-body");
+      var split = document.getElementById("inbox-split");
+
+      var EMPTY = {
+        "new": "Inbox zero. Nothing new from residents.",
+        "in_progress": "Nothing in progress.",
+        "done": "Nothing marked done yet.",
+        "": "No submissions yet.",
+      };
+
+      initTabs(document.getElementById("inbox-tabs"), function (tab) {
+        currentStatus = tab.getAttribute("data-status");
+        renderQueue();
+      });
+
+      function counts() {
+        var c = { "new": 0, in_progress: 0, done: 0 };
+        all.forEach(function (s) { c[s.status] += 1; });
+        return c;
+      }
+
+      function updateCounts() {
+        var c = counts();
+        document.getElementById("count-new").textContent = "(" + c["new"] + ")";
+        document.getElementById("count-in_progress").textContent = "(" + c.in_progress + ")";
+        document.getElementById("count-done").textContent = "(" + c.done + ")";
+        document.getElementById("count-all").textContent = "(" + all.length + ")";
+        var navBadge = document.getElementById("nav-inbox-count");
+        if (navBadge) {
+          navBadge.textContent = String(c["new"]);
+          navBadge.hidden = c["new"] === 0;
         }
-        data.submissions.forEach(function (s) {
-          items.appendChild(renderItem(s));
+      }
+
+      function extractOf(s) {
+        var v = s.fields.name || s.fields.address || s.fields.location || "";
+        if (!v) {
+          var keys = Object.keys(s.fields);
+          for (var i = 0; i < keys.length; i++) {
+            if (s.fields[keys[i]]) { v = s.fields[keys[i]]; break; }
+          }
+        }
+        if (v.length > 48) v = v.slice(0, 48) + "…";
+        return v;
+      }
+
+      function badgeFor(s) {
+        return el("span", "badge badge--" + s.status, s.status.replace("_", " "));
+      }
+
+      function renderQueue() {
+        queue.textContent = "";
+        rowRefs = {};
+        var shown = currentStatus ? all.filter(function (s) { return s.status === currentStatus; }) : all;
+        queueEmpty.hidden = shown.length > 0;
+        queueEmpty.textContent = EMPTY[currentStatus];
+        shown.forEach(function (s) {
+          var li = el("li");
+          var item = el("button", "queue-item");
+          item.type = "button";
+          item.setAttribute("aria-current", s.id === selectedId ? "true" : "false");
+
+          var top = el("div", "qi-top");
+          top.appendChild(el("span", null, TYPE_LABELS[s.form_type] || s.form_type));
+          top.appendChild(el("span", "qi-date", s.created_at.slice(0, 10)));
+          item.appendChild(top);
+
+          var sub = el("div", "qi-sub");
+          sub.appendChild(el("span", null, extractOf(s)));
+          var badge = badgeFor(s);
+          sub.appendChild(badge);
+          item.appendChild(sub);
+
+          item.addEventListener("click", function () { selectItem(s); });
+          li.appendChild(item);
+          queue.appendChild(li);
+          rowRefs[s.id] = { item: item, badge: badge };
         });
+      }
+
+      function selectItem(s) {
+        selectedId = s.id;
+        Object.keys(rowRefs).forEach(function (id) {
+          rowRefs[id].item.setAttribute("aria-current", Number(id) === s.id ? "true" : "false");
+        });
+        renderDetail(s);
+        split.classList.add("show-detail"); // mobile push; no-op on desktop
+        var heading = detailBody.querySelector("h2");
+        if (heading) { heading.tabIndex = -1; heading.focus(); }
+      }
+
+      function updateRowBadge(s) {
+        var ref = rowRefs[s.id];
+        // renderQueue() rebuilds rowRefs and the queue DOM together, so this
+        // guard only trips if the row was filtered out of the current tab
+        // (or the queue was rebuilt) while a status PATCH was in flight.
+        if (!ref || !ref.item.isConnected) return;
+        var fresh = badgeFor(s);
+        ref.badge.replaceWith(fresh);
+        ref.badge = fresh;
+      }
+
+      function setStatus(s, status, busyBtn) {
+        if (busyBtn) busyBtn.disabled = true;
+        api("/api/admin/submissions/" + s.id, { method: "PATCH", body: { status: status } })
+          .then(function () {
+            s.status = status;
+            updateRowBadge(s);   // row updates in place — no queue reload
+            updateCounts();
+            // Guard: the user may have selected a different submission while
+            // this request was in flight. Only refresh the detail pane if it
+            // is still showing s, otherwise this would clobber whatever the
+            // user has navigated to since.
+            if (selectedId === s.id) renderDetail(s);
+          })
+          .catch(function (err) {
+            if (busyBtn && busyBtn.isConnected) busyBtn.disabled = false;
+            showError(err);
+          });
+      }
+
+      function renderDetail(s) {
+        detailBody.textContent = "";
+
+        var h2 = el("h2", null, TYPE_LABELS[s.form_type] || s.form_type);
+        h2.id = "detail-heading";
+        detailBody.appendChild(h2);
+
+        var meta = el("p", "field-help");
+        meta.appendChild(document.createTextNode("Submitted " + s.created_at.slice(0, 10) + " "));
+        meta.appendChild(badgeFor(s));
+        detailBody.appendChild(meta);
+
+        var dl = el("dl", "portal-dl");
+        Object.keys(s.fields).forEach(function (k) {
+          dl.appendChild(el("dt", null, k.replace(/_/g, " ")));
+          dl.appendChild(el("dd", null, s.fields[k]));
+        });
+        detailBody.appendChild(dl);
+
+        var actions = el("p");
+        if (s.status === "new") {
+          var start = el("button", "btn btn--primary", "Start working on this");
+          start.type = "button";
+          start.addEventListener("click", function () { setStatus(s, "in_progress", start); });
+          actions.appendChild(start);
+        } else if (s.status === "in_progress") {
+          var done = el("button", "btn btn--primary", "Mark done");
+          done.type = "button";
+          done.addEventListener("click", function () { setStatus(s, "done", done); });
+          actions.appendChild(done);
+          actions.appendChild(document.createTextNode(" "));
+          var back = el("button", "btn btn--sm", "Move back to new");
+          back.type = "button";
+          back.addEventListener("click", function () { setStatus(s, "new", back); });
+          actions.appendChild(back);
+        } else {
+          var reopen = el("button", "btn btn--sm", "Reopen: move back to in progress");
+          reopen.type = "button";
+          reopen.addEventListener("click", function () { setStatus(s, "in_progress", reopen); });
+          actions.appendChild(reopen);
+        }
+
+        var email = "";
+        Object.keys(s.fields).forEach(function (k) {
+          if (!email && /email/i.test(k) && /@/.test(s.fields[k])) email = s.fields[k];
+        });
+        if (email) {
+          actions.appendChild(document.createTextNode(" "));
+          var reply = el("a", "btn btn--sm btn--outline", "Reply by email ↗");
+          reply.href = "mailto:" + email + "?subject=" +
+            encodeURIComponent("Re: your " + (TYPE_LABELS[s.form_type] || s.form_type).toLowerCase() + " to the WOPHA board");
+          actions.appendChild(reply);
+        }
+        detailBody.appendChild(actions);
+
+        var notesLabel = el("label", null, "Board notes (private)");
+        notesLabel.htmlFor = "notes-" + s.id;
+        detailBody.appendChild(notesLabel);
+        var notes = el("textarea");
+        notes.id = "notes-" + s.id;
+        notes.rows = 3;
+        notes.maxLength = 2000;
+        notes.style.width = "100%";
+        notes.value = s.notes;
+        detailBody.appendChild(notes);
+
+        var saved = el("p", "saved-note");
+        saved.setAttribute("role", "status");
+        detailBody.appendChild(saved);
+        var noteErr = el("p", "field-error");
+        noteErr.hidden = true;
+        noteErr.tabIndex = -1;
+        detailBody.appendChild(noteErr);
+
+        function saveNotes() {
+          if (notes.value === s.notes) return; // nothing changed — no request
+          noteErr.hidden = true;
+          api("/api/admin/submissions/" + s.id, { method: "PATCH", body: { notes: notes.value } })
+            .then(function () {
+              s.notes = notes.value;
+              // Guard: the user may have navigated to a different submission
+              // (blur fires before the click that swaps detailBody) while
+              // this request was in flight — don't touch the detached notes.
+              if (!notes.isConnected) return;
+              var t = new Date();
+              saved.textContent = "Saved ✓ " +
+                t.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+            })
+            .catch(function () {
+              if (!notes.isConnected) return; // same guard as above
+              noteErr.textContent = "Notes not saved. ";
+              var retry = el("button", "btn btn--sm", "Retry");
+              retry.type = "button";
+              retry.addEventListener("click", saveNotes);
+              noteErr.appendChild(retry);
+              noteErr.hidden = false;
+              noteErr.focus();
+            });
+        }
+        notes.addEventListener("blur", saveNotes);
+      }
+
+      document.getElementById("detail-back").addEventListener("click", function () {
+        split.classList.remove("show-detail");
+        var ref = rowRefs[selectedId];
+        if (ref) ref.item.focus();
+      });
+
+      queue.appendChild(el("li")).appendChild(skeleton(4));
+      api("/api/admin/submissions").then(function (data) {
+        all = data.submissions;
+        updateCounts();
+        renderQueue();
       }).catch(showError);
-    }
-
-    function renderItem(s) {
-      var card = document.createElement("div");
-      card.className = "card";
-
-      var head = document.createElement("h3");
-      head.textContent = (TYPE_LABELS[s.form_type] || s.form_type) + " (" + s.created_at.slice(0, 10) + ")";
-      card.appendChild(head);
-
-      var badge = document.createElement("span");
-      badge.className = "badge badge--" + s.status;
-      badge.textContent = s.status.replace("_", " ");
-      card.appendChild(badge);
-
-      var dl = document.createElement("dl");
-      Object.keys(s.fields).forEach(function (k) {
-        var dt = document.createElement("dt");
-        dt.textContent = k;
-        var dd = document.createElement("dd");
-        dd.textContent = s.fields[k];
-        dl.appendChild(dt);
-        dl.appendChild(dd);
-      });
-      card.appendChild(dl);
-
-      var statusSel = document.createElement("select");
-      ["new", "in_progress", "done"].forEach(function (st) {
-        var o = document.createElement("option");
-        o.value = st;
-        o.textContent = st.replace("_", " ");
-        if (st === s.status) o.selected = true;
-        statusSel.appendChild(o);
-      });
-      statusSel.addEventListener("change", function () {
-        api("/api/admin/submissions/" + s.id, { method: "PATCH", body: { status: statusSel.value } })
-          .then(load).catch(showError);
-      });
-      card.appendChild(statusSel);
-
-      var notes = document.createElement("textarea");
-      notes.rows = 2;
-      notes.placeholder = "Board notes (private)";
-      notes.value = s.notes;
-      card.appendChild(notes);
-
-      var save = document.createElement("button");
-      save.className = "btn";
-      save.type = "button";
-      save.textContent = "Save notes";
-      save.addEventListener("click", function () {
-        api("/api/admin/submissions/" + s.id, { method: "PATCH", body: { notes: notes.value } })
-          .then(function () { save.textContent = "Saved ✓"; setTimeout(function () { save.textContent = "Save notes"; }, 1500); })
-          .catch(showError);
-      });
-      card.appendChild(save);
-
-      return card;
-    }
-
-    filter.addEventListener("change", load);
-    load();
+    })();
   </script>
