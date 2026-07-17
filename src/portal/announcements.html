@@ -5,106 +5,227 @@ pageKey: announcements
 ---
   <main class="section">
     <div class="container">
-      <h1>Announcements</h1>
-      <form class="form-grid" id="ann-form">
-        <input type="hidden" id="ann-id" value="">
-        <div>
-          <label for="ann-title">Title</label>
-          <input type="text" id="ann-title" maxlength="200" required>
-        </div>
-        <div>
-          <label for="ann-body">Body (plain text; shown on the homepage)</label>
-          <textarea id="ann-body" rows="4" maxlength="4000" required></textarea>
-        </div>
-        <div>
-          <label for="ann-pin">Keep at the top until (optional)</label>
-          <input type="date" id="ann-pin">
-        </div>
-        <div>
-          <button class="btn btn--primary" type="submit" id="ann-save">Publish</button>
-          <button class="btn" type="button" id="ann-cancel" hidden>Cancel edit</button>
-        </div>
-      </form>
+      <div class="portal-page-head">
+        <h1>Announcements</h1>
+        <button type="button" class="btn btn--primary" id="new-btn">New announcement</button>
+      </div>
 
-      <h2>Published</h2>
-      <table class="portal-table">
-        <thead><tr><th>Date</th><th>Title</th><th>Pinned until</th><th></th></tr></thead>
-        <tbody id="ann-rows"></tbody>
-      </table>
+      <section class="portal-card portal-section" id="compose" aria-labelledby="compose-heading" hidden>
+        <h2 id="compose-heading">New announcement</h2>
+        <form id="compose-form">
+          <input type="hidden" id="c-id" value="">
+          <p>
+            <label for="c-title">Title</label><br>
+            <input type="text" id="c-title" maxlength="200" required style="width:100%" aria-describedby="c-title-count">
+            <span class="char-count" id="c-title-count" hidden></span>
+          </p>
+          <p>
+            <label for="c-body">Body</label><br>
+            <textarea id="c-body" rows="5" maxlength="4000" required style="width:100%" aria-describedby="c-body-help c-body-count"></textarea>
+            <span class="field-help" id="c-body-help">Plain text. Shown on the homepage and community page exactly as typed.</span>
+            <span class="char-count" id="c-body-count" hidden></span>
+          </p>
+          <p>
+            <label for="c-pin">Keep pinned at the top until</label><br>
+            <input type="date" id="c-pin" aria-describedby="c-pin-help">
+            <span class="field-help" id="c-pin-help">Optional. It drops into normal order after this date.</span>
+          </p>
+          <h3>Preview: how residents will see it</h3>
+          <!-- MIRROR of the public announcement card built in src/assets/js/site.js
+               (div.card > h3 title, p body, p date). Keep in sync. -->
+          <div class="content-preview">
+            <div class="card">
+              <h3 id="pv-title">Title appears here</h3>
+              <p id="pv-body">Body appears here.</p>
+              <p id="pv-date"></p>
+            </div>
+          </div>
+          <p>
+            <button class="btn btn--primary" type="submit" id="c-save">Publish</button>
+            <button class="btn" type="button" id="c-cancel">Cancel</button>
+          </p>
+        </form>
+      </section>
+
+      <h2 class="visually-hidden">Published announcements</h2>
+      <div id="ann-list"></div>
     </div>
   </main>
   <script>
-    var form = document.getElementById("ann-form");
-    var idEl = document.getElementById("ann-id");
-    var titleEl = document.getElementById("ann-title");
-    var bodyEl = document.getElementById("ann-body");
-    var pinEl = document.getElementById("ann-pin");
-    var saveBtn = document.getElementById("ann-save");
-    var cancelBtn = document.getElementById("ann-cancel");
-    var rows = document.getElementById("ann-rows");
+    (function () {
+      var list = [];
+      var lastTrigger = null;
 
-    function resetForm() {
-      idEl.value = "";
-      form.reset();
-      saveBtn.textContent = "Publish";
-      cancelBtn.hidden = true;
-    }
+      var compose = document.getElementById("compose");
+      var composeHeading = document.getElementById("compose-heading");
+      var form = document.getElementById("compose-form");
+      var idEl = document.getElementById("c-id");
+      var titleEl = document.getElementById("c-title");
+      var bodyEl = document.getElementById("c-body");
+      var pinEl = document.getElementById("c-pin");
+      var saveBtn = document.getElementById("c-save");
+      var newBtn = document.getElementById("new-btn");
+      var listEl = document.getElementById("ann-list");
 
-    function load() {
-      api("/api/admin/announcements").then(function (data) {
-        rows.textContent = "";
-        data.announcements.forEach(function (a) {
-          var tr = document.createElement("tr");
-          [a.created_at.slice(0, 10), a.title, a.pinned_until || "–"].forEach(function (text) {
-            var td = document.createElement("td");
-            td.textContent = text;
-            tr.appendChild(td);
+      function bindCounter(input, counter, max) {
+        function update() {
+          var n = input.value.length;
+          counter.textContent = n + " / " + max;
+          counter.hidden = n < max * 0.8;
+          counter.classList.toggle("is-warn", n >= max);
+        }
+        input.addEventListener("input", update);
+        return update;
+      }
+      var titleCount = bindCounter(titleEl, document.getElementById("c-title-count"), 200);
+      var bodyCount = bindCounter(bodyEl, document.getElementById("c-body-count"), 4000);
+
+      function updatePreview() {
+        document.getElementById("pv-title").textContent = titleEl.value || "Title appears here";
+        document.getElementById("pv-body").textContent = bodyEl.value || "Body appears here.";
+      }
+      titleEl.addEventListener("input", updatePreview);
+      bodyEl.addEventListener("input", updatePreview);
+
+      function openCompose(a, trigger) {
+        lastTrigger = trigger || null;
+        idEl.value = a ? String(a.id) : "";
+        titleEl.value = a ? a.title : "";
+        bodyEl.value = a ? a.body : "";
+        pinEl.value = a ? (a.pinned_until || "") : "";
+        composeHeading.textContent = a ? "Editing: " + a.title : "New announcement";
+        saveBtn.textContent = a ? "Save changes" : "Publish";
+        // A previous submit may still be settling in the background after the user
+        // cancelled out of it (see the submit handler below) - a fresh session always
+        // starts with an enabled button rather than inheriting a stale disabled state.
+        saveBtn.disabled = false;
+        document.getElementById("pv-date").textContent =
+          (a ? a.created_at : new Date().toISOString()).slice(0, 10);
+        titleCount();
+        bodyCount();
+        updatePreview();
+        compose.hidden = false;
+        titleEl.focus();
+      }
+
+      function closeCompose() {
+        compose.hidden = true;
+        form.reset();
+        idEl.value = "";
+        if (lastTrigger) lastTrigger.focus();
+        else newBtn.focus();
+      }
+
+      newBtn.addEventListener("click", function () { openCompose(null, newBtn); });
+      document.getElementById("c-cancel").addEventListener("click", closeCompose);
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        clearError();
+        saveBtn.disabled = true;
+        var editing = idEl.value !== "";
+        // Capture what we're submitting now - if the user cancels and opens a
+        // different announcement (or starts a fresh "New announcement") before this
+        // request resolves, idEl.value will no longer match. Then the success
+        // handler below must not close/reset the compose panel out from under
+        // whatever they're editing now, even though the toast + list refresh
+        // (which reflect this request's own outcome) should still happen.
+        var submittedId = idEl.value;
+        var payload = {
+          title: titleEl.value,
+          body: bodyEl.value,
+          pinned_until: pinEl.value || null,
+        };
+        var req = editing
+          ? api("/api/admin/announcements/" + submittedId, { method: "PUT", body: payload })
+          : api("/api/admin/announcements", { method: "POST", body: payload });
+        req.then(function () {
+          if (idEl.value === submittedId) closeCompose();
+          toast(editing ? "Saved. It's live on the site now." : "Published. It's live on the homepage now.", {
+            actionLabel: "View on site ↗",
+            onAction: function () { window.open("/community/#announcements", "_blank", "noopener"); },
           });
-          var actions = document.createElement("td");
-          var edit = document.createElement("button");
-          edit.className = "btn";
-          edit.type = "button";
-          edit.textContent = "Edit";
-          edit.addEventListener("click", function () {
-            idEl.value = String(a.id);
-            titleEl.value = a.title;
-            bodyEl.value = a.body;
-            pinEl.value = a.pinned_until || "";
-            saveBtn.textContent = "Save changes";
-            cancelBtn.hidden = false;
-            window.scrollTo(0, 0);
-          });
-          var del = document.createElement("button");
-          del.className = "btn";
-          del.type = "button";
-          del.textContent = "Delete";
-          del.addEventListener("click", function () {
-            if (!confirm("Delete \"" + a.title + "\"? It disappears from the public site.")) return;
-            api("/api/admin/announcements/" + a.id, { method: "DELETE" }).then(load).catch(showError);
-          });
-          actions.appendChild(edit);
-          actions.appendChild(document.createTextNode(" "));
-          actions.appendChild(del);
-          tr.appendChild(actions);
-          rows.appendChild(tr);
+          load();
+        }).catch(showError).finally(function () { saveBtn.disabled = false; });
+      });
+
+      function buildRow(a) {
+        var row = el("div", "ann-row");
+        row.appendChild(el("span", "ann-date", a.created_at.slice(0, 10)));
+
+        var mid = el("div");
+        var titleLine = el("div");
+        titleLine.appendChild(el("strong", null, a.title));
+        var today = new Date().toISOString().slice(0, 10);
+        if (a.pinned_until && a.pinned_until >= today) {
+          titleLine.appendChild(document.createTextNode(" "));
+          titleLine.appendChild(el("span", "chip", "Pinned until " + a.pinned_until));
+        }
+        mid.appendChild(titleLine);
+        var excerpt = a.body.length > 90 ? a.body.slice(0, 90) + "…" : a.body;
+        mid.appendChild(el("p", "ann-excerpt", excerpt));
+        row.appendChild(mid);
+
+        var actions = el("div", "ann-actions");
+        var edit = el("button", "btn btn--sm", "Edit");
+        edit.type = "button";
+        edit.addEventListener("click", function () { openCompose(a, edit); });
+        var del = el("button", "btn btn--sm btn--danger", "Delete");
+        del.type = "button";
+        del.addEventListener("click", function () {
+          confirmDialog("Delete \"" + a.title + "\"? It disappears from the public site immediately.")
+            .then(function (yes) {
+              if (!yes) return;
+              api("/api/admin/announcements/" + a.id, { method: "DELETE" })
+                .then(function () {
+                  toast("Deleted.");
+                  load();
+                })
+                .catch(showError);
+            });
         });
-      }).catch(showError);
-    }
+        actions.appendChild(edit);
+        actions.appendChild(del);
+        row.appendChild(actions);
+        return row;
+      }
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      clearError();
-      var payload = {
-        title: titleEl.value,
-        body: bodyEl.value,
-        pinned_until: pinEl.value || null,
-      };
-      var req = idEl.value
-        ? api("/api/admin/announcements/" + idEl.value, { method: "PUT", body: payload })
-        : api("/api/admin/announcements", { method: "POST", body: payload });
-      req.then(function () { resetForm(); load(); }).catch(showError);
-    });
+      function renderList() {
+        listEl.textContent = "";
+        if (!list.length) {
+          var empty = el("div", "empty-state");
+          empty.appendChild(el("p", null, "No announcements yet. Post one and it appears on the homepage."));
+          var btn = el("button", "btn btn--primary", "New announcement");
+          btn.type = "button";
+          btn.addEventListener("click", function () { openCompose(null, btn); });
+          empty.appendChild(btn);
+          listEl.appendChild(empty);
+          return;
+        }
+        list.forEach(function (a) { listEl.appendChild(buildRow(a)); });
+      }
 
-    cancelBtn.addEventListener("click", resetForm);
-    load();
+      var handledHash = false;
+      function handleHash() {
+        if (handledHash) return;
+        handledHash = true;
+        if (location.hash === "#new") openCompose(null, newBtn);
+        else if (location.hash === "#edit-latest" && list.length) openCompose(list[0], newBtn);
+      }
+
+      function load() {
+        listEl.textContent = "";
+        listEl.appendChild(skeleton(3));
+        api("/api/admin/announcements").then(function (data) {
+          list = data.announcements;
+          renderList();
+          handleHash();
+        }).catch(function (err) {
+          listEl.textContent = ""; // don't strand the loading skeleton behind the error banner
+          showError(err);
+        });
+      }
+
+      load();
+    })();
   </script>
