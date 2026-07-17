@@ -9,7 +9,7 @@
   --portal-topbar-h: 56px;
   --poolwater-deep: #0a5560;            /* hover shade for --poolwater */
   --hairline: rgba(30, 42, 34, 0.16);   /* 1px card & table borders */
-  --ok: #2e7d4f;      --ok-bg: #e3f2e8;     /* paid / done */
+  --ok: #2d794d;      --ok-bg: #e3f2e8;     /* paid / done — 4.586:1 on --ok-bg */
   --warn: #8a5a00;    --warn-bg: #fdf0d3;   /* new / pending */
   --info: #17567f;    --info-bg: #e2eef5;   /* in progress */
   --danger: #a13324;  --danger-bg: #fbe7e2; /* unpaid / errors */
@@ -18,7 +18,8 @@
 /* ---- App shell ---------------------------------------------------------- */
 
 body { background: var(--paper); }
-@media (min-width: 900px) { body { padding-left: var(--portal-nav-w); } }
+/* Offset activates only once the sidebar exists — graceful for the unrewritten pages; :has is transitional-safe here, portal is modern-browser Access-gated. */
+@media (min-width: 900px) { body:has(.portal-sidebar) { padding-left: var(--portal-nav-w); } }
 
 .portal-sidebar {
   position: fixed;
@@ -239,17 +240,18 @@ a.kpi:hover { border-color: var(--fern); }
 .portal-table caption { text-align: left; padding: 0.6rem 0.75rem; font-weight: 700; }
 
 @media (max-width: 719.98px) {
-  .portal-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-  .portal-table, .portal-table tbody, .portal-table tr, .portal-table td, .portal-table caption { display: block; }
-  .portal-table tr {
+  /* Gated on :has(td[data-label]) — old tables (no data-label yet) keep their normal thead until the rewritten pages, which emit data-label, land. */
+  .portal-table:has(td[data-label]) thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .portal-table:has(td[data-label]), .portal-table:has(td[data-label]) tbody, .portal-table:has(td[data-label]) tr, .portal-table:has(td[data-label]) td, .portal-table:has(td[data-label]) caption { display: block; }
+  .portal-table:has(td[data-label]) tbody tr {
     border: 1px solid var(--hairline);
     border-radius: var(--radius);
     background: var(--card);
     margin: var(--space-3);
     padding: var(--space-2) 0;
   }
-  .portal-table td { border: none; padding: 0.35rem var(--space-4); display: flex; justify-content: space-between; gap: var(--space-4); }
-  .portal-table td[data-label]::before {
+  .portal-table:has(td[data-label]) td { border: none; padding: 0.35rem var(--space-4); display: flex; justify-content: space-between; gap: var(--space-4); }
+  .portal-table:has(td[data-label]) td[data-label]::before {
     content: attr(data-label);
     font: 700 0.75rem var(--body);
     text-transform: uppercase;
@@ -257,8 +259,8 @@ a.kpi:hover { border-color: var(--fern); }
     color: var(--ink-soft);
     padding-top: 0.2rem;
   }
-  .table-card { border: none; box-shadow: none; background: transparent; }
-  .portal-table tbody tr:hover { background: var(--card); }
+  .table-card:has(.portal-table td[data-label]) { border: none; box-shadow: none; background: transparent; }
+  .portal-table:has(td[data-label]) tbody tr:hover { background: var(--card); }
 }
 
 /* ---- Badges (text + color, never color alone) ----------------------------- */
