@@ -75,8 +75,11 @@ describe("pricing.json shape", () => {
   });
   it("carries a source tag on both top-level figures (payhoa anchor, sponsor target)", () => {
     // Global Constraints: "each figure carries its [F#]/[V#] source tag." These two
-    // top-level figures aren't tier line items, so they need their own tag fields.
-    expect(pricing.payhoa_anchor_source).toMatch(/^[FV]\d$/);
-    expect(pricing.sponsor_target_source).toMatch(/^[FV]\d$/);
+    // top-level figures aren't tier line items and aren't F1-F6 minutes facts or
+    // V1-V3 pending-subscription items, so they use their own M (market anchor) and
+    // T (target, not verified income) prefixes. Still a real pattern check, not a
+    // loosened non-empty-string check: malformed tags still fail.
+    expect(pricing.payhoa_anchor_source).toMatch(/^[FVMT]\d$/);
+    expect(pricing.sponsor_target_source).toMatch(/^[FVMT]\d$/);
   });
 });
