@@ -1,7 +1,7 @@
 // Input validation for everything that crosses the API boundary.
 export const FORM_TYPES = ["contact_update", "issue_report", "suggestion", "arc_request", "sponsor_inquiry"];
 export const PAYMENT_METHODS = ["stripe", "zelle", "check", "other"];
-export const CONTENT_KEYS = ["season_glance", "pool_hours"];
+export const CONTENT_KEYS = ["season_glance", "pool_hours", "sponsors", "safety_report"];
 
 const MAX_FIELD_LENGTH = 4000;
 const MAX_FIELDS = 20;
@@ -65,16 +65,22 @@ export function validatePayment(input) {
   };
 }
 
+// Per-key row shape. Default: [label, value] string pairs, at least one row.
+// sponsors rows are [name, url, blurb]; an empty list is valid (no sponsors
+// yet) — the public page then shows its baked-in reserved-space message.
+const CONTENT_SHAPES = { sponsors: { cells: 3, minRows: 0 } };
+const DEFAULT_SHAPE = { cells: 2, minRows: 1 };
+
 export function validateContent(key, value) {
   if (!CONTENT_KEYS.includes(key)) return { ok: false, error: "Unknown content key" };
-  if (!Array.isArray(value) || value.length === 0 || value.length > 50) {
-    return { ok: false, error: "Value must be a list of 1–50 rows" };
+  const shape = CONTENT_SHAPES[key] || DEFAULT_SHAPE;
+  if (!Array.isArray(value) || value.length < shape.minRows || value.length > 50) {
+    return { ok: false, error: `Value must be a list of ${shape.minRows}–50 rows` };
   }
   for (const row of value) {
-    if (!Array.isArray(row) || row.length !== 2 ||
-        typeof row[0] !== "string" || typeof row[1] !== "string" ||
-        row[0].length > 200 || row[1].length > 200) {
-      return { ok: false, error: "Each row must be a [label, value] pair of strings (max 200 chars)" };
+    if (!Array.isArray(row) || row.length !== shape.cells ||
+        !row.every((cell) => typeof cell === "string" && cell.length <= 200)) {
+      return { ok: false, error: `Each row must be ${shape.cells} strings (max 200 chars)` };
     }
   }
   return { ok: true, value };

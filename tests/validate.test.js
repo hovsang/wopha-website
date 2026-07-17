@@ -81,6 +81,30 @@ describe("validateContent", () => {
     expect(validateContent("pool_hours", [["only one cell"]]).ok).toBe(false);
     expect(validateContent("pool_hours", [[1, 2]]).ok).toBe(false);
   });
+  it("accepts sponsors rows as [name, url, blurb] triples", () => {
+    const r = validateContent("sponsors", [
+      ["Lilburn Hardware", "https://lilburnhardware.example", "Family owned since 1979."],
+    ]);
+    expect(r.ok).toBe(true);
+  });
+  it("accepts an empty sponsors list (no sponsors yet)", () => {
+    const r = validateContent("sponsors", []);
+    expect(r.ok).toBe(true);
+    expect(r.value).toEqual([]);
+  });
+  it("rejects sponsors rows that are not exactly 3 strings", () => {
+    expect(validateContent("sponsors", [["Name", "https://x.example"]]).ok).toBe(false);
+    expect(validateContent("sponsors", [["a", "b", "c", "d"]]).ok).toBe(false);
+    expect(validateContent("sponsors", [["a", "b", 3]]).ok).toBe(false);
+  });
+  it("accepts safety_report [label, value] pairs and rejects 3-cell rows there", () => {
+    expect(validateContent("safety_report", [["Reported", "Annual meeting, February 22, 2026"]]).ok).toBe(true);
+    expect(validateContent("safety_report", [["a", "b", "c"]]).ok).toBe(false);
+  });
+  it("still rejects empty lists for the 2-column keys", () => {
+    expect(validateContent("pool_hours", []).ok).toBe(false);
+    expect(validateContent("safety_report", []).ok).toBe(false);
+  });
 });
 
 describe("malformed top-level input", () => {
