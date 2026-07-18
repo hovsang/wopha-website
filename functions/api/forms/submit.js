@@ -4,7 +4,6 @@ const SUBJECTS = {
   contact_update: "WOPHA contact info update",
   issue_report: "WOPHA issue report",
   suggestion: "WOPHA suggestion",
-  arc_request: "WOPHA exterior change request",
   sponsor_inquiry: "WOPHA sponsorship inquiry",
 };
 

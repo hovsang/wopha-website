@@ -52,7 +52,6 @@ var TYPE_LABELS = {
   contact_update: "Contact update",
   issue_report: "Issue report",
   suggestion: "Suggestion",
-  arc_request: "Exterior change request",
   sponsor_inquiry: "Sponsorship inquiry",
 };
 

@@ -1,7 +1,7 @@
 ---
 layout: base.njk
 title: Governing Documents | Woods of Parkview HOA
-description: Woods of Parkview HOA covenants and bylaws, meeting minutes, the exterior change request (ARC) form, and answers to common questions.
+description: Woods of Parkview HOA covenants and bylaws, meeting minutes, and answers to common questions.
 pageKey: about-documents
 permalink: /about/documents/index.html
 ---
@@ -9,7 +9,7 @@ permalink: /about/documents/index.html
   <div class="container">
     <span class="eyebrow">The rules of record</span>
     <h1>Governing documents</h1>
-    <p class="lede">What the board decided, and the documents that govern the neighborhood: covenants, bylaws, meeting minutes, and the exterior change request form.</p>
+    <p class="lede">What the board decided, and the documents of record: the covenants, the bylaws, and past meeting minutes.</p>
   </div>
 </section>
 
@@ -71,53 +71,7 @@ permalink: /about/documents/index.html
   </div>
 </section>
 
-<section class="section" id="arc" aria-labelledby="arc-heading">
-  <div class="container">
-    <span class="eyebrow">Before you build, paint, or fence</span>
-    <h2 id="arc-heading">Exterior change request</h2>
-    <p class="lede">The covenants require board approval before exterior changes: fences, paint colors, roofs, additions, major landscaping. Send your request here and get a written answer before work starts; it protects you at resale.</p>
-    <form class="form-card form-grid" action="/api/forms/submit" method="POST">
-      <input type="hidden" name="form_type" value="arc_request">
-      <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
-      <div>
-        <label for="arc-name">Your name</label>
-        <input id="arc-name" name="name" type="text" required autocomplete="name">
-      </div>
-      <div>
-        <label for="arc-address">Property address</label>
-        <input id="arc-address" name="address" type="text" required autocomplete="street-address">
-      </div>
-      <div>
-        <label for="arc-email">Email</label>
-        <input id="arc-email" name="email" type="email" required autocomplete="email">
-      </div>
-      <div>
-        <label for="arc-type">Type of change</label>
-        <select id="arc-type" name="project_type" required>
-          <option value="">Choose one…</option>
-          <option>Fence</option>
-          <option>Exterior paint</option>
-          <option>Roof</option>
-          <option>Addition or structure</option>
-          <option>Major landscaping / tree removal</option>
-          <option>Something else</option>
-        </select>
-      </div>
-      <div>
-        <label for="arc-desc">Describe the project</label>
-        <textarea id="arc-desc" name="message" rows="5" required placeholder="What you're changing, materials and colors, and roughly when work would start"></textarea>
-      </div>
-      <div>
-        <button class="btn btn--primary" type="submit">Submit for board review</button>
-      </div>
-    </form>
-    <div class="notice">
-      <p>Have drawings, paint chips, or photos? After submitting, email them to the board referencing your address. The board reviews requests at its next meeting and replies in writing.</p>
-    </div>
-  </div>
-</section>
-
-<section class="section section--tint" aria-labelledby="faq-heading">
+<section class="section" aria-labelledby="faq-heading">
   <div class="container">
     <span class="eyebrow">Common questions</span>
     <h2 id="faq-heading">FAQ</h2>
