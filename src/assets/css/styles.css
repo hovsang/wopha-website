@@ -758,17 +758,48 @@ input:user-invalid:focus, textarea:user-invalid:focus, select:user-invalid:focus
 .pine-ridge-strip { line-height: 0; background: var(--paper); }
 .pine-ridge-strip--prefooter { margin-top: var(--space-10); }
 
-/* Hero baseline: a filled Pine treeline silhouette. The green header comes
-   DOWN in pine-tree shapes into the Paper content, so the ridge IS the edge
-   (not a line floating above a flat cut). Trees hang from the hero. */
-.pine-silhouette-strip { line-height: 0; background: var(--paper); margin-top: -1px; }
-.pine-silhouette { display: block; width: 100%; height: 52px; }
-.pine-silhouette path { fill: var(--pine); }
+/* Treeline silhouettes: a seamless repeating tile of the drafted ridge
+   (1085x40 units, both edges cut mid flat-run so the repeat has no seam).
+   Tiled at a fixed 340x52 so the pines keep their proportions at every
+   viewport width instead of stretching. Every hero ends in the treeline
+   (::after, so all pages get it); the footer rises out of the mirrored one. */
+.hero {
+  --ridge-h: 52px;
+  position: relative;
+  padding-bottom: calc(var(--space-8) + var(--ridge-h));
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--ridge-h);
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1085 40' preserveAspectRatio='none'%3E%3Cpath fill='%231F3D2B' d='M0 0 L0 10 L0 10 L30 18 L45 16.5 L69 26 L96 19.6 L108 16.7 L150 10 L156 10 L180 22.1 L192 20.6 L211.2 32 L232.8 24.3 L242.4 20.3 L276 10 L280 10 L299.2 15.4 L308.8 13.9 L324.2 22 L341.4 16.6 L349.1 14.4 L376 10 L416 10 L444 20 L458 18.5 L480.4 30 L505.6 22 L516.8 18.4 L556 10 L564 10 L586 25.6 L597 24.1 L614.6 36 L634.4 28.2 L643.2 23.5 L674 10 L679 10 L696.6 15.6 L705.4 14.1 L719.5 24 L735.3 17 L742.4 14.5 L767 10 L823 10 L849 19 L862 17.5 L882.8 28 L906.2 20.8 L916.6 17.6 L953 10 L959 10 L979.8 23.2 L990.2 21.7 L1006.8 34 L1025.6 25.6 L1033.9 21.3 L1063 10 L1085 10 L1085 0 Z'/%3E%3C/svg%3E");
+  background-size: 340px 52px;
+  background-repeat: repeat-x;
+}
 
-/* Pre-footer: same silhouette mirrored. The Pine footer rises in pine-tree
-   shapes into the Paper content above it, so the footer's top IS the treeline.
-   Trees point up (pine-silhouette-up.njk), green base meets the footer flush. */
-.pine-silhouette-strip--prefooter { line-height: 0; background: var(--paper); margin-top: var(--space-10); }
+/* Larger canvas, larger pines: scale the tile proportionally (same 340:52
+   aspect, so the trees never stretch). */
+@media (min-width: 900px) {
+  .hero { --ridge-h: 72px; }
+  .hero::after,
+  .pine-silhouette-strip--prefooter {
+    height: 72px;
+    background-size: 471px 72px;
+  }
+}
+
+.pine-silhouette-strip--prefooter {
+  height: 52px;
+  margin-top: var(--space-10);
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1085 40' preserveAspectRatio='none'%3E%3Cpath fill='%231F3D2B' d='M0 40 L0 30 L0 30 L30 22 L45 23.5 L69 14 L96 20.4 L108 23.3 L150 30 L156 30 L180 17.9 L192 19.4 L211.2 8 L232.8 15.7 L242.4 19.7 L276 30 L280 30 L299.2 24.6 L308.8 26.1 L324.2 18 L341.4 23.4 L349.1 25.6 L376 30 L416 30 L444 20 L458 21.5 L480.4 10 L505.6 18 L516.8 21.6 L556 30 L564 30 L586 14.4 L597 15.9 L614.6 4 L634.4 11.8 L643.2 16.5 L674 30 L679 30 L696.6 24.4 L705.4 25.9 L719.5 16 L735.3 23 L742.4 25.5 L767 30 L823 30 L849 21 L862 22.5 L882.8 12 L906.2 19.2 L916.6 22.4 L953 30 L959 30 L979.8 16.8 L990.2 18.3 L1006.8 6 L1025.6 14.4 L1033.9 18.7 L1063 30 L1085 30 L1085 40 Z'/%3E%3C/svg%3E");
+  background-size: 340px 52px;
+  background-repeat: repeat-x;
+}
 
 /* Footer mark: a 160px-wide slice of the same ridge at its natural 30:1
    proportions: the wrapper CROPS (overflow hidden) rather than squeezing
